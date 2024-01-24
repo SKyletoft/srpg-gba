@@ -44,7 +44,15 @@ CFLAGS := -g -Wall -Oz \
 
 CFLAGS += $(INCLUDE)
 
-CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions
+CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions \
+	-Wall -Wextra -Wpedantic -Wno-unused-parameter -Wfloat-equal \
+	-Wnon-virtual-dtor -Wcast-align -Wzero-as-null-pointer-constant \
+	-Wunused -Woverloaded-virtual -Wmisleading-indentation \
+	-Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wtype-limits \
+	-Wnull-dereference -Werror=format-security \
+	-Werror=missing-field-initializers -Werror=return-type \
+	-Werror=conversion -Werror=sign-conversion -Werror=float-conversion \
+	-std=gnu++20
 
 ASFLAGS := -g $(ARCH)
 LDFLAGS = -g $(ARCH) -Wl,-Map,$(notdir $*.map)
@@ -117,7 +125,7 @@ export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES))) $(PNGFILES:.png=.h)
 
 export INCLUDE := \
 	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
-	$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+	$(foreach dir,$(LIBDIRS),-isystem$(dir)/include) \
 	-I$(CURDIR)/$(BUILD)
 
 export LIBPATHS := $(foreach dir,$(LIBDIRS),-L$(dir)/lib)
