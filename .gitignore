@@ -1,0 +1,7 @@
+out
+.vscode
+.idea
+*.o
+*.a
+.envrc
+libtonc
