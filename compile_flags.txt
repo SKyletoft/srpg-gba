@@ -1,5 +1,5 @@
 -xc++
--Ilibtonc/include
+-isystemlibtonc/include
 -Wall
 -Wexta
 -Wpedantic
