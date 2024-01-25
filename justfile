@@ -4,6 +4,9 @@ setup:
 build: setup
 	docker run -it builder
 
+bash: setup
+	docker run -v $(pwd)/out:/gba-dev/out -it builder /bin/bash
+
 run: setup
 	-rm -rf out
 	mkdir out
