@@ -8,6 +8,7 @@ RUN apt-get -y update \
 RUN wget https://apt.devkitpro.org/install-devkitpro-pacman
 RUN chmod +x ./install-devkitpro-pacman
 RUN echo "y" | ./install-devkitpro-pacman
+RUN ln -sf /proc/mounts /etc/mtab
 RUN printf "\nY\n\n" | dkp-pacman -S gba-dev
 
 ENV DEVKITPRO=/opt/devkitpro
