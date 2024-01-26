@@ -15,6 +15,7 @@ ENV DEVKITPRO=/opt/devkitpro
 ENV DEVKITARM=/opt/devkitpro/devkitARM
 ENV DEVKITPPC=/opt/devkitpro/devkitPPC
 ENV PATH=$DEVKITARM/bin:$DEVKITPRO/tools/bin:$PATH
+ENV EDITOR=nano
 
 WORKDIR /gba-dev
 
