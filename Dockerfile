@@ -19,4 +19,4 @@ ENV PATH=$DEVKITARM/bin:$DEVKITPRO/tools/bin:$PATH
 WORKDIR /gba-dev
 
 COPY . .
-CMD make -kj && cp *.gba out
+CMD make -kj && cp *.gba out && cp build/*.h out

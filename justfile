@@ -8,8 +8,8 @@ bash: setup
 	docker run -v $(pwd)/out:/gba-dev/out -it builder /bin/bash
 
 run: setup
-	-rm -rf out
-	mkdir out
+	mkdir out | true
+	-rm -rf out/*.gba
 	docker run -v $(pwd)/out:/gba-dev/out builder
 
 setup-env:
