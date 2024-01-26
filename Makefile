@@ -31,7 +31,7 @@ SOURCES  := src
 INCLUDES := inc
 DATA     :=
 MUSIC    :=
-GRAPHICS := graphics
+GRAPHICS := gfx
 
 #---------------------------------------------------------------------------------
 # options for code generation
