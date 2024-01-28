@@ -1,4 +1,4 @@
 #
 # FE8: 64x64t, 4bpp, SBB-layout, not compressed.
 #
--gt -gB4 -mR4 -mLs
+-gt -gB8 -mR8 -mLs -pn250
