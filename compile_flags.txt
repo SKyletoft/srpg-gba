@@ -1,6 +1,7 @@
 -xc++
 -isystemlibtonc/include
 -Iout
+-Iinc
 -Wall
 -Wexta
 -Wpedantic
