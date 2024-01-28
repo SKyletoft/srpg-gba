@@ -3,7 +3,7 @@
 
 namespace hex_overlay_3_4 {
 
-static constexpr sprites::STile hex00 = sprites::STile{
+static constexpr tiles::STile hex00 = tiles::STile{
 	.index_octs =
 		{
 			0x00000000,
@@ -16,7 +16,7 @@ static constexpr sprites::STile hex00 = sprites::STile{
 			0x10000000,
 		}
 };
-static constexpr sprites::STile hex01 = sprites::STile{
+static constexpr tiles::STile hex01 = tiles::STile{
 	.index_octs =
 		{
 			0x00011100,
@@ -29,7 +29,7 @@ static constexpr sprites::STile hex01 = sprites::STile{
 			0x00000000,
 		}
 };
-static constexpr sprites::STile hex02 = sprites::STile{
+static constexpr tiles::STile hex02 = tiles::STile{
 	.index_octs =
 		{
 			0x00000000,
@@ -43,7 +43,7 @@ static constexpr sprites::STile hex02 = sprites::STile{
 		}
 };
 
-static constexpr sprites::STile hex10 = sprites::STile{
+static constexpr tiles::STile hex10 = tiles::STile{
 	.index_octs =
 		{
 			0x10000000,
@@ -57,7 +57,7 @@ static constexpr sprites::STile hex10 = sprites::STile{
 		}
 };
 
-static constexpr sprites::STile hex20 = sprites::STile{
+static constexpr tiles::STile hex20 = tiles::STile{
 	.index_octs =
 		{
 			0x11000000,
@@ -70,7 +70,7 @@ static constexpr sprites::STile hex20 = sprites::STile{
 			0x00000000,
 		}
 };
-static constexpr sprites::STile hex21 = sprites::STile{
+static constexpr tiles::STile hex21 = tiles::STile{
 	.index_octs =
 		{
 			0x00000000,
@@ -83,7 +83,7 @@ static constexpr sprites::STile hex21 = sprites::STile{
 			0x00001000,
 		}
 };
-static constexpr sprites::STile hex22 = sprites::STile{
+static constexpr tiles::STile hex22 = tiles::STile{
 	.index_octs =
 		{
 			0x00000001,
@@ -97,7 +97,7 @@ static constexpr sprites::STile hex22 = sprites::STile{
 		}
 };
 
-static constexpr sprites::STile hex31 = sprites::STile{
+static constexpr tiles::STile hex31 = tiles::STile{
 	.index_octs =
 		{
 			0x00001000,
@@ -111,7 +111,7 @@ static constexpr sprites::STile hex31 = sprites::STile{
 		}
 };
 
-static constexpr sprites::STile empty = sprites::STile{
+static constexpr tiles::STile empty = tiles::STile{
 	.index_octs =
 		{
 			0x00000000,

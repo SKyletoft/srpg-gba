@@ -11,7 +11,8 @@ extern "C" {
 #include "fe8.h"
 }
 
-using namespace sprites;
+using TileRep = tiles::TileRep;
+using STile = tiles::STile;
 
 constexpr int BG0_TILE_SOURCE = 1;
 constexpr int BG1_TILE_SOURCE = 0;

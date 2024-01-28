@@ -4,7 +4,7 @@ extern "C" {
 #include <tonc_types.h>
 }
 
-namespace sprites {
+namespace tiles {
 
 class Colour {
   private:
@@ -117,4 +117,4 @@ union TileRep {
 };
 static_assert(sizeof(TileRep) == sizeof(u16));
 
-} // namespace sprites
+} // namespace tiles
