@@ -13,12 +13,12 @@ extern "C" {
 
 using namespace sprites;
 
+constexpr int BG0_TILE_SOURCE = 1;
+constexpr int BG1_TILE_SOURCE = 0;
+constexpr int BG0_TILE_MAP = 29;
+constexpr int BG1_TILE_MAP = 30;
 
 int main() {
-	constexpr int BG0_TILE_SOURCE = 0;
-	constexpr int BG1_TILE_SOURCE = 1;
-	constexpr int BG0_TILE_MAP = 30;
-	constexpr int BG1_TILE_MAP = 29;
 
 	// Load image from grit generated headers
 	std::memcpy(pal_bg_mem, fe8Pal, fe8PalLen);
