@@ -18,13 +18,14 @@ constexpr int BG1_TILE_SOURCE = 0;
 constexpr int BG0_TILE_MAP = 29;
 constexpr int BG1_TILE_MAP = 30;
 
-int main() {
-
+void load_fe8() {
 	// Load image from grit generated headers
 	std::memcpy(pal_bg_mem, fe8Pal, fe8PalLen);
 	std::memcpy(&tile_mem[BG0_TILE_SOURCE][0], fe8Tiles, fe8TilesLen);
 	std::memcpy(&se_mem[BG0_TILE_MAP][0], fe8Map, fe8MapLen);
+}
 
+void load_hexgrid() {
 	// Load hex grid from hand written tiles
 	STile *tiles = (STile *)(tile_mem[BG1_TILE_SOURCE]);
 	tiles[6] = hex_overlay_3_4::empty;
@@ -89,6 +90,11 @@ int main() {
 		base3[30] = hex32;
 		base3[31] = hex31;
 	}
+}
+
+int main() {
+	load_fe8();
+	load_hexgrid();
 
 	REG_BG0CNT = BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_8BPP
 				 | BG_REG_64x64 | BG_PRIO(1);
