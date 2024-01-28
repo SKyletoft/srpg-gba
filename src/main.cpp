@@ -1,5 +1,6 @@
 #include "hex-overlay.h"
 #include "tiles.h"
+#include "util.h"
 #include <cstring>
 
 extern "C" {
@@ -12,17 +13,6 @@ extern "C" {
 
 using namespace sprites;
 
-// An infinite loop without a sideeffect (like setting a global
-// variable) is UB and may be optimised away by the compiler.
-// Returning from main might actually be fine and handled by the
-// runtime, but let's not rely on that until we've checked it out
-// with gdb
-vu32 x;
-void spin() {
-	for (u32 i = 0;; ++i) {
-		x = i;
-	}
-}
 
 int main() {
 	constexpr int BG0_TILE_SOURCE = 0;
@@ -106,7 +96,7 @@ int main() {
 				 | BG_REG_32x32 | BG_PRIO(0);
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1;
 
-	spin();
+	util::spin();
 
 	return 0;
 }
