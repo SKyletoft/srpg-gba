@@ -21,5 +21,6 @@ WORKDIR /gba-dev
 
 COPY src src
 COPY inc inc
+COPY gfx gfx
 COPY Makefile .
 CMD make -kj && cp *.gba out && cp build/*.h out
