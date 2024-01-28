@@ -18,3 +18,4 @@ IndentWidth: '4'
 ContinuationIndentWidth: '4'
 TabWidth: '4'
 UseTab: ForContinuationAndIndentation
+UseCRLF: false
