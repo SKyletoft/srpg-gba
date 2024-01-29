@@ -145,10 +145,12 @@ int main() {
 			switch (key_tri_vert()) {
 			case -1: {
 				y--;
+				x += (y % 2 == 0);
 				cooldown = COOLDOWN_TIMER;
 			} break;
 			case 1: {
 				y++;
+				x -= (y % 2 == 1);
 				cooldown = COOLDOWN_TIMER;
 			} break;
 			}
