@@ -5,6 +5,8 @@
 
 extern "C" {
 #include <tonc.h>
+#include <tonc_input.h>
+#include <tonc_math.h>
 #include <tonc_memmap.h>
 #include <tonc_types.h>
 
@@ -126,8 +128,51 @@ int main() {
 	REG_BG1CNT = BG_CBB(BG1_TILE_SOURCE) | BG_SBB(BG1_TILE_MAP) | BG_4BPP
 				 | BG_REG_32x32 | BG_PRIO(0);
 
-	util::spin();
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 
+	OBJ_ATTR *metr = &obj_buffer[0];
+	int x = 2;
+	int y = 2;
+	int t = 0;
+	int cooldown = 0;
+	static constexpr int COOLDOWN_TIMER = 8;
+
+	for (;;) {
+		vid_vsync();
+		key_poll();
+
+		if (cooldown < 0) {
+			switch (key_tri_vert()) {
+			case -1: {
+				y--;
+				cooldown = COOLDOWN_TIMER;
+			} break;
+			case 1: {
+				y++;
+				cooldown = COOLDOWN_TIMER;
+			} break;
+			}
+			switch (key_tri_horz()) {
+			case -1: {
+				x--;
+				cooldown = COOLDOWN_TIMER;
+			} break;
+			case 1: {
+				x++;
+				cooldown = COOLDOWN_TIMER;
+			} break;
+			}
+		}
+
+		cooldown--;
+		t = (t + 10) % 514;
+
+		int actual_x = x * 8 * 3 + 4 + 12 * (y % 2);
+		int actual_y = y * 8 * 2 + sin_lut[t] / 1000 - 5;
+		obj_set_pos(metr, actual_x, actual_y);
+		oam_copy(oam_mem, obj_buffer, 1);
+	}
+
+	util::spin();
 	return 0;
 }
