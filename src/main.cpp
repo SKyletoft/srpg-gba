@@ -9,6 +9,7 @@ extern "C" {
 #include <tonc_types.h>
 
 // #include "fe8.h"
+#include "arrow.h"
 #include "custom-fe7.h"
 #include "fe7.h"
 }
@@ -22,6 +23,24 @@ static constexpr int BG0_TILE_SOURCE = 1;
 static constexpr int BG1_TILE_SOURCE = 0;
 static constexpr int BG0_TILE_MAP = 29;
 static constexpr int BG1_TILE_MAP = 30;
+
+OBJ_ATTR obj_buffer[128];
+OBJ_AFFINE *obj_aff_buffer = (OBJ_AFFINE *)obj_buffer;
+
+void load_metr() {
+	memcpy_(&tile_mem[4][0], arrowTiles);
+	memcpy_(pal_obj_mem, arrowPal);
+
+	oam_init(obj_buffer, 128);
+
+	OBJ_ATTR *cur = &obj_buffer[0];
+	obj_set_attr(
+		cur,
+		ATTR0_SQUARE,  // Square, regular sprite
+		ATTR1_SIZE_16, // 64x64p,
+		ATTR2_PALBANK(0) | 0
+	); // palbank 0, tile 0
+}
 
 /// Load image from grit generated headers
 void load_fe8() {
@@ -100,14 +119,15 @@ void load_hexgrid() {
 int main() {
 	load_fe8();
 	load_hexgrid();
+	load_metr();
 
 	REG_BG0CNT = BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_8BPP
 				 | BG_REG_64x64 | BG_PRIO(1);
 	REG_BG1CNT = BG_CBB(BG1_TILE_SOURCE) | BG_SBB(BG1_TILE_MAP) | BG_4BPP
 				 | BG_REG_32x32 | BG_PRIO(0);
-	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1;
 
 	util::spin();
+	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 
 	return 0;
 }
