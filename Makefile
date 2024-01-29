@@ -38,7 +38,7 @@ GRAPHICS := gfx
 #---------------------------------------------------------------------------------
 ARCH := -mthumb -mthumb-interwork
 
-CFLAGS := -g -Oz \
+CFLAGS := -g -Oz -flto \
 	-mcpu=arm7tdmi -mtune=arm7tdmi \
 	$(ARCH)
 
@@ -55,7 +55,7 @@ CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions \
 	-std=gnu++20
 
 ASFLAGS := -g $(ARCH)
-LDFLAGS = -g $(ARCH) -Wl,-Map,$(notdir $*.map)
+LDFLAGS = -g $(ARCH) -flto -Wl,-Map,$(notdir $*.map)
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
