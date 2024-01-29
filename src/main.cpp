@@ -168,7 +168,7 @@ int main() {
 		t = (t + 10) % 514;
 
 		int actual_x = x * 8 * 3 + 4 + 12 * (y % 2);
-		int actual_y = y * 8 * 2 + sin_lut[t] / 1000 - 5;
+		int actual_y = y * 8 * 2 + sin_lut[t] / 1024 - 5;
 		obj_set_pos(metr, actual_x, actual_y);
 		oam_copy(oam_mem, obj_buffer, 1);
 	}
