@@ -8,22 +8,26 @@ extern "C" {
 #include <tonc_memmap.h>
 #include <tonc_types.h>
 
-#include "fe8.h"
+// #include "fe8.h"
+#include "custom-fe7.h"
+#include "fe7.h"
 }
+
+#define memcpy_(dest, src) std::memcpy(dest, src, sizeof(src))
 
 using TileRep = tiles::TileRep;
 using STile = tiles::STile;
 
-constexpr int BG0_TILE_SOURCE = 1;
-constexpr int BG1_TILE_SOURCE = 0;
-constexpr int BG0_TILE_MAP = 29;
-constexpr int BG1_TILE_MAP = 30;
+static constexpr int BG0_TILE_SOURCE = 1;
+static constexpr int BG1_TILE_SOURCE = 0;
+static constexpr int BG0_TILE_MAP = 29;
+static constexpr int BG1_TILE_MAP = 30;
 
 /// Load image from grit generated headers
 void load_fe8() {
-	std::memcpy(pal_bg_mem, fe8Pal, fe8PalLen);
-	std::memcpy(&tile_mem[BG0_TILE_SOURCE][0], fe8Tiles, fe8TilesLen);
-	std::memcpy(&se_mem[BG0_TILE_MAP][0], fe8Map, fe8MapLen);
+	memcpy_(pal_bg_mem, fe7Pal);
+	memcpy_(&tile_mem[BG0_TILE_SOURCE][0], fe7Tiles);
+	memcpy_(&se_mem[BG0_TILE_MAP][0], custom_fe7_tilemap);
 }
 
 /// Load hex grid from hand written tiles
