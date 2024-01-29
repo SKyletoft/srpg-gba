@@ -25,12 +25,13 @@ static constexpr int BG0_TILE_SOURCE = 1;
 static constexpr int BG1_TILE_SOURCE = 0;
 static constexpr int BG0_TILE_MAP = 29;
 static constexpr int BG1_TILE_MAP = 30;
+static constexpr int SPRITE_SOURCE = 4;
 
 OBJ_ATTR obj_buffer[128];
 OBJ_AFFINE *obj_aff_buffer = (OBJ_AFFINE *)obj_buffer;
 
 void load_metr() {
-	memcpy_(&tile_mem[4][0], arrowTiles);
+	memcpy_(&tile_mem[SPRITE_SOURCE][0], arrowTiles);
 	memcpy_(pal_obj_mem, arrowPal);
 
 	oam_init(obj_buffer, 128);
