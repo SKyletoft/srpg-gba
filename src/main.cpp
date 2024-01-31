@@ -145,6 +145,7 @@ int main() {
 
 	for (;;) {
 		vid_vsync();
+		oam_copy(oam_mem, obj_buffer, 1);
 		key_poll();
 
 		if (cooldown < 0) {
@@ -177,8 +178,7 @@ int main() {
 
 		int actual_x = x * 8 * 3 + 4 + 12 * (y % 2);
 		int actual_y = y * 8 * 2 + sin_lut[t] / 1024 - 5;
-		obj_set_pos(metr, actual_x, actual_y);
-		oam_copy(oam_mem, obj_buffer, 1);
+		obj_set_pos(arrow, actual_x, actual_y);
 	}
 
 	util::spin();
