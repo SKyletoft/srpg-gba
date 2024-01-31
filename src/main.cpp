@@ -20,6 +20,8 @@ extern "C" {
 
 using TileRep = tiles::TileRep;
 using STile = tiles::STile;
+using ObjectAttribute = OBJ_ATTR;
+using ObjectAffineAttributes = OBJ_AFFINE;
 
 static constexpr int BG0_TILE_SOURCE = 1;
 static constexpr int BG1_TILE_SOURCE = 0;
@@ -27,8 +29,8 @@ static constexpr int BG0_TILE_MAP = 29;
 static constexpr int BG1_TILE_MAP = 30;
 static constexpr int SPRITE_SOURCE = 4;
 
-OBJ_ATTR obj_buffer[128];
-OBJ_AFFINE *obj_aff_buffer = (OBJ_AFFINE *)obj_buffer;
+ObjectAttribute obj_buffer[128];
+ObjectAffineAttributes *obj_aff_buffer = (ObjectAffineAttributes *)obj_buffer;
 
 void load_metr() {
 	memcpy_(&tile_mem[SPRITE_SOURCE][0], arrowTiles);
@@ -36,7 +38,7 @@ void load_metr() {
 
 	oam_init(obj_buffer, 128);
 
-	OBJ_ATTR *cur = &obj_buffer[0];
+	ObjectAttribute *cur = &obj_buffer[0];
 
 	const u16 palette = ATTR2_PALBANK(0);
 	const u16 tile = 0;
@@ -134,7 +136,7 @@ int main() {
 
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 
-	OBJ_ATTR *metr = &obj_buffer[0];
+	ObjectAttribute *arrow = &obj_buffer[0];
 	int x = 2;
 	int y = 2;
 	int t = 0;
