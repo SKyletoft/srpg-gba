@@ -42,12 +42,7 @@ void load_metr() {
 
 	const u16 palette = ATTR2_PALBANK(0);
 	const u16 tile = 0;
-	obj_set_attr(
-		cur,
-		ATTR0_SQUARE,
-		ATTR1_SIZE_16,
-		palette | tile
-	); // palbank 0, tile 0
+	obj_set_attr(cur, ATTR0_SQUARE, ATTR1_SIZE_16, palette | tile);
 }
 
 /// Load image from grit generated headers
