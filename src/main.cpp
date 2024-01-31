@@ -37,11 +37,14 @@ void load_metr() {
 	oam_init(obj_buffer, 128);
 
 	OBJ_ATTR *cur = &obj_buffer[0];
+
+	const u16 palette = ATTR2_PALBANK(0);
+	const u16 tile = 0;
 	obj_set_attr(
 		cur,
-		ATTR0_SQUARE,  // Square, regular sprite
-		ATTR1_SIZE_16, // 64x64p,
-		ATTR2_PALBANK(0) | 0
+		ATTR0_SQUARE,
+		ATTR1_SIZE_16,
+		palette | tile
 	); // palbank 0, tile 0
 }
 
