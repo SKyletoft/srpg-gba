@@ -14,4 +14,5 @@ Audio system (music + sound effects)
 ** Terrain variations (logic)
 ** Saves
 ** Battle animations
+**** Figure out any hardware specific bugs
 ***** Enemy AI
