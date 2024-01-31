@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 RUN apt-get -y update \
 	&& apt-get -y upgrade \
 	&& apt-get install -y \
-		build-essential wget less git
+		build-essential wget less git nano ranger
 
 RUN wget https://apt.devkitpro.org/install-devkitpro-pacman
 RUN chmod +x ./install-devkitpro-pacman
@@ -15,8 +15,12 @@ ENV DEVKITPRO=/opt/devkitpro
 ENV DEVKITARM=/opt/devkitpro/devkitARM
 ENV DEVKITPPC=/opt/devkitpro/devkitPPC
 ENV PATH=$DEVKITARM/bin:$DEVKITPRO/tools/bin:$PATH
+ENV EDITOR=nano
 
 WORKDIR /gba-dev
 
-COPY . .
-CMD make -kj && cp *.gba out
+COPY src src
+COPY inc inc
+COPY gfx gfx
+COPY Makefile .
+CMD make -kj && cp *.gba out && cp build/*.h out

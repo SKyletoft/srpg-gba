@@ -31,14 +31,14 @@ SOURCES  := src
 INCLUDES := inc
 DATA     :=
 MUSIC    :=
-GRAPHICS := graphics
+GRAPHICS := gfx
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
 ARCH := -mthumb -mthumb-interwork
 
-CFLAGS := -g -Wall -Oz \
+CFLAGS := -g -Oz -flto \
 	-mcpu=arm7tdmi -mtune=arm7tdmi \
 	$(ARCH)
 
@@ -55,7 +55,7 @@ CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions \
 	-std=gnu++20
 
 ASFLAGS := -g $(ARCH)
-LDFLAGS = -g $(ARCH) -Wl,-Map,$(notdir $*.map)
+LDFLAGS = -g $(ARCH) -flto -Wl,-Map,$(notdir $*.map)
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
@@ -68,7 +68,7 @@ LIBS := -lmm -ltonc
 # include and lib.
 # the LIBGBA path should remain in this list if you want to use maxmod
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	$(LIBGBA) $(LIBTONC)
+LIBDIRS := $(LIBGBA) $(LIBTONC)
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -86,16 +86,16 @@ export VPATH := \
 	$(foreach dir,$(DATA),$(CURDIR)/$(dir)) \
 	$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
 
-export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+export DEPSDIR := $(CURDIR)/$(BUILD)
 
-CFILES	 := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
+CFILES   := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
-SFILES	 := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
+SFILES   := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 PNGFILES := $(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
 BINFILES := $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
 ifneq ($(strip $(MUSIC)),)
-	export AUDIOFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.*)),$(CURDIR)/$(MUSIC)/$(dir))
+	export AUDIOFILES := $(foreach dir,$(notdir $(wildcard $(MUSIC)/*.*)),$(CURDIR)/$(MUSIC)/$(dir))
 	BINFILES += soundbank.bin
 endif
 
