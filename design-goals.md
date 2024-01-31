@@ -1,8 +1,8 @@
-Draw stuff
-Move cursor
+Draw stuff √
+Move cursor + additional hexgrid maths - Brage
 Move characters
-Mode system (navigation, menu, animation, etc)
-Audio system (music + sound effects)
+Mode system (navigation, menu, animation, etc) - Samuel
+Audio system (music + sound effects) - Izaz
 * Levels (w/ different maps)
 * Scrollable map
 * Shortest path char → cursor
