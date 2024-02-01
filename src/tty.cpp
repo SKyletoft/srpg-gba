@@ -47,8 +47,14 @@ void decompress_1bpp_to_4bpp(
 }
 
 void TtyMode::restore() {
+	decompress_1bpp_to_4bpp(tile_mem[BG0_TILE_SOURCE], sys8Glyphs, '~' - ' ');
+	std::memcpy(&pal_bg_mem[0], &YELLOW_ON_BLACK, sizeof(YELLOW_ON_BLACK));
+
+	this->clear();
+
+	REG_BG0CNT =
+		BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_4BPP | BG_REG_32x32;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
-	tte_init_se_default(0, BG_CBB(0) | BG_SBB(31));
 }
 
 void TtyMode::vsync_hook() {}
