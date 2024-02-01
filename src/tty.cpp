@@ -22,8 +22,9 @@ void decompress_1bpp_to_4bpp(
 	void *dest, const u32 *__restrict src, size_t len
 ) {
 	STile *dest_tile = (STile *)dest;
+	STile *end = (STile *)dest + len;
 
-	for (size_t i = 0; i < len * 4; i += 2) {
+	for (size_t i = 0; dest_tile != end; i += 2) {
 		u32 bottom = src[i];
 		u32 top = src[i + 1];
 
