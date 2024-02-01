@@ -28,6 +28,11 @@ int main() {
 
 		key_poll();
 		modes[mode]->update();
+
+		for (auto mode : modes) {
+			mode->always_update();
+		}
+
 		vid_vsync();
 		modes[mode]->vsync_hook();
 	}

@@ -129,6 +129,8 @@ void MapMode::handle_input() {
 	}
 }
 
+void MapMode::always_update() {}
+
 void MapMode::update() {
 	if (this->cooldown < 0) {
 		this->handle_input();

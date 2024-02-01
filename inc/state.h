@@ -20,6 +20,7 @@ class Mode {
 	virtual ~Mode() {}
 
 	virtual void update() = 0;
+	virtual void always_update() = 0;
 	virtual void restore() = 0;
 	virtual void vsync_hook() = 0;
 };
