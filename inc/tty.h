@@ -4,6 +4,8 @@
 
 namespace tty {
 
+void decompress_1bpp_to_4bpp(void *dest, const u32 *__restrict src, size_t len);
+
 class TtyMode : public state::Mode {
   private:
   public:
