@@ -12,6 +12,10 @@ void TtyMode::always_update() {}
 
 void TtyMode::suspend() {}
 
+constexpr tiles::Palette YELLOW_ON_BLACK = tiles::Palette{{
+	tiles::BLACK,
+	tiles::YELLOW,
+}};
 
 /// len is counting compressed bytes
 void decompress_1bpp_to_4bpp(
