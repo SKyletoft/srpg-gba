@@ -44,6 +44,7 @@ class MapMode : public state::Mode {
 	void update() override;
 	void always_update() override;
 	void restore() override;
+	void suspend() override;
 	void vsync_hook() override;
 };
 

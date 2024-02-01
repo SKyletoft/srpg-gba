@@ -144,6 +144,8 @@ void MapMode::update() {
 	obj_set_pos(this->arrow, actual_x, actual_y);
 }
 
+void MapMode::suspend() {}
+
 void MapMode::restore() {
 	load_fe8();
 	load_hexgrid();

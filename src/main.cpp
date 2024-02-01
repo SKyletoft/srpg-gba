@@ -22,6 +22,7 @@ int main() {
 
 	for (;;) {
 		if (mode != state::next_state) {
+			modes[mode]->suspend();
 			mode = state::next_state;
 			modes[mode]->restore();
 		}
