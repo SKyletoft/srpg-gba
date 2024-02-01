@@ -1,12 +1,14 @@
 #pragma once
 
-#include "sprite.h"
+#include <cstddef>
 
 extern "C" {
 #include <tonc_types.h>
 }
 
 namespace state {
+
+extern size_t next_state;
 
 /// The mode baseclass is an abstraction to handle switching between game
 /// states.

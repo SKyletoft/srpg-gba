@@ -11,7 +11,9 @@ extern "C" {
 map::MapMode map_mode{};
 
 int main() {
-	size_t mode = 0;
+	state::next_state = 0;
+
+	size_t mode = state::next_state;
 	state::Mode *modes[1] = {
 		&map_mode,
 	};
@@ -19,6 +21,11 @@ int main() {
 	modes[mode]->restore();
 
 	for (;;) {
+		if (mode != state::next_state) {
+			mode = state::next_state;
+			modes[mode]->restore();
+		}
+
 		key_poll();
 		modes[mode]->update();
 		vid_vsync();
