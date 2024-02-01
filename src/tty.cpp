@@ -53,4 +53,15 @@ void TtyMode::restore() {
 
 void TtyMode::vsync_hook() {}
 
+void TtyMode::clear() {
+	this->len = 0;
+
+	const TileRep empty{0, 0, 0};
+	std::span<u16> tile_map{(u16 *)se_mem[BG0_TILE_MAP], 1024};
+
+	for (u16 &tile : tile_map) {
+		tile = empty;
+	}
+}
+
 } // namespace tty

@@ -17,6 +17,8 @@ class TtyMode : public state::Mode {
 	void suspend() override;
 	void restore() override;
 	void vsync_hook() override;
+
+	void clear();
 };
 
 } // namespace tty
