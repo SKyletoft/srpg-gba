@@ -1,4 +1,5 @@
 #include "map.h"
+#include "tty.h"
 #include "state.h"
 #include "util.h"
 
@@ -9,13 +10,15 @@ extern "C" {
 }
 
 map::MapMode map_mode{};
+tty::TtyMode tty_mode{};
 
 int main() {
 	state::next_state = 0;
 
 	size_t mode = state::next_state;
-	state::Mode *modes[1] = {
+	state::Mode *modes[2] = {
 		&map_mode,
+		&tty_mode,
 	};
 
 	modes[mode]->restore();
