@@ -8,8 +8,6 @@
 extern "C" {
 #include <tonc.h>
 #include <tonc_input.h>
-#include <tonc_types.h>
-#include <tonc_video.h>
 
 extern const u32 sys8Glyphs[192];
 }
@@ -127,7 +125,7 @@ void TtyMode::vsync_hook() {}
 
 void TtyMode::clear_screen() {
 	const ScreenEntry empty{0, 0, 0};
-	std::span<u16> tile_map{(u16 *)se_mem[BG0_TILE_MAP], 1024};
+	std::span<u16> tile_map{(u16 *)SCREENBLOCKS[BG0_TILE_MAP], 1024};
 
 	for (u16 &tile : tile_map) {
 		tile = empty;
