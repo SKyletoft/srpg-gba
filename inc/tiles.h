@@ -115,11 +115,18 @@ union ScreenEntry {
 			.flips = (u8)(flips & 0b11),
 			.palette = (u8)(palette & 0b1111),
 		}) {}
+	constexpr ScreenEntry(const ScreenEntry &rhs)
+		: raw(rhs.raw) {}
 
 	constexpr operator u16() const { return this->raw; }
 	constexpr operator u16() { return this->raw; }
+
+	constexpr void operator=(const ScreenEntry &rhs) volatile {
+		this->raw = rhs.raw;
+	}
 };
 static_assert(sizeof(ScreenEntry) == sizeof(u16));
+static_assert(alignof(ScreenEntry) == alignof(u16));
 
 /// 4 bpp tile
 union STile {
