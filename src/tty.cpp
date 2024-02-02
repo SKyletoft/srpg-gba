@@ -10,6 +10,13 @@ namespace tty {
 constexpr size_t BG0_TILE_SOURCE = 0;
 constexpr size_t BG0_TILE_MAP = 8;
 
+constexpr u16 get_character_tile_index(char c) {
+	if (' ' <= c && c <= '~') {
+		return (u16)(c - ' ');
+	}
+	return 0;
+}
+
 void TtyMode::update() {}
 
 void TtyMode::always_update() {}
