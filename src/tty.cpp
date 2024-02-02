@@ -5,10 +5,7 @@
 #include <span>
 
 extern "C" {
-#include "fe7.h"
 #include <tonc.h>
-#include <tonc_memmap.h>
-#include <tonc_tte.h>
 
 extern const u32 sys8Glyphs[192];
 }
