@@ -26,4 +26,19 @@ void set_screen_to_black() {
 	REG_DISPCNT = 0;
 }
 
+void wait_for_drawing_start() {
+	while (REG_VCOUNT >= 160)
+		;
+}
+
+void wait_for_drawing_complete() {
+	while (REG_VCOUNT < 160)
+		;
+}
+
+void wait_for_vsync() {
+	wait_for_drawing_start();
+	wait_for_drawing_complete();
+}
+
 } // namespace util
