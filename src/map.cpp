@@ -17,9 +17,10 @@ extern "C" {
 
 namespace map {
 
-void MapMode::load_metr() {
-	memcpy_(&tile_mem[SPRITE_SOURCE][0], arrowTiles);
-	memcpy_(pal_obj_mem, arrowPal);
+void MapMode::load_metr_pal() { memcpy_(pal_obj_mem, arrowPal); }
+
+void MapMode::load_metr_data() {
+	memcpy_(tiles::CHARBLOCKS[SPRITE_SOURCE].raw, arrowTiles);
 
 	oam_init(obj_buffer, 128);
 
@@ -30,11 +31,11 @@ void MapMode::load_metr() {
 	obj_set_attr(cur, ATTR0_SQUARE, ATTR1_SIZE_16, palette | tile);
 }
 
-/// Load image from grit generated headers
-void MapMode::load_fe8() {
-	memcpy_(pal_bg_mem, fe7Pal);
-	memcpy_(&tile_mem[BG0_TILE_SOURCE][0], fe7Tiles);
-	memcpy_(&se_mem[BG0_TILE_MAP][0], custom_fe7_tilemap);
+void MapMode::load_fe8_pal() { memcpy_(pal_bg_mem, fe7Pal); }
+
+void MapMode::load_fe8_data() {
+	memcpy_(tiles::CHARBLOCKS[BG0_TILE_SOURCE].raw, fe7Tiles);
+	memcpy_(tiles::SCREENBLOCKS[BG0_TILE_MAP].raw, custom_fe7_tilemap);
 }
 
 /// Load hex grid from hand written tiles
@@ -151,9 +152,12 @@ void MapMode::update() {
 void MapMode::suspend() {}
 
 void MapMode::restore() {
-	load_fe8();
+	load_fe8_data();
 	load_hexgrid();
-	load_metr();
+	load_metr_data();
+
+	load_fe8_pal();
+	load_metr_pal();
 
 	REG_BG0CNT = BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_8BPP
 				 | BG_REG_64x64 | BG_PRIO(1);

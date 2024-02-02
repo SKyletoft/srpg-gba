@@ -32,8 +32,10 @@ class MapMode : public state::Mode {
 	int cooldown = 0;
 	static constexpr int COOLDOWN_TIMER = 8;
 
-	void load_metr();
-	void load_fe8();
+	void load_metr_data();
+	void load_metr_pal();
+	void load_fe8_data();
+	void load_fe8_pal();
 	void load_hexgrid();
 	void handle_input();
 
