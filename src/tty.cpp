@@ -1,11 +1,22 @@
 #include "tty.h"
 
+#include "tiles.h"
+#include <cstring>
+#include <span>
+
 extern "C" {
+#include "fe7.h"
 #include <tonc.h>
+#include <tonc_memmap.h>
+#include <tonc_tte.h>
+
+extern const u32 sys8Glyphs[192];
 }
 
 namespace tty {
 
+using tiles::STile;
+using tiles::TileRep;
 
 constexpr size_t BG0_TILE_SOURCE = 0;
 constexpr size_t BG0_TILE_MAP = 8;
