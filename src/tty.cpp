@@ -6,6 +6,10 @@ extern "C" {
 
 namespace tty {
 
+
+constexpr size_t BG0_TILE_SOURCE = 0;
+constexpr size_t BG0_TILE_MAP = 8;
+
 void TtyMode::update() {}
 
 void TtyMode::always_update() {}
