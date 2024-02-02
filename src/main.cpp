@@ -7,6 +7,8 @@
 
 extern "C" {
 #include <tonc.h>
+#include <tonc_memmap.h>
+#include <tonc_video.h>
 }
 
 map::MapMode map_mode{};
@@ -25,8 +27,11 @@ int main() {
 
 	for (;;) {
 		if (mode != state::next_state) {
+			vid_vsync();
+			util::set_screen_to_black();
 			modes[mode]->suspend();
 			mode = state::next_state;
+			vid_vsync();
 			modes[mode]->restore();
 		}
 
