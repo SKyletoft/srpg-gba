@@ -82,6 +82,25 @@ static_assert(sizeof(Palette[16]) == 0x0200);
 
 const std::span<Palette, 16> PALETTE_MEMORY{(Palette *)pal_bg_mem, 16};
 
+constexpr Palette BLACK_ON_BLACK = Palette{{
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+}};
+
 union ScreenEntry {
 	u16 raw;
 	struct __attribute((packed)) bitflags {
