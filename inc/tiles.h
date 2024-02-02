@@ -136,12 +136,9 @@ union STile {
 };
 static_assert(sizeof(STile) == 32);
 
-union Charblock {
-	byte raw[16 * 1024];
-	STile stiles[512];
-};
+using Charblock = STile[512];
 static_assert(sizeof(Charblock) == 16 * 1024);
-const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 6};
+static const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 6};
 
 union Screenblock {
 	byte raw[2048];

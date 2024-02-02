@@ -21,7 +21,7 @@ namespace map {
 void MapMode::load_metr_pal() { memcpy_(pal_obj_mem, arrowPal); }
 
 void MapMode::load_metr_data() {
-	memcpy_(tiles::CHARBLOCKS[SPRITE_SOURCE].raw, arrowTiles);
+	memcpy_(tiles::CHARBLOCKS[SPRITE_SOURCE], arrowTiles);
 
 	oam_init(obj_buffer, 128);
 
@@ -35,13 +35,13 @@ void MapMode::load_metr_data() {
 void MapMode::load_fe8_pal() { memcpy_(pal_bg_mem, fe7Pal); }
 
 void MapMode::load_fe8_data() {
-	memcpy_(tiles::CHARBLOCKS[BG0_TILE_SOURCE].raw, fe7Tiles);
 	memcpy_(tiles::SCREENBLOCKS[BG0_TILE_MAP].raw, custom_fe7_tilemap);
+	memcpy_(tiles::CHARBLOCKS[BG0_TILE_SOURCE], fe7Tiles);
 }
 
 /// Load hex grid from hand written tiles
 void MapMode::load_hexgrid() {
-	STile *tiles = tiles::CHARBLOCKS[BG1_TILE_SOURCE].stiles;
+	STile *tiles = tiles::CHARBLOCKS[BG1_TILE_SOURCE];
 	tiles[0] = hex_overlay_3_4::empty;
 	tiles[1] = hex_overlay_3_4::hex00;
 	tiles[2] = hex_overlay_3_4::hex01;
