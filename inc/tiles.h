@@ -80,12 +80,27 @@ struct Palette {
 
 static_assert(sizeof(Palette[16]) == 0x0200);
 
-struct __attribute((packed)) ScreenEntry {
-	u8 tile : 8;
-	u8 palette : 8;
 const std::span<Palette, 16> PALETTE_MEMORY{(Palette *)pal_bg_mem, 16};
 
+union ScreenEntry {
+	u16 raw;
+	struct __attribute((packed)) bitflags {
+		u16 index : 10;
+		u8 flips : 2;
+		u8 palette : 4;
+	} bitflags;
+
+	constexpr ScreenEntry(u16 index, u8 flips, u8 palette)
+		: bitflags({
+			.index = (u16)(index & 0b1111111111),
+			.flips = (u8)(flips & 0b11),
+			.palette = (u8)(palette & 0b1111),
+		}) {}
+
+	constexpr operator u16() const { return this->raw; }
+	constexpr operator u16() { return this->raw; }
 };
+static_assert(sizeof(ScreenEntry) == sizeof(u16));
 
 /// 4 bpp tile
 union STile {
@@ -99,28 +114,16 @@ union Charblock {
 	byte raw[16 * 1024];
 	STile stiles[512];
 };
-
 static_assert(sizeof(Charblock) == 16 * 1024);
 const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 6};
 
-union TileRep {
-	u16 raw;
-	struct __attribute((packed)) bitflags {
-		u16 index : 10;
-		u8 flips : 2;
-		u8 palette : 4;
-	} bitflags;
-
-	constexpr TileRep(u16 index, u8 flips, u8 palette)
-		: bitflags({
-			.index = (u16)(index & 0b1111111111),
-			.flips = (u8)(flips & 0b11),
-			.palette = (u8)(palette & 0b1111),
-		}) {}
-
-	constexpr operator u16() const { return this->raw; }
-	constexpr operator u16() { return this->raw; }
+union Screenblock {
+	byte raw[2048];
+	ScreenEntry tiles[1024];
 };
-static_assert(sizeof(TileRep) == sizeof(u16));
+static_assert(sizeof(Screenblock) == 2048);
+
+const std::span<Screenblock> SCREENBLOCKS{(Screenblock *)se_mem, 16};
+static_assert(sizeof(SCREENBLOCKS) <= 96 * 1024);
 
 } // namespace tiles

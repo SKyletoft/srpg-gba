@@ -9,7 +9,7 @@ extern "C" {
 
 namespace map {
 
-using TileRep = tiles::TileRep;
+using ScreenEntry = tiles::ScreenEntry;
 using STile = tiles::STile;
 using ObjectAttribute = OBJ_ATTR;
 using ObjectAffineAttributes = OBJ_AFFINE;

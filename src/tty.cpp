@@ -12,8 +12,8 @@ extern const u32 sys8Glyphs[192];
 
 namespace tty {
 
+using tiles::ScreenEntry;
 using tiles::STile;
-using tiles::TileRep;
 
 constexpr size_t BG0_TILE_SOURCE = 0;
 constexpr size_t BG0_TILE_MAP = 8;

@@ -50,19 +50,19 @@ void MapMode::load_hexgrid() {
 	tiles[13] = hex_overlay_3_4::hex22;
 	tiles[14] = hex_overlay_3_4::hex31;
 
-	auto const transparent = TileRep(6, 0, 0);
+	auto const transparent = ScreenEntry(6, 0, 0);
 
-	auto const hex00 = TileRep(7, 0, 0);
-	auto const hex01 = TileRep(8, 0, 0);
-	auto const hex02 = TileRep(9, 0, 0);
-	auto const hex10 = TileRep(10, 0, 0);
+	auto const hex00 = ScreenEntry(7, 0, 0);
+	auto const hex01 = ScreenEntry(8, 0, 0);
+	auto const hex02 = ScreenEntry(9, 0, 0);
+	auto const hex10 = ScreenEntry(10, 0, 0);
 	auto const hex11 = transparent;
 	auto const hex12 = transparent;
-	auto const hex20 = TileRep(11, 0, 0);
-	auto const hex21 = TileRep(12, 0, 0);
-	auto const hex22 = TileRep(13, 0, 0);
+	auto const hex20 = ScreenEntry(11, 0, 0);
+	auto const hex21 = ScreenEntry(12, 0, 0);
+	auto const hex22 = ScreenEntry(13, 0, 0);
 	auto const hex30 = transparent;
-	auto const hex31 = TileRep(14, 0, 0);
+	auto const hex31 = ScreenEntry(14, 0, 0);
 	auto const hex32 = transparent;
 
 	for (size_t j = 0; j < 32; j += 4) {
