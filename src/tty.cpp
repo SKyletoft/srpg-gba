@@ -113,7 +113,7 @@ void TtyMode::println(const char *s, const size_t len) {
 
 	for (char c : str) {
 		const u16 index = get_character_tile_index(c);
-		tiles::SCREENBLOCKS[BG0_TILE_MAP].tiles[this->len] =
+		tiles::SCREENBLOCKS[BG0_TILE_MAP][this->len] =
 			ScreenEntry(index, 0, 0);
 
 		this->len += 1;

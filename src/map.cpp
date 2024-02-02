@@ -1,6 +1,7 @@
 #include "map.h"
 #include "hex-overlay.h"
 #include "state.h"
+#include "tiles.h"
 
 #include <cstring>
 
@@ -14,7 +15,7 @@ extern "C" {
 #include "fe7.h"
 }
 
-#define memcpy_(dest, src) std::memcpy(dest, src, sizeof(src))
+#define memcpy_(dest, src) std::memcpy((void *)dest, src, sizeof(src))
 
 namespace map {
 
@@ -35,8 +36,8 @@ void MapMode::load_metr_data() {
 void MapMode::load_fe8_pal() { memcpy_(pal_bg_mem, fe7Pal); }
 
 void MapMode::load_fe8_data() {
-	memcpy_(tiles::SCREENBLOCKS[BG0_TILE_MAP].raw, custom_fe7_tilemap);
 	memcpy_(tiles::CHARBLOCKS[BG0_TILE_SOURCE], fe7Tiles);
+	memcpy_(tiles::SCREENBLOCKS[BG0_TILE_MAP], custom_fe7_tilemap);
 }
 
 /// Load hex grid from hand written tiles
@@ -68,41 +69,41 @@ void MapMode::load_hexgrid() {
 	auto const hex32 = transparent;
 
 	for (size_t j = 0; j < 32; j += 4) {
-		auto base0 = &se_mem[BG1_TILE_MAP][j * 32];
+		auto base = &tiles::SCREENBLOCKS[BG1_TILE_MAP][j * 32];
 		for (size_t i = 0; i < 30; i += 3) {
-			base0[i] = hex02;
-			base0[i + 1] = hex01;
-			base0[i + 2] = hex00;
+			base[i] = hex02;
+			base[i + 1] = hex01;
+			base[i + 2] = hex00;
 		}
-		base0[30] = hex02;
-		base0[31] = hex01;
+		base[30] = hex02;
+		base[31] = hex01;
 
-		auto base1 = &se_mem[BG1_TILE_MAP][(j + 1) * 32];
+		base += 32;
 		for (size_t i = 0; i < 30; i += 3) {
-			base1[i] = hex12;
-			base1[i + 1] = hex11;
-			base1[i + 2] = hex10;
+			base[i] = hex12;
+			base[i + 1] = hex11;
+			base[i + 2] = hex10;
 		}
-		base1[30] = hex12;
-		base1[31] = hex11;
+		base[30] = hex12;
+		base[31] = hex11;
 
-		auto base2 = &se_mem[BG1_TILE_MAP][(j + 2) * 32];
+		base += 32;
 		for (size_t i = 0; i < 30; i += 3) {
-			base2[i] = hex22;
-			base2[i + 1] = hex21;
-			base2[i + 2] = hex20;
+			base[i] = hex22;
+			base[i + 1] = hex21;
+			base[i + 2] = hex20;
 		}
-		base2[30] = hex22;
-		base2[31] = hex21;
+		base[30] = hex22;
+		base[31] = hex21;
 
-		auto base3 = &se_mem[BG1_TILE_MAP][(j + 3) * 32];
+		base += 32;
 		for (size_t i = 0; i < 30; i += 3) {
-			base3[i] = hex32;
-			base3[i + 1] = hex31;
-			base3[i + 2] = hex30;
+			base[i] = hex32;
+			base[i + 1] = hex31;
+			base[i + 2] = hex30;
 		}
-		base3[30] = hex32;
-		base3[31] = hex31;
+		base[30] = hex32;
+		base[31] = hex31;
 	}
 }
 

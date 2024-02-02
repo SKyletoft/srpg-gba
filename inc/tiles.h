@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstring>
 #include <span>
 #include <tonc_memmap.h>
 
@@ -140,13 +141,13 @@ using Charblock = STile[512];
 static_assert(sizeof(Charblock) == 16 * 1024);
 static const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 6};
 
-union Screenblock {
-	byte raw[2048];
-	ScreenEntry tiles[1024];
-};
+using Screenblock = ScreenEntry[1024];
 static_assert(sizeof(Screenblock) == 2048);
+static_assert(alignof(Screenblock) == alignof(ScreenEntry));
 
-const std::span<Screenblock> SCREENBLOCKS{(Screenblock *)se_mem, 16};
+static const std::span<volatile Screenblock> SCREENBLOCKS{
+	(Screenblock *)se_mem, 16
+};
 static_assert(sizeof(SCREENBLOCKS) <= 96 * 1024);
 
 } // namespace tiles
