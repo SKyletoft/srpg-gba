@@ -42,29 +42,29 @@ void MapMode::load_fe8_data() {
 /// Load hex grid from hand written tiles
 void MapMode::load_hexgrid() {
 	STile *tiles = (STile *)(tile_mem[BG1_TILE_SOURCE]);
-	tiles[6] = hex_overlay_3_4::empty;
-	tiles[7] = hex_overlay_3_4::hex00;
-	tiles[8] = hex_overlay_3_4::hex01;
-	tiles[9] = hex_overlay_3_4::hex02;
-	tiles[10] = hex_overlay_3_4::hex10;
-	tiles[11] = hex_overlay_3_4::hex20;
-	tiles[12] = hex_overlay_3_4::hex21;
-	tiles[13] = hex_overlay_3_4::hex22;
-	tiles[14] = hex_overlay_3_4::hex31;
+	tiles[0] = hex_overlay_3_4::empty;
+	tiles[1] = hex_overlay_3_4::hex00;
+	tiles[2] = hex_overlay_3_4::hex01;
+	tiles[3] = hex_overlay_3_4::hex02;
+	tiles[4] = hex_overlay_3_4::hex10;
+	tiles[5] = hex_overlay_3_4::hex20;
+	tiles[6] = hex_overlay_3_4::hex21;
+	tiles[7] = hex_overlay_3_4::hex22;
+	tiles[8] = hex_overlay_3_4::hex31;
 
-	auto const transparent = ScreenEntry(6, 0, 0);
+	auto const transparent = ScreenEntry(0, 0, 0);
 
-	auto const hex00 = ScreenEntry(7, 0, 0);
-	auto const hex01 = ScreenEntry(8, 0, 0);
-	auto const hex02 = ScreenEntry(9, 0, 0);
-	auto const hex10 = ScreenEntry(10, 0, 0);
+	auto const hex00 = ScreenEntry(1, 0, 0);
+	auto const hex01 = ScreenEntry(2, 0, 0);
+	auto const hex02 = ScreenEntry(3, 0, 0);
+	auto const hex10 = ScreenEntry(4, 0, 0);
 	auto const hex11 = transparent;
 	auto const hex12 = transparent;
-	auto const hex20 = ScreenEntry(11, 0, 0);
-	auto const hex21 = ScreenEntry(12, 0, 0);
-	auto const hex22 = ScreenEntry(13, 0, 0);
+	auto const hex20 = ScreenEntry(5, 0, 0);
+	auto const hex21 = ScreenEntry(6, 0, 0);
+	auto const hex22 = ScreenEntry(7, 0, 0);
 	auto const hex30 = transparent;
-	auto const hex31 = ScreenEntry(14, 0, 0);
+	auto const hex31 = ScreenEntry(8, 0, 0);
 	auto const hex32 = transparent;
 
 	for (size_t j = 0; j < 32; j += 4) {
