@@ -1,6 +1,6 @@
 #include "map.h"
-#include "tty.h"
 #include "state.h"
+#include "tty.h"
 #include "util.h"
 
 #include <cstddef>
