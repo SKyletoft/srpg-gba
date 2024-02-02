@@ -7,6 +7,7 @@
 extern "C" {
 #include <tonc.h>
 #include <tonc_input.h>
+#include <tonc_video.h>
 
 #include "arrow.h"
 #include "custom-fe7.h"
@@ -156,6 +157,7 @@ void MapMode::restore() {
 	load_hexgrid();
 	load_metr_data();
 
+	vid_vsync();
 	load_fe8_pal();
 	load_metr_pal();
 
