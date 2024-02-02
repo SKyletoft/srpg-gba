@@ -1,5 +1,8 @@
 #pragma once
 
+#include <span>
+#include <tonc_memmap.h>
+
 extern "C" {
 #include <tonc_types.h>
 }
@@ -80,6 +83,8 @@ static_assert(sizeof(Palette[16]) == 0x0200);
 struct __attribute((packed)) ScreenEntry {
 	u8 tile : 8;
 	u8 palette : 8;
+const std::span<Palette, 16> PALETTE_MEMORY{(Palette *)pal_bg_mem, 16};
+
 };
 
 /// 4 bpp tile
@@ -96,6 +101,7 @@ union Charblock {
 };
 
 static_assert(sizeof(Charblock) == 16 * 1024);
+const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 6};
 
 union TileRep {
 	u16 raw;
