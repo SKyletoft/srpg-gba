@@ -1,6 +1,9 @@
 #pragma once
 
+#include <span>
+
 extern "C" {
+#include <tonc_memmap.h>
 #include <tonc_types.h>
 }
 
@@ -77,10 +80,53 @@ struct Palette {
 
 static_assert(sizeof(Palette[16]) == 0x0200);
 
-struct __attribute((packed)) ScreenEntry {
-	u8 tile : 8;
-	u8 palette : 8;
+const std::span<Palette, 16> PALETTE_MEMORY{(Palette *)pal_bg_mem, 16};
+
+constexpr Palette BLACK_ON_BLACK = Palette{{
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+	tiles::BLACK,
+}};
+
+union ScreenEntry {
+	u16 raw;
+	struct __attribute((packed)) bitflags {
+		u16 index : 10;
+		u8 flips : 2;
+		u8 palette : 4;
+	} bitflags;
+
+	constexpr ScreenEntry(u16 index, u8 flips, u8 palette)
+		: bitflags({
+			.index = (u16)(index & 0b1111111111),
+			.flips = (u8)(flips & 0b11),
+			.palette = (u8)(palette & 0b1111),
+		}) {}
+	constexpr ScreenEntry(const ScreenEntry &rhs)
+		: raw(rhs.raw) {}
+
+	constexpr operator u16() const { return this->raw; }
+	constexpr operator u16() { return this->raw; }
+
+	constexpr void operator=(const ScreenEntry &rhs) volatile {
+		this->raw = rhs.raw;
+	}
 };
+static_assert(sizeof(ScreenEntry) == sizeof(u16));
+static_assert(alignof(ScreenEntry) == alignof(u16));
 
 /// 4 bpp tile
 union STile {
@@ -90,31 +136,17 @@ union STile {
 };
 static_assert(sizeof(STile) == 32);
 
-union Charblock {
-	byte raw[16 * 1024];
-	STile stiles[512];
-};
-
+using Charblock = STile[512];
 static_assert(sizeof(Charblock) == 16 * 1024);
+static const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 6};
 
-union TileRep {
-	u16 raw;
-	struct __attribute((packed)) bitflags {
-		u16 index : 10;
-		u8 flips : 2;
-		u8 palette : 4;
-	} bitflags;
+using Screenblock = ScreenEntry[1024];
+static_assert(sizeof(Screenblock) == 2048);
+static_assert(alignof(Screenblock) == alignof(ScreenEntry));
 
-	constexpr TileRep(u16 index, u8 flips, u8 palette)
-		: bitflags({
-			.index = (u16)(index & 0b1111111111),
-			.flips = (u8)(flips & 0b11),
-			.palette = (u8)(palette & 0b1111),
-		}) {}
-
-	constexpr operator u16() const { return this->raw; }
-	constexpr operator u16() { return this->raw; }
+static const std::span<volatile Screenblock> SCREENBLOCKS{
+	(Screenblock *)se_mem, 16
 };
-static_assert(sizeof(TileRep) == sizeof(u16));
+static_assert(sizeof(SCREENBLOCKS) <= 96 * 1024);
 
 } // namespace tiles
