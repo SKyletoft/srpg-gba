@@ -1,10 +1,12 @@
 #include "map.h"
 #include "hex-overlay.h"
+#include "state.h"
 
 #include <cstring>
 
 extern "C" {
 #include <tonc.h>
+#include <tonc_input.h>
 
 #include "arrow.h"
 #include "custom-fe7.h"
@@ -124,6 +126,10 @@ void MapMode::handle_input() {
 		this->x++;
 		this->cooldown = COOLDOWN_TIMER;
 	} break;
+	}
+
+	if (key_held(1 << KI_R) && key_held(1 << KI_L)) {
+		state::next_state = 1;
 	}
 }
 

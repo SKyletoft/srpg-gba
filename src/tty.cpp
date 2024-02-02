@@ -25,7 +25,11 @@ constexpr u16 get_character_tile_index(char c) {
 	return 0;
 }
 
-void TtyMode::update() {}
+void TtyMode::update() {
+	if (!(key_held(1 << KI_R) && key_held(1 << KI_L))) {
+		state::next_state = 0;
+	}
+}
 
 void TtyMode::always_update() {}
 
@@ -74,6 +78,8 @@ void TtyMode::restore() {
 	REG_BG0CNT =
 		BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_4BPP | BG_REG_32x32;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
+
+	this->println("Restored");
 }
 
 void TtyMode::vsync_hook() {}
