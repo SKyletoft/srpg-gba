@@ -41,7 +41,7 @@ void MapMode::load_fe8_data() {
 
 /// Load hex grid from hand written tiles
 void MapMode::load_hexgrid() {
-	STile *tiles = (STile *)(tile_mem[BG1_TILE_SOURCE]);
+	STile *tiles = tiles::CHARBLOCKS[BG1_TILE_SOURCE].stiles;
 	tiles[0] = hex_overlay_3_4::empty;
 	tiles[1] = hex_overlay_3_4::hex00;
 	tiles[2] = hex_overlay_3_4::hex01;
