@@ -1,10 +1,9 @@
 #pragma once
 
-#include <cstring>
 #include <span>
-#include <tonc_memmap.h>
 
 extern "C" {
+#include <tonc_memmap.h>
 #include <tonc_types.h>
 }
 
