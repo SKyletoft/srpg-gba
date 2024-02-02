@@ -24,6 +24,8 @@ class TtyMode : public state::Mode {
 	void vsync_hook() override;
 
 	void clear();
+	void clear_screen();
+	void clear_buffer();
 	void println(const char *);
 	void println(const char *, const size_t);
 };
