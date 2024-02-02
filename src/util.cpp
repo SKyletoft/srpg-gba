@@ -1,4 +1,9 @@
 #include "util.h"
+#include "tiles.h"
+
+extern "C" {
+#include <tonc_memmap.h>
+}
 
 namespace util {
 
@@ -12,6 +17,13 @@ void spin() {
 	for (u32 i = 0;; ++i) {
 		x = i;
 	}
+}
+
+void set_screen_to_black() {
+	for (auto &palette : tiles::PALETTE_MEMORY) {
+		palette = tiles::BLACK_ON_BLACK;
+	}
+	REG_DISPCNT = 0;
 }
 
 } // namespace util
