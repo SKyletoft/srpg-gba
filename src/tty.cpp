@@ -92,4 +92,23 @@ void TtyMode::clear() {
 	}
 }
 
+void TtyMode::println(const char *s) { this->println(s, strlen(s)); }
+
+void TtyMode::println(const char *s, const size_t len) {
+	std::span<const char> str{s, len};
+
+	if (len > SIZE) {
+		s = s + len + this->len - SIZE;
+	} else if (this->len + len > SIZE) {
+		this->clear();
+	}
+
+	for (char c : str) {
+		const u16 index = get_character_tile_index(c);
+		se_mem[BG0_TILE_MAP][this->len] = TileRep(index, 0, 0);
+
+		this->len += 1;
+	}
+}
+
 } // namespace tty
