@@ -1,11 +1,14 @@
 #include "tty.h"
 
 #include "tiles.h"
+#include <cstddef>
 #include <cstring>
 #include <span>
 
 extern "C" {
 #include <tonc.h>
+#include <tonc_input.h>
+#include <tonc_types.h>
 #include <tonc_video.h>
 
 extern const u32 sys8Glyphs[192];
@@ -13,6 +16,9 @@ extern const u32 sys8Glyphs[192];
 
 namespace tty {
 
+using tiles::Palette;
+using tiles::SCREENBLOCKS;
+using tiles::CHARBLOCKS;
 using tiles::ScreenEntry;
 using tiles::STile;
 
@@ -26,17 +32,49 @@ constexpr u16 get_character_tile_index(char c) {
 	return 0;
 }
 
+constexpr size_t get_grid_index(size_t i) {
+	size_t d = i / TtyMode::LINE_LEN;
+	size_t r = i % TtyMode::LINE_LEN;
+
+	return d * 30 + r;
+}
+
 void TtyMode::update() {
 	if (!(key_held(1 << KI_R) && key_held(1 << KI_L))) {
 		state::next_state = 0;
+	}
+
+	if (key_held(1 << KI_LEFT)) {
+		this->print("<");
+	}
+	if (key_held(1 << KI_RIGHT)) {
+		this->print(">");
+	}
+	if (key_held(1 << KI_UP)) {
+		this->print("^");
+	}
+	if (key_held(1 << KI_DOWN)) {
+		this->print("v");
+	}
+	if (key_held(1 << KI_A)) {
+		this->print("a");
+	}
+	if (key_held(1 << KI_B)) {
+		this->print("b");
+	}
+	if (key_held(1 << KI_START)) {
+		this->println("");
+	}
+	if (key_held(1 << KI_SELECT)) {
+		this->clear();
 	}
 }
 
 void TtyMode::always_update() {}
 
-void TtyMode::suspend() {}
+void TtyMode::suspend() { this->in_focus = false; }
 
-constexpr tiles::Palette YELLOW_ON_BLACK = tiles::Palette{{
+constexpr Palette YELLOW_ON_BLACK = Palette{{
 	tiles::BLACK,
 	tiles::YELLOW,
 }};
@@ -71,15 +109,18 @@ void decompress_1bpp_to_4bpp(
 }
 
 void TtyMode::restore() {
-	decompress_1bpp_to_4bpp(tile_mem[BG0_TILE_SOURCE], sys8Glyphs, '~' - ' ');
+	decompress_1bpp_to_4bpp(CHARBLOCKS[BG0_TILE_SOURCE], sys8Glyphs, '~' - ' ');
 
-	this->clear();
+	this->clear_screen();
 
 	vid_vsync();
 	std::memcpy(&pal_bg_mem[0], &YELLOW_ON_BLACK, sizeof(YELLOW_ON_BLACK));
 	REG_BG0CNT =
 		BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_4BPP | BG_REG_32x32;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
+
+	this->in_focus = true;
+	this->draw_buffer();
 }
 
 void TtyMode::vsync_hook() {}
@@ -100,21 +141,64 @@ void TtyMode::clear() {
 	this->clear_screen();
 }
 
-void TtyMode::println(const char *s) { this->println(s, strlen(s)); }
+void TtyMode::scroll_down() {
+	std::memcpy(this->buffer, this->buffer + SIZE / 2, SIZE / 2);
+	this->len = SIZE / 2;
+	this->clear_screen();
+	this->draw_buffer();
+}
+
+void TtyMode::draw_char(size_t i) {
+	auto const idx = get_grid_index(i);
+	auto const c = get_character_tile_index(this->buffer[i]);
+	SCREENBLOCKS[BG0_TILE_MAP][idx] = ScreenEntry(c, 0, 0);
+}
+
+void TtyMode::draw_buffer() {
+	for (size_t i = 0; i < this->len; ++i) {
+		this->draw_char(i);
+	}
+}
+
+void TtyMode::pad_to_newline() {
+	size_t until = (this->len / TtyMode::LINE_LEN + 1) * 32;
+	for (; this->len < until; ++this->len) {
+		this->buffer[this->len] = ' ';
+	}
+}
+
+void TtyMode::println(const char *s) {
+	this->print(s);
+	this->print("\n");
+}
 
 void TtyMode::println(const char *s, const size_t len) {
+	this->print(s);
+	this->print("\n");
+}
+
+void TtyMode::print(const char *s) { this->print(s, strlen(s)); }
+
+// len should *not* include the null terminator
+void TtyMode::print(const char *s, const size_t len) {
 	std::span<const char> str{s, len};
 
-	if (len > SIZE) {
-		s = s + len + this->len - SIZE;
-	} else if (this->len + len > SIZE) {
-		this->clear();
-	}
-
 	for (char c : str) {
-		const u16 index = get_character_tile_index(c);
-		tiles::SCREENBLOCKS[BG0_TILE_MAP][this->len] =
-			ScreenEntry(index, 0, 0);
+		if (this->len >= SIZE) {
+			this->scroll_down();
+		}
+		if (c == 0) {
+			break;
+		}
+		if (c == '\n') {
+			this->pad_to_newline();
+			continue;
+		}
+		this->buffer[this->len] = c;
+
+		if (this->in_focus) {
+			this->draw_char(this->len - 1);
+		}
 
 		this->len += 1;
 	}
