@@ -30,6 +30,7 @@ int main() {
 				util::set_screen_to_black();
 			}
 			modes[mode]->suspend();
+			state::last_state = mode;
 			mode = state::next_state;
 			util::wait_for_vsync();
 			modes[mode]->restore();
