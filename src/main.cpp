@@ -4,6 +4,7 @@
 #include "util.h"
 
 #include <cstddef>
+#include <exception>
 
 extern "C" {
 #include <tonc.h>
@@ -12,7 +13,17 @@ extern "C" {
 map::MapMode map_mode{};
 tty::TtyMode tty_mode{};
 
+void error_handler() {
+	tty_mode.restore();
+	tty_mode.clear();
+	tty_mode.println("Crashed!  ");
+
+	util::spin();
+}
+
 int main() {
+	std::set_terminate(error_handler);
+
 	state::next_state = 0;
 
 	size_t mode = state::next_state;
@@ -26,8 +37,12 @@ int main() {
 	for (;;) {
 		if (mode != state::next_state) {
 			util::wait_for_vsync();
-			util::set_screen_to_black();
+			if (modes[mode]->blackout() || modes[state::next_state]->blackout())
+			{
+				util::set_screen_to_black();
+			}
 			modes[mode]->suspend();
+			state::last_state = mode;
 			mode = state::next_state;
 			util::wait_for_vsync();
 			modes[mode]->restore();
