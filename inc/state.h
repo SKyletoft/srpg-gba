@@ -16,14 +16,19 @@ extern size_t next_state;
 class Mode {
   private:
   public:
-	Mode() {}
-	virtual ~Mode() {}
+	const bool blackout;
 
 	virtual void update() = 0;
 	virtual void always_update() = 0;
 	virtual void suspend() = 0;
 	virtual void restore() = 0;
 	virtual void vsync_hook() = 0;
+
+	Mode()
+		: blackout(true) {}
+	Mode(bool blackout)
+		: blackout(blackout) {}
+	virtual ~Mode() {}
 };
 
 } // namespace state

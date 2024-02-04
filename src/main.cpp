@@ -26,7 +26,9 @@ int main() {
 	for (;;) {
 		if (mode != state::next_state) {
 			util::wait_for_vsync();
-			util::set_screen_to_black();
+			if (modes[mode]->blackout || modes[state::next_state]->blackout) {
+				util::set_screen_to_black();
+			}
 			modes[mode]->suspend();
 			mode = state::next_state;
 			util::wait_for_vsync();
