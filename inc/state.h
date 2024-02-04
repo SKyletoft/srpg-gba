@@ -17,18 +17,14 @@ extern size_t last_state;
 class Mode {
   private:
   public:
-	const bool blackout;
-
+	virtual bool blackout();
 	virtual void update() = 0;
 	virtual void always_update() = 0;
 	virtual void suspend() = 0;
 	virtual void restore() = 0;
 	virtual void vsync_hook() = 0;
 
-	Mode()
-		: blackout(true) {}
-	Mode(bool blackout)
-		: blackout(blackout) {}
+	Mode() {}
 	virtual ~Mode() {}
 };
 
