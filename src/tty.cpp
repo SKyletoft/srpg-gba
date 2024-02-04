@@ -34,7 +34,7 @@ constexpr size_t get_grid_index(size_t i) {
 	size_t d = i / TtyMode::LINE_LEN;
 	size_t r = i % TtyMode::LINE_LEN;
 
-	return d * 30 + r;
+	return d * 32 + r;
 }
 
 void TtyMode::update() {
@@ -159,7 +159,7 @@ void TtyMode::draw_buffer() {
 }
 
 void TtyMode::pad_to_newline() {
-	size_t until = (this->len / TtyMode::LINE_LEN + 1) * 32;
+	size_t until = (this->len / TtyMode::LINE_LEN + 1) * TtyMode::LINE_LEN;
 	for (; this->len < until; ++this->len) {
 		this->buffer[this->len] = ' ';
 	}
