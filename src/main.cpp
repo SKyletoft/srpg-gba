@@ -35,6 +35,7 @@ int main() {
 	modes[mode]->restore();
 
 	for (;;) {
+		util::wait_for_drawing_start();
 		if (mode != state::next_state) {
 			util::wait_for_vsync();
 			if (modes[mode]->blackout() || modes[state::next_state]->blackout())
@@ -55,7 +56,7 @@ int main() {
 			mode->always_update();
 		}
 
-		util::wait_for_vsync();
+		util::wait_for_drawing_complete();
 		modes[mode]->vsync_hook();
 	}
 
