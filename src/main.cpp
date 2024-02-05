@@ -27,7 +27,7 @@ int main() {
 	state::next_state = 0;
 
 	size_t mode = state::next_state;
-	state::Mode *modes[2] = {
+	state::Mode *const modes[2] = {
 		&map_mode,
 		&tty_mode,
 	};
