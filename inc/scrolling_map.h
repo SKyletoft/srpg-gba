@@ -12,16 +12,15 @@ namespace scrolling_map {
 using ScreenEntry = tiles::ScreenEntry;
 using STile = tiles::STile;
 
-static constexpr int BG0_TILE_SOURCE = 1;
-static constexpr int BG1_TILE_SOURCE = 0;
-static constexpr int BG0_TILE_MAP = 29;
-static constexpr int BG1_TILE_MAP = 30;
-static constexpr int SPRITE_SOURCE = 4;
+static constexpr int BG0_TILE_SOURCE = 0;
+static constexpr int BG0_TILE_MAP = 30;
 
 class ScrollingMap : public state::Mode {
   private:
 	int x = 0;
 	int y = 0;
+
+	void load_map();
 
   public:
 	ScrollingMap()
