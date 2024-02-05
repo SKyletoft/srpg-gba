@@ -39,6 +39,7 @@ GRAPHICS := gfx
 ARCH := -mthumb -mthumb-interwork
 
 CFLAGS := -g -Oz -flto \
+	-fdebug-prefix-map=/gba-dev/src=src \
 	-mcpu=arm7tdmi -mtune=arm7tdmi \
 	$(ARCH)
 
