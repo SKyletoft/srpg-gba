@@ -1,4 +1,4 @@
-run: setup
+build: setup
 	mkdir out | true
 	-rm -rf out/*.gba
 	docker run -v $(pwd)/out:/gba-dev/out builder
@@ -12,5 +12,5 @@ bash: setup
 setup-env:
 	git clone https://github.com/devkitPro/libtonc.git
 
-mgba: run
+mgba: build
 	mgba-qt out/gba-dev.gba -4
