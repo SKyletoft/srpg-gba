@@ -1,0 +1,40 @@
+#pragma once
+
+#include "state.h"
+#include "tiles.h"
+
+extern "C" {
+#include <tonc_types.h>
+}
+
+namespace scrolling_map {
+
+using ScreenEntry = tiles::ScreenEntry;
+using STile = tiles::STile;
+
+static constexpr int BG0_TILE_SOURCE = 0;
+static constexpr int BG0_TILE_MAP = 30;
+
+class ScrollingMap : public state::Mode {
+  private:
+	static constexpr s16 MAX_X = 40 * 3 * 8;
+	static constexpr s16 MAX_Y = 30 * 4 * 8;
+	s16 x = 0;
+	s16 y = 0;
+	s16 last_load_at_x = -100;
+	s16 last_load_at_y = -100;
+
+	void load_map();
+
+  public:
+	ScrollingMap()
+		: Mode() {}
+
+	void update() override;
+	void always_update() override;
+	void restore() override;
+	void suspend() override;
+	void vsync_hook() override;
+};
+
+} // namespace scrolling_map

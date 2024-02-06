@@ -1,4 +1,5 @@
 #include "map.h"
+#include "scrolling_map.h"
 #include "state.h"
 #include "tty.h"
 #include "util.h"
@@ -10,6 +11,7 @@ extern "C" {
 #include <tonc.h>
 }
 
+scrolling_map::ScrollingMap scroll_mode{};
 map::MapMode map_mode{};
 tty::TtyMode tty_mode{};
 
@@ -27,10 +29,13 @@ int main() {
 	state::next_state = 0;
 
 	size_t mode = state::next_state;
-	state::Mode *const modes[2] = {
+	state::Mode *const modes[] = {
+		// &scroll_mode,
 		&map_mode,
 		&tty_mode,
 	};
+
+	tty_mode.println("Initialising...");
 
 	modes[mode]->restore();
 

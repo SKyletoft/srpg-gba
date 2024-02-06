@@ -4,6 +4,11 @@ extern "C" {
 #include <tonc_types.h>
 }
 
+#include <exception>
+#define assert(x)                                                              \
+	if (!(x))                                                                  \
+		std::terminate();
+
 namespace util {
 
 extern vu32 x;
