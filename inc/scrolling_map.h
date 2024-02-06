@@ -17,8 +17,12 @@ static constexpr int BG0_TILE_MAP = 30;
 
 class ScrollingMap : public state::Mode {
   private:
-	int x = 0;
-	int y = 0;
+	static constexpr s16 MAX_X = 40 * 3 * 8;
+	static constexpr s16 MAX_Y = 30 * 4 * 8;
+	s16 x = 0;
+	s16 y = 0;
+	s16 last_load_at_x = -100;
+	s16 last_load_at_y = -100;
 
 	void load_map();
 
