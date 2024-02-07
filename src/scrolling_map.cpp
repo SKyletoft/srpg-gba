@@ -30,26 +30,26 @@ size_t get_screenblock_offset_from_camera(s16 x, s16 y) {
 	return get_screenblock_offset_from_tiles(x / 8, y / 8);
 }
 
-ScreenEntry ScrollingMap::get_tile_from_camera(s16 x, s16 y) {
-	return this->get_tile(x / 8, y / 8);
+ScreenEntry ScrollingMap::get_tile_from_camera(size_t layer, s16 x, s16 y) {
+	return this->get_tile(layer, x / 8, y / 8);
 }
 
-void ScrollingMap::load_map() {
-	auto base = tiles::SCREENBLOCKS[BG0_TILE_MAP];
+void ScrollingMap::load_map(size_t layer) {
+	auto base = tiles::SCREENBLOCKS[layer];
 	// Yes, load one row too many
 	for (s16 x = 0; x <= 30; ++x) {
 		for (s16 y = 0; y <= 20; ++y) {
 			auto const idx = get_screenblock_offset_from_tiles(x, y);
-			base[idx] = this->get_tile(x, y);
+			base[idx] = this->get_tile(layer, x, y);
 		}
 	}
 }
 
-void ScrollingMap::update() {
-	auto const base = tiles::SCREENBLOCKS[BG0_TILE_MAP];
+void ScrollingMap::update_layer(size_t layer) {
+	auto const base = tiles::SCREENBLOCKS[layer];
 	auto const f = [&](s16 x, s16 y) {
 		size_t const idx = get_screenblock_offset_from_camera(x, y);
-		ScreenEntry const tile = this->get_tile_from_camera(x, y);
+		ScreenEntry const tile = this->get_tile_from_camera(layer, x, y);
 		base[idx] = tile;
 	};
 
@@ -78,16 +78,22 @@ void ScrollingMap::update() {
 	}
 }
 
+void ScrollingMap::update() { this->update_layer(this->bg0_tile_map); }
+
 void ScrollingMap::always_update() {}
 
 void ScrollingMap::restore() {
-	load_tilesets();
-	load_map();
+	this->load_tilesets(this->bg0_tile_source);
+	// this->load_tilesets(this->bg1_tile_source);
+	this->load_map(this->bg0_tile_map);
+	// this->load_map(this->bg1_tile_map);
 	util::wait_for_drawing_start();
-	load_palettes();
+	this->load_palettes(0);
 
-	REG_BG0CNT =
-		BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_4BPP | BG_REG_32x32;
+	REG_BG0CNT = BG_CBB((u16)this->bg0_tile_source)
+				 | BG_SBB((u16)this->bg0_tile_map) | BG_4BPP | BG_REG_32x32;
+	// REG_BG1CNT = BG_CBB((u16)this->bg1_tile_source)
+	//			 | BG_SBB((u16)this->bg1_tile_map) | BG_4BPP | BG_REG_32x32;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
 
 	REG_BG0HOFS = (u16)this->x;
