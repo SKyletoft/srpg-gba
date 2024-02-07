@@ -147,8 +147,8 @@ void TtyMode::scroll_down() {
 }
 
 void TtyMode::draw_char(size_t i) {
-	auto const idx = get_grid_index(i);
-	auto const c = get_character_tile_index(this->buffer[i]);
+	size_t const idx = get_grid_index(i);
+	u16 const c = get_character_tile_index(this->buffer[i]);
 	SCREENBLOCKS[BG0_TILE_MAP][idx] = ScreenEntry(c, 0, 0);
 }
 
@@ -160,9 +160,11 @@ void TtyMode::draw_buffer() {
 
 void TtyMode::pad_to_newline() {
 	size_t until = (this->len / TtyMode::LINE_LEN + 1) * TtyMode::LINE_LEN;
-	for (; this->len < until; ++this->len) {
-		this->buffer[this->len] = ' ';
+	size_t len;
+	for (len = this->len; len < until; ++len) {
+		this->buffer[len] = ' ';
 	}
+	this->len = len;
 }
 
 void TtyMode::println(const char *s) {
