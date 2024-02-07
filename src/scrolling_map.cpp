@@ -54,7 +54,6 @@ void ScrollingMap::update_layer(size_t layer) {
 	};
 
 	s16 const dy = this->y - this->last_load_at_y;
-	this->y = std::clamp((s16)(this->y + key_tri_vert()), (s16)0, this->max_y);
 	if (abs(dy) > 4) {
 		s16 const diff = dy < 0 ? -4 : 164;
 		s16 const cam_y = this->y + diff;
@@ -63,10 +62,9 @@ void ScrollingMap::update_layer(size_t layer) {
 			f(this->x + d_cam_x, cam_y);
 		}
 
-		this->last_load_at_y = this->y;
+		this->updated_y = true;
 	}
 
-	this->x = std::clamp((s16)(this->x + key_tri_horz()), (s16)0, this->max_x);
 	s16 const dx = this->x - this->last_load_at_x;
 	if (abs(dx) > 4) {
 		s16 const diff = dx < 0 ? -4 : 244;
@@ -74,40 +72,61 @@ void ScrollingMap::update_layer(size_t layer) {
 		for (s16 d_cam_y = -8; d_cam_y < 168; d_cam_y += 7) {
 			f(cam_x, this->y + d_cam_y);
 		}
-		this->last_load_at_x = this->x;
+		this->updated_x = true;
 	}
 }
 
-void ScrollingMap::update() { this->update_layer(this->bg0_tile_map); }
+void ScrollingMap::update() {
+	this->x = std::clamp((s16)(this->x + key_tri_horz()), (s16)0, this->max_x);
+	this->y = std::clamp((s16)(this->y + key_tri_vert()), (s16)0, this->max_y);
+
+	this->update_layer(this->bg0_tile_map);
+	this->update_layer(this->bg1_tile_map);
+
+	if (this->updated_x) {
+		this->updated_x = false;
+		this->last_load_at_x = this->x;
+	}
+	if (this->updated_y) {
+		this->updated_y = false;
+		this->last_load_at_y = this->y;
+	}
+}
 
 void ScrollingMap::always_update() {}
 
 void ScrollingMap::restore() {
 	this->load_tilesets(this->bg0_tile_source);
-	// this->load_tilesets(this->bg1_tile_source);
+	this->load_tilesets(this->bg1_tile_source);
 	this->load_map(this->bg0_tile_map);
-	// this->load_map(this->bg1_tile_map);
+	this->load_map(this->bg1_tile_map);
 	util::wait_for_drawing_start();
 	this->load_palettes(0);
 
 	REG_BG0CNT = BG_CBB((u16)this->bg0_tile_source)
 				 | BG_SBB((u16)this->bg0_tile_map) | BG_4BPP | BG_REG_32x32;
-	// REG_BG1CNT = BG_CBB((u16)this->bg1_tile_source)
-	//			 | BG_SBB((u16)this->bg1_tile_map) | BG_4BPP | BG_REG_32x32;
-	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
+	REG_BG1CNT = BG_CBB((u16)this->bg1_tile_source)
+				 | BG_SBB((u16)this->bg1_tile_map) | BG_4BPP | BG_REG_32x32;
+	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1;
 
 	REG_BG0HOFS = (u16)this->x;
 	REG_BG0VOFS = (u16)this->y;
+	REG_BG1HOFS = (u16)this->x + 4;
+	REG_BG1VOFS = (u16)this->y;
 }
 
 void ScrollingMap::suspend() {
 	REG_BG0HOFS = 0;
 	REG_BG0VOFS = 0;
+	REG_BG1HOFS = 0;
+	REG_BG1VOFS = 0;
 }
 
 void ScrollingMap::vsync_hook() {
 	REG_BG0HOFS = (u16)this->x;
 	REG_BG0VOFS = (u16)this->y;
+	REG_BG1HOFS = (u16)this->x + 4;
+	REG_BG1VOFS = (u16)this->y;
 }
 
 } // namespace scrolling_map

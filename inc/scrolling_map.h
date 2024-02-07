@@ -28,6 +28,8 @@ class ScrollingMap : public state::Mode {
 	s16 y = 0;
 	s16 last_load_at_x = -100;
 	s16 last_load_at_y = -100;
+	bool updated_x = false;
+	bool updated_y = false;
 
 	void update_layer(size_t);
 	void load_map(size_t);
