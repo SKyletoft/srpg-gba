@@ -46,7 +46,7 @@ void ScrollingMap::load_map(size_t layer) {
 }
 
 void ScrollingMap::update_layer(size_t layer) {
-	auto const base = tiles::SCREENBLOCKS[layer];
+	ScreenEntry volatile *const base = tiles::SCREENBLOCKS[layer];
 	auto const f = [&](s16 x, s16 y) {
 		size_t const idx = get_screenblock_offset_from_camera(x, y);
 		ScreenEntry const tile = this->get_tile_from_camera(layer, x, y);
