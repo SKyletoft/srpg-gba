@@ -35,7 +35,7 @@ ScreenEntry ScrollingMap::get_tile_from_camera(size_t layer, s16 x, s16 y) {
 }
 
 void ScrollingMap::load_map(size_t layer) {
-	auto base = tiles::SCREENBLOCKS[layer];
+	volatile tiles::ScreenEntry *base = tiles::SCREENBLOCKS[layer];
 	// Yes, load one row too many
 	for (s16 x = 0; x <= 30; ++x) {
 		for (s16 y = 0; y <= 20; ++y) {
