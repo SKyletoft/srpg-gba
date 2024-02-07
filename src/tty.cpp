@@ -14,9 +14,9 @@ extern const u32 sys8Glyphs[192];
 
 namespace tty {
 
+using tiles::CHARBLOCKS;
 using tiles::Palette;
 using tiles::SCREENBLOCKS;
-using tiles::CHARBLOCKS;
 using tiles::ScreenEntry;
 using tiles::STile;
 
