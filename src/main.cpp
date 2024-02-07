@@ -1,5 +1,5 @@
 #include "map.h"
-#include "scrolling_map.h"
+#include "scrolling_hexgrid.h"
 #include "state.h"
 #include "tty.h"
 #include "util.h"
@@ -11,7 +11,7 @@ extern "C" {
 #include <tonc.h>
 }
 
-scrolling_map::ScrollingMap scroll_mode{};
+scrolling_hexgrid::ScrollingHexgrid scroll_mode{};
 map::MapMode map_mode{};
 tty::TtyMode tty_mode{};
 
