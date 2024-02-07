@@ -14,3 +14,6 @@ setup-env:
 
 mgba: build
 	mgba-qt out/gba-dev.gba -4
+
+clean:
+	-rm -rf out/*
