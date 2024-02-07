@@ -30,7 +30,7 @@ int main() {
 
 	size_t mode = state::next_state;
 	state::Mode *const modes[] = {
-		// &scroll_mode,
+		&scroll_mode,
 		&map_mode,
 		&tty_mode,
 	};
