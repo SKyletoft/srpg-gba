@@ -130,9 +130,9 @@ static_assert(alignof(ScreenEntry) == alignof(u16));
 
 /// 4 bpp tile
 union STile {
-	byte raw[32];
-	u16 index_quads[16];
 	u32 index_octs[8];
+	u16 index_quads[16];
+	byte raw[32];
 };
 static_assert(sizeof(STile) == 32);
 
