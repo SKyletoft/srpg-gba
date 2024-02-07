@@ -19,8 +19,6 @@ extern "C" {
 
 #define memcpy_(dest, src) std::memcpy((void *)dest, src, sizeof(src))
 
-using Point = std::tuple<s16, s16>;
-
 namespace scrolling_map {
 
 void load_tilesets() {
