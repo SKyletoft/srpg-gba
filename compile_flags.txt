@@ -24,5 +24,5 @@
 -Werror=conversion
 -Werror=sign-conversion
 -Werror=float-conversion
--std=gnu++20
--stdlib=libc++
+-std=gnu++23
+-stdlib=libstdc++
