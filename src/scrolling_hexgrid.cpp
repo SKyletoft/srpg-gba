@@ -17,11 +17,11 @@ extern "C" {
 
 namespace scrolling_hexgrid {
 
-void ScrollingHexgrid::load_tilesets(size_t layer) {
+void ScrollingHexgrid::load_tilesets(Layer &layer) {
 	// memcpy_(tiles::CHARBLOCKS[BG0_TILE_SOURCE], grassTiles);
 	// memcpy_(tiles::SCREENBLOCKS[BG0_TILE_MAP], grassMap);
 
-	STile *tiles = tiles::CHARBLOCKS[layer];
+	STile *tiles = tiles::CHARBLOCKS[layer.tile_source];
 	tiles[0] = hex_overlay_3_4::empty;
 	tiles[1] = hex_overlay_3_4::hex00;
 	tiles[2] = hex_overlay_3_4::hex01;
@@ -33,18 +33,18 @@ void ScrollingHexgrid::load_tilesets(size_t layer) {
 	tiles[8] = hex_overlay_3_4::hex31;
 }
 
-void ScrollingHexgrid::load_palettes(size_t pal) {
-	((tiles::Palette *)pal_bg_mem)[pal] =
+void ScrollingHexgrid::load_palettes(Layer &) {
+	((tiles::Palette *)pal_bg_mem)[0] =
 		{.colours = {
 			 tiles::TRANSPARENT,
 			 tiles::RED,
 		 }};
 }
 
-ScreenEntry ScrollingHexgrid::get_tile(size_t layer, s16 x, s16 y) {
+ScreenEntry ScrollingHexgrid::get_tile(Layer const &layer, s16 x, s16 y) {
 	auto const transparent = ScreenEntry(0, 0, 0);
 
-	if (layer != this->bg0_tile_map) {
+	if (layer != this->layer0) {
 		return transparent;
 	}
 

@@ -19,7 +19,7 @@ using Colour = tiles::Colour;
 
 namespace scrolling_rainbow {
 
-void ScrollingRainbow::load_tilesets(size_t layer) {
+void ScrollingRainbow::load_tilesets(Layer &layer) {
 	u32 const nums[] = {
 		0x11111111,
 		0x22222222,
@@ -37,7 +37,7 @@ void ScrollingRainbow::load_tilesets(size_t layer) {
 		0xEEEEEEEE,
 		0xFFFFFFFF,
 	};
-	std::span<STile> const tiles{tiles::CHARBLOCKS[layer], 16};
+	std::span<STile> const tiles{tiles::CHARBLOCKS[layer.tile_source], 16};
 
 	// Clangd complains but GCC thinks this is fine
 	for (auto [tile, num] : rv::zip(tiles, nums)) {
@@ -45,9 +45,9 @@ void ScrollingRainbow::load_tilesets(size_t layer) {
 	}
 }
 
-void ScrollingRainbow::load_palettes(size_t pal) {
+void ScrollingRainbow::load_palettes(Layer &) {
 	// memcpy_(pal_bg_mem, grassPal);
-	((tiles::Palette *)pal_bg_mem)[pal] = tiles::Palette{
+	((tiles::Palette *)pal_bg_mem)[0] = tiles::Palette{
 		.colours =
 			{
 				tiles::TRANSPARENT,
@@ -70,7 +70,7 @@ void ScrollingRainbow::load_palettes(size_t pal) {
 	};
 }
 
-ScreenEntry ScrollingRainbow::get_tile(size_t _, s16 x, s16 y) {
+ScreenEntry ScrollingRainbow::get_tile(Layer const &, s16 x, s16 y) {
 	return ScreenEntry((u16)((x * 2 + y * 3) / 2 % 15), 0, 0);
 }
 

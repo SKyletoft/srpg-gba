@@ -17,24 +17,28 @@ namespace hexmap {
 
 const u16 tile_size = grassTilesLen;
 
-void Hexmap::load_tilesets(size_t layer) {
-	memcpy_((tiles::CHARBLOCKS[layer] + 0 * tile_size), grassTiles);
-	memcpy_((tiles::CHARBLOCKS[layer] + 1 * tile_size), waterTiles);
-	memcpy_((tiles::CHARBLOCKS[layer] + 2 * tile_size), flowerTiles);
-	memcpy_((tiles::CHARBLOCKS[layer] + 3 * tile_size), water2Tiles);
-	memcpy_((tiles::CHARBLOCKS[layer] + 4 * tile_size), grassTiles);
+void Hexmap::load_tilesets(Layer &layer) {
+	memcpy_((tiles::CHARBLOCKS[layer.tile_source] + 0 * tile_size), grassTiles);
+	memcpy_((tiles::CHARBLOCKS[layer.tile_source] + 1 * tile_size), waterTiles);
+	memcpy_(
+		(tiles::CHARBLOCKS[layer.tile_source] + 2 * tile_size), flowerTiles
+	);
+	memcpy_(
+		(tiles::CHARBLOCKS[layer.tile_source] + 3 * tile_size), water2Tiles
+	);
+	memcpy_((tiles::CHARBLOCKS[layer.tile_source] + 4 * tile_size), grassTiles);
 }
 
-void Hexmap::load_palettes(size_t) {
-	tiles::PALETTE_MEMORY[0] = tiles::Palette::from_raw(flowerPal);
+void Hexmap::load_palettes(Layer &) {
+	tiles::PALETTE_MEMORY[0] = tiles::Palette::from_raw(grassPal);
 	tiles::PALETTE_MEMORY[1] = tiles::Palette::from_raw(waterPal);
 	tiles::PALETTE_MEMORY[2] = tiles::Palette::from_raw(flowerPal);
 	tiles::PALETTE_MEMORY[3] = tiles::Palette::from_raw(waterPal);
 	tiles::PALETTE_MEMORY[4] = tiles::Palette::from_raw(grassPal);
 }
 
-ScreenEntry Hexmap::get_tile(size_t layer, s16 x, s16 y) {
-	if (layer != this->bg0_tile_map) {
+ScreenEntry Hexmap::get_tile(Layer const &layer, s16 x, s16 y) {
+	if (layer != this->layer0) {
 		x += 1;
 		y += 2;
 	}

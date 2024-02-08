@@ -9,6 +9,7 @@ extern "C" {
 
 namespace scrolling_rainbow {
 
+using Layer = scrolling_map::Layer;
 using ScreenEntry = tiles::ScreenEntry;
 using STile = tiles::STile;
 
@@ -17,9 +18,9 @@ static constexpr s16 HEIGHT = (s16)32000;
 
 class ScrollingRainbow : public scrolling_map::ScrollingMap {
   protected:
-	void load_tilesets(size_t) override;
-	void load_palettes(size_t) override;
-	ScreenEntry get_tile(size_t, s16, s16) override;
+	void load_tilesets(Layer &) override;
+	void load_palettes(Layer &) override;
+	ScreenEntry get_tile(Layer const &, s16, s16) override;
 
   public:
 	ScrollingRainbow()
