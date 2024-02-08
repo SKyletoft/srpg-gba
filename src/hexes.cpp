@@ -8,10 +8,34 @@ OffsetXYCoord cube_to_offsetXY(CubeCoord hex) {
   return OffsetXYCoord((s16) col, (s16) row);
 };
 
-CubeCoord OffsetXY_to_cube(OffsetXYCoord hex){
+CubeCoord offsetXY_to_cube(OffsetXYCoord hex){
   auto q = hex.col - (hex.row - (hex.row & 1)) / 2;
   auto r = hex.row;
-  return CubeCoord((s16) q, (s16) r, (s16) -q-r);
+  auto s = -q-r;
+  return CubeCoord((s16) q, (s16) r, (s16) s);
+};
+
+CubeCoord axial_to_cube(AxialCoord hex){
+  s16 q = hex.q;
+  s16 r = hex.r;
+  s16 s = -q-r;
+  return CubeCoord(q, r, s);
+};
+
+AxialCoord cube_to_axial(CubeCoord hex){
+  s16 q = hex.q;
+  s16 r = hex.r;
+  return AxialCoord(q, r);
+};
+
+OffsetXYCoord axial_to_offsetXY(AxialCoord hex){
+  CubeCoord cube = axial_to_cube(hex);
+  return cube_to_offsetXY(cube);
+};
+
+AxialCoord offsetXY_to_axial(OffsetXYCoord hex){
+  CubeCoord cube = offsetXY_to_cube(hex);
+  return cube_to_axial(cube);
 };
 
 }

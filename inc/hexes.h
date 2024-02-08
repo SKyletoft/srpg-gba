@@ -7,9 +7,9 @@ extern "C" {
 namespace hexes {
 
 struct CubeCoord {
-  s16 s;
-  s16 r;
   s16 q;
+  s16 r;
+  s16 s;
 };
 
 struct OffsetXYCoord {
@@ -17,7 +17,18 @@ struct OffsetXYCoord {
   s16 row;
 };
 
+struct AxialCoord {
+  s16 q;
+  s16 r;
+};
+
 OffsetXYCoord cube_to_offsetXY(CubeCoord hex);
-CubeCoord OffsetXY_to_cube(OffsetXYCoord hex);
+OffsetXYCoord axial_to_offsetXY(AxialCoord hex);
+
+CubeCoord offsetXY_to_cube(OffsetXYCoord hex);
+CubeCoord axial_to_cube(AxialCoord hex);
+
+AxialCoord cube_to_axial(CubeCoord hex);
+AxialCoord offsetXY_to_axial(OffsetXYCoord hex);
 
 }
