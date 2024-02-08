@@ -76,6 +76,14 @@ static constexpr Colour TRANSPARENT = BLACK;
 
 struct Palette {
 	Colour colours[16];
+
+	static constexpr Palette from_raw(const u16 raws[16]) {
+		Palette pal{};
+		for (size_t i = 0; i < 16; ++i) {
+			pal.colours[i] = raws[i];
+		}
+		return pal;
+	}
 };
 
 static_assert(sizeof(Palette[16]) == 0x0200);
