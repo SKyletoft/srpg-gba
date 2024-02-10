@@ -35,13 +35,21 @@ ScreenEntry ScrollingMap::get_tile_from_camera(Layer &layer, s16 x, s16 y) {
 	return this->get_tile(layer, x / 8, y / 8);
 }
 
+void ScrollingMap::update_tile(
+	ScreenEntry volatile *const base, Layer &layer, s16 x, s16 y
+) {
+	size_t const idx = get_screenblock_offset_from_camera(x, y);
+	ScreenEntry const tile = this->get_tile_from_camera(layer, x, y);
+	base[idx] = tile;
+};
+
 void ScrollingMap::load_map(Layer &layer) {
-	volatile tiles::ScreenEntry *base = tiles::SCREENBLOCKS[layer.tile_map];
+	ScreenEntry volatile *const base = tiles::SCREENBLOCKS[layer.tile_map];
+
 	// Yes, load one row too many
-	for (s16 x = 0; x <= 30; ++x) {
-		for (s16 y = 0; y <= 20; ++y) {
-			auto const idx = get_screenblock_offset_from_tiles(x, y);
-			base[idx] = this->get_tile(layer, x, y);
+	for (s16 x = 0; x <= 30 * 8; x += 8) {
+		for (s16 y = 0; y <= 20 * 8; y += 8) {
+			this->update_tile(base, layer, layer.x + x, layer.y + y);
 		}
 	}
 }
@@ -53,11 +61,6 @@ void ScrollingMap::update_layer(Layer &layer) {
 		std::clamp((s16)(layer.y + key_tri_vert()), layer.min_y, layer.max_y);
 
 	ScreenEntry volatile *const base = tiles::SCREENBLOCKS[layer.tile_map];
-	auto const f = [&](s16 x, s16 y) {
-		size_t const idx = get_screenblock_offset_from_camera(x, y);
-		ScreenEntry const tile = this->get_tile_from_camera(layer, x, y);
-		base[idx] = tile;
-	};
 
 	s16 const dy = layer.y - layer.last_load_at_y;
 	if (abs(dy) > 4) {
@@ -65,7 +68,7 @@ void ScrollingMap::update_layer(Layer &layer) {
 		s16 const cam_y = layer.y + diff;
 
 		for (s16 d_cam_x = -8; d_cam_x < 248; d_cam_x += 7) {
-			f(layer.x + d_cam_x, cam_y);
+			this->update_tile(base, layer, layer.x + d_cam_x, cam_y);
 		}
 
 		layer.updated_y = true;
@@ -76,7 +79,7 @@ void ScrollingMap::update_layer(Layer &layer) {
 		s16 const diff = dx < 0 ? -4 : 244;
 		s16 const cam_x = layer.x + diff;
 		for (s16 d_cam_y = -8; d_cam_y < 168; d_cam_y += 7) {
-			f(cam_x, layer.y + d_cam_y);
+			this->update_tile(base, layer, cam_x, layer.y + d_cam_y);
 		}
 		layer.updated_x = true;
 	}

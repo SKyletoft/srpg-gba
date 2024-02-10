@@ -40,6 +40,7 @@ class ScrollingMap : public state::Mode {
 	Layer layer0;
 	Layer layer1;
 
+	void update_tile(ScreenEntry volatile *const, Layer &, s16, s16);
 	void update_layer(Layer &);
 	void load_map(Layer &);
 	ScreenEntry get_tile_from_camera(Layer &, s16, s16);
