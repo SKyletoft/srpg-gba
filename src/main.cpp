@@ -2,8 +2,8 @@
 #include "map.h"
 #include "scrolling_hexgrid.h"
 #include "scrolling_rainbow.h"
-#include "test_map.h"
 #include "state.h"
+#include "test_map.h"
 #include "tty.h"
 #include "util.h"
 
