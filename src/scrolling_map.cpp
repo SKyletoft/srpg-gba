@@ -97,6 +97,9 @@ void ScrollingMap::update_layer(Layer &layer) {
 void ScrollingMap::update() {
 	this->update_layer(this->layer0);
 	this->update_layer(this->layer1);
+	if (key_held(1 << KI_R) && key_held(1 << KI_L)) {
+		state::next_state = 2;
+	}
 }
 
 void ScrollingMap::always_update() {}
