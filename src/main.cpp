@@ -18,12 +18,15 @@ extern "C" {
 // scrolling_hexgrid::ScrollingHexgrid scroll_mode{};
 hexmap::Hexmap scroll_mode{test_map::map};
 map::MapMode map_mode{};
-tty::TtyMode tty_mode{};
+
+namespace debug {
+extern tty::TtyMode tty_mode;
+}
 
 void error_handler() {
-	tty_mode.restore();
-	tty_mode.clear();
-	tty_mode.println("Crashed!  ");
+	debug::tty_mode.restore();
+	debug::tty_mode.clear();
+	debug::tty_mode.println("Crashed!  ");
 
 	util::spin();
 }
@@ -37,10 +40,10 @@ int main() {
 	state::Mode *const modes[] = {
 		&scroll_mode,
 		&map_mode,
-		&tty_mode,
+		&debug::tty_mode,
 	};
 
-	tty_mode.println("Initialising...");
+	debug::tty_mode.println("Initialising...");
 
 	modes[mode]->restore();
 
