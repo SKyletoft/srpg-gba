@@ -20,14 +20,14 @@ using tiles::CHARBLOCKS;
 using tiles::Palette;
 using tiles::PALETTE_MEMORY;
 
-const u16 tile_size = grassTilesLen;
+constexpr u16 TILE_SIZE = 10;
 
 void Hexmap::load_tilesets(Layer &layer) {
-	memcpy_((CHARBLOCKS[layer.tile_source] + 0 * tile_size), grassTiles);
-	memcpy_((CHARBLOCKS[layer.tile_source] + 1 * tile_size), waterTiles);
-	memcpy_((CHARBLOCKS[layer.tile_source] + 2 * tile_size), flowerTiles);
-	memcpy_((CHARBLOCKS[layer.tile_source] + 3 * tile_size), water2Tiles);
-	memcpy_((CHARBLOCKS[layer.tile_source] + 4 * tile_size), grassTiles);
+	memcpy_((CHARBLOCKS[layer.tile_source] + 0 * TILE_SIZE), grassTiles);
+	memcpy_((CHARBLOCKS[layer.tile_source] + 1 * TILE_SIZE), waterTiles);
+	memcpy_((CHARBLOCKS[layer.tile_source] + 2 * TILE_SIZE), flowerTiles);
+	memcpy_((CHARBLOCKS[layer.tile_source] + 3 * TILE_SIZE), water2Tiles);
+	memcpy_((CHARBLOCKS[layer.tile_source] + 4 * TILE_SIZE), grassTiles);
 }
 
 void Hexmap::load_palettes(Layer &) {
@@ -58,7 +58,7 @@ ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
 	if (tile_x < WIDTH - (tile_y & 1) && tile_y < HEIGHT) {
 		u8 tile_type = this->map[tile_y, tile_x];
 		u16 tile_index = (u16)((y % 4) * 3 + (x % 3) + 1);
-		u16 hex_index = tile_type * tile_size;
+		u16 hex_index = tile_type * TILE_SIZE;
 		palette = tile_type;
 		index = tile_index + hex_index;
 	}
