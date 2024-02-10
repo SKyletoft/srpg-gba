@@ -4,9 +4,9 @@
 
 namespace hexmap {
 
-using ScreenEntry = tiles::ScreenEntry;
-using STile = tiles::STile;
 using scrolling_map::Layer;
+using tiles::ScreenEntry;
+using tiles::STile;
 
 static constexpr s16 WIDTH = (s16)32000;
 static constexpr s16 HEIGHT = (s16)32000;
