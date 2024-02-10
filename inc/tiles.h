@@ -53,8 +53,8 @@ static constexpr Colour GREEN = Colour({
 	.blue = 0,
 });
 static constexpr Colour YELLOW = Colour({
-	.red = 0b01110,
-	.green = 0b01110,
+	.red = 0b11111,
+	.green = 0b11111,
 	.blue = 0,
 });
 static constexpr Colour BLUE = Colour({
