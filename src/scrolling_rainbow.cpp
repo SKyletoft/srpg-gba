@@ -70,7 +70,7 @@ void ScrollingRainbow::load_palettes(Layer &) {
 	};
 }
 
-ScreenEntry ScrollingRainbow::get_tile(Layer const &, s16 x, s16 y) {
+ScreenEntry ScrollingRainbow::get_tile(Layer &, s16 x, s16 y) {
 	return ScreenEntry((u16)((x * 2 + y * 3) / 2 % 15), 0, 0);
 }
 

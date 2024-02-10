@@ -15,7 +15,7 @@ class Hexmap : public scrolling_map::ScrollingMap {
   protected:
 	void load_tilesets(Layer &) override;
 	void load_palettes(Layer &) override;
-	ScreenEntry get_tile(Layer const &, s16, s16) override;
+	ScreenEntry get_tile(Layer &, s16, s16) override;
 
   public:
 	Hexmap()

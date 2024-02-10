@@ -37,7 +37,7 @@ void Hexmap::load_palettes(Layer &) {
 	tiles::PALETTE_MEMORY[4] = tiles::Palette::from_raw(grassPal);
 }
 
-ScreenEntry Hexmap::get_tile(Layer const &layer, s16 x, s16 y) {
+ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
 	if (layer != this->layer0) {
 		x += 1;
 		y += 2;

@@ -41,7 +41,7 @@ void ScrollingHexgrid::load_palettes(Layer &) {
 		 }};
 }
 
-ScreenEntry ScrollingHexgrid::get_tile(Layer const &layer, s16 x, s16 y) {
+ScreenEntry ScrollingHexgrid::get_tile(Layer &layer, s16 x, s16 y) {
 	auto const transparent = ScreenEntry(0, 0, 0);
 
 	if (layer != this->layer0) {

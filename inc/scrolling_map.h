@@ -46,7 +46,7 @@ class ScrollingMap : public state::Mode {
 
 	virtual void load_tilesets(Layer &) = 0;
 	virtual void load_palettes(Layer &) = 0;
-	virtual ScreenEntry get_tile(Layer const &, s16, s16) = 0;
+	virtual ScreenEntry get_tile(Layer &, s16, s16) = 0;
 
   public:
 	ScrollingMap(s16 width, s16 height)
