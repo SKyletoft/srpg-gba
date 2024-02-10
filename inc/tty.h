@@ -40,6 +40,7 @@ class TtyMode : public state::Mode {
 	void clear_buffer();
 	void scroll_down();
 	void print(const char *);
+	void printf(const char *format, ...);
 	void print(const char *, const size_t);
 	void println(const char *);
 	void println(const char *, const size_t);

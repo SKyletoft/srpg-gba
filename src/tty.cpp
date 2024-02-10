@@ -2,7 +2,9 @@
 
 #include "tiles.h"
 #include <cstddef>
+#include <cstdlib>
 #include <cstring>
+#include <stdarg.h>
 #include <span>
 
 extern "C" {
@@ -175,6 +177,16 @@ void TtyMode::println(const char *s) {
 void TtyMode::println(const char *s, const size_t len) {
 	this->print(s);
 	this->print("\n");
+}
+
+void TtyMode::printf(const char *format, ...) {
+	char buf[1024];
+	va_list args;
+	va_start(args, format);
+	vsnprintf(buf, sizeof(buf), format, args);
+	va_end(args);
+
+	this->print(buf);
 }
 
 void TtyMode::print(const char *s) { this->print(s, strlen(s)); }
