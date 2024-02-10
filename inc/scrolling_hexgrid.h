@@ -25,12 +25,6 @@ class ScrollingHexgrid : public scrolling_map::ScrollingMap {
   public:
 	ScrollingHexgrid()
 		: ScrollingMap(WIDTH, HEIGHT) {}
-
-	void update() override;
-	void always_update() override;
-	void restore() override;
-	void suspend() override;
-	void vsync_hook() override;
 };
 
 } // namespace scrolling_hexgrid

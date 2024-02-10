@@ -71,14 +71,4 @@ ScreenEntry ScrollingHexgrid::get_tile(Layer const &layer, s16 x, s16 y) {
 	return hexes[y % 4][x % 3];
 }
 
-void ScrollingHexgrid::update() { this->ScrollingMap::update(); }
-
-void ScrollingHexgrid::always_update() { this->ScrollingMap::always_update(); }
-
-void ScrollingHexgrid::restore() { this->ScrollingMap::restore(); }
-
-void ScrollingHexgrid::suspend() { this->ScrollingMap::suspend(); }
-
-void ScrollingHexgrid::vsync_hook() { this->ScrollingMap::vsync_hook(); }
-
 } // namespace scrolling_hexgrid
