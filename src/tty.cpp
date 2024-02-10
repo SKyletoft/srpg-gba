@@ -142,7 +142,7 @@ void TtyMode::clear() {
 }
 
 void TtyMode::scroll_down() {
-	std::memcpy(this->buffer, this->buffer + SIZE / 2, SIZE / 2);
+	std::memmove(this->buffer.data(), this->buffer.data() + SIZE / 2, SIZE / 2);
 	this->len = SIZE / 2;
 	this->clear_screen();
 	this->draw_buffer();

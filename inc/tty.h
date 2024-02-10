@@ -1,6 +1,7 @@
 #pragma once
 
 #include "state.h"
+#include <array>
 
 extern "C" {
 #include <tonc_types.h>
@@ -17,7 +18,7 @@ class TtyMode : public state::Mode {
 	static constexpr size_t SIZE = LINE_LEN * COLUMN_LEN;
 
   private:
-	char buffer[SIZE];
+	std::array<char, SIZE> buffer;
 	size_t len = 0;
 	bool in_focus = false;
 
