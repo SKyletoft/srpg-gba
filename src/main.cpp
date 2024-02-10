@@ -2,6 +2,7 @@
 #include "map.h"
 #include "scrolling_hexgrid.h"
 #include "scrolling_rainbow.h"
+#include "test_map.h"
 #include "state.h"
 #include "tty.h"
 #include "util.h"
@@ -15,7 +16,7 @@ extern "C" {
 
 // scrolling_rainbow::ScrollingRainbow scroll_mode{};
 // scrolling_hexgrid::ScrollingHexgrid scroll_mode{};
-hexmap::Hexmap scroll_mode{};
+hexmap::Hexmap scroll_mode{test_map::map};
 map::MapMode map_mode{};
 tty::TtyMode tty_mode{};
 
