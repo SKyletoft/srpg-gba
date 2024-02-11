@@ -1,24 +1,27 @@
-#include "map.h"
-#include "scrolling_map.h"
 #include "state.h"
 #include "tty.h"
 #include "util.h"
 
 #include <cstddef>
 #include <exception>
+#include <span>
 
 extern "C" {
 #include <tonc.h>
 }
 
-scrolling_map::ScrollingMap scroll_mode{};
-map::MapMode map_mode{};
-tty::TtyMode tty_mode{};
+namespace config {
+extern std::span<state::Mode *const> modes;
+}
+
+namespace debug {
+extern tty::TtyMode tty_mode;
+}
 
 void error_handler() {
-	tty_mode.restore();
-	tty_mode.clear();
-	tty_mode.println("Crashed!  ");
+	debug::tty_mode.restore();
+	debug::tty_mode.clear();
+	debug::tty_mode.println("Crashed!");
 
 	util::spin();
 }
@@ -29,40 +32,34 @@ int main() {
 	state::next_state = 0;
 
 	size_t mode = state::next_state;
-	state::Mode *const modes[] = {
-		// &scroll_mode,
-		&map_mode,
-		&tty_mode,
-	};
+	debug::tty_mode.println("Initialising...");
 
-	tty_mode.println("Initialising...");
-
-	modes[mode]->restore();
+	config::modes[mode]->restore();
 
 	for (;;) {
 		util::wait_for_drawing_start();
 		if (mode != state::next_state) {
 			util::wait_for_vsync();
-			if (modes[mode]->blackout() || modes[state::next_state]->blackout())
+			if (config::modes[mode]->blackout() || config::modes[state::next_state]->blackout())
 			{
 				util::set_screen_to_black();
 			}
-			modes[mode]->suspend();
+			config::modes[mode]->suspend();
 			state::last_state = mode;
 			mode = state::next_state;
 			util::wait_for_vsync();
-			modes[mode]->restore();
+			config::modes[mode]->restore();
 		}
 
 		key_poll();
-		modes[mode]->update();
+		config::modes[mode]->update();
 
-		for (auto mode : modes) {
+		for (auto mode : config::modes) {
 			mode->always_update();
 		}
 
 		util::wait_for_drawing_complete();
-		modes[mode]->vsync_hook();
+		config::modes[mode]->vsync_hook();
 	}
 
 	util::spin();

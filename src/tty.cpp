@@ -2,8 +2,10 @@
 
 #include "tiles.h"
 #include <cstddef>
+#include <cstdlib>
 #include <cstring>
 #include <span>
+#include <stdarg.h>
 
 extern "C" {
 #include <tonc.h>
@@ -14,9 +16,9 @@ extern const u32 sys8Glyphs[192];
 
 namespace tty {
 
+using tiles::CHARBLOCKS;
 using tiles::Palette;
 using tiles::SCREENBLOCKS;
-using tiles::CHARBLOCKS;
 using tiles::ScreenEntry;
 using tiles::STile;
 
@@ -107,23 +109,28 @@ void decompress_1bpp_to_4bpp(
 }
 
 void TtyMode::restore() {
+	this->in_focus = true;
+
 	decompress_1bpp_to_4bpp(CHARBLOCKS[BG0_TILE_SOURCE], sys8Glyphs, '~' - ' ');
 
 	this->clear_screen();
 
 	vid_vsync();
-	std::memcpy(&pal_bg_mem[0], &YELLOW_ON_BLACK, sizeof(YELLOW_ON_BLACK));
+	tiles::PALETTE_MEMORY[0] = YELLOW_ON_BLACK;
 	REG_BG0CNT =
 		BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_4BPP | BG_REG_32x32;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
 
-	this->in_focus = true;
 	this->draw_buffer();
 }
 
 void TtyMode::vsync_hook() {}
 
 void TtyMode::clear_screen() {
+	if (!this->in_focus) {
+		return;
+	}
+
 	const ScreenEntry empty{0, 0, 0};
 	std::span<u16> tile_map{(u16 *)SCREENBLOCKS[BG0_TILE_MAP], 1024};
 
@@ -140,19 +147,25 @@ void TtyMode::clear() {
 }
 
 void TtyMode::scroll_down() {
-	std::memcpy(this->buffer, this->buffer + SIZE / 2, SIZE / 2);
+	std::memmove(this->buffer.data(), this->buffer.data() + SIZE / 2, SIZE / 2);
 	this->len = SIZE / 2;
 	this->clear_screen();
 	this->draw_buffer();
 }
 
 void TtyMode::draw_char(size_t i) {
-	auto const idx = get_grid_index(i);
-	auto const c = get_character_tile_index(this->buffer[i]);
+	if (!this->in_focus) {
+		return;
+	}
+	size_t const idx = get_grid_index(i);
+	u16 const c = get_character_tile_index(this->buffer[i]);
 	SCREENBLOCKS[BG0_TILE_MAP][idx] = ScreenEntry(c, 0, 0);
 }
 
 void TtyMode::draw_buffer() {
+	if (!this->in_focus) {
+		return;
+	}
 	for (size_t i = 0; i < this->len; ++i) {
 		this->draw_char(i);
 	}
@@ -160,9 +173,11 @@ void TtyMode::draw_buffer() {
 
 void TtyMode::pad_to_newline() {
 	size_t until = (this->len / TtyMode::LINE_LEN + 1) * TtyMode::LINE_LEN;
-	for (; this->len < until; ++this->len) {
-		this->buffer[this->len] = ' ';
+	size_t len;
+	for (len = this->len; len < until; ++len) {
+		this->buffer[len] = ' ';
 	}
+	this->len = len;
 }
 
 void TtyMode::println(const char *s) {
@@ -173,6 +188,16 @@ void TtyMode::println(const char *s) {
 void TtyMode::println(const char *s, const size_t len) {
 	this->print(s);
 	this->print("\n");
+}
+
+void TtyMode::printf(const char *format, ...) {
+	char buf[1024];
+	va_list args;
+	va_start(args, format);
+	vsnprintf(buf, sizeof(buf), format, args);
+	va_end(args);
+
+	this->print(buf);
 }
 
 void TtyMode::print(const char *s) { this->print(s, strlen(s)); }
@@ -194,9 +219,7 @@ void TtyMode::print(const char *s, const size_t len) {
 		}
 		this->buffer[this->len] = c;
 
-		if (this->in_focus) {
-			this->draw_char(this->len - 1);
-		}
+		this->draw_char(this->len - 1);
 
 		this->len += 1;
 	}

@@ -53,8 +53,8 @@ static constexpr Colour GREEN = Colour({
 	.blue = 0,
 });
 static constexpr Colour YELLOW = Colour({
-	.red = 0b01110,
-	.green = 0b01110,
+	.red = 0b11111,
+	.green = 0b11111,
 	.blue = 0,
 });
 static constexpr Colour BLUE = Colour({
@@ -76,6 +76,14 @@ static constexpr Colour TRANSPARENT = BLACK;
 
 struct Palette {
 	Colour colours[16];
+
+	static constexpr Palette from_raw(const u16 raws[16]) {
+		Palette pal{};
+		for (size_t i = 0; i < 16; ++i) {
+			pal.colours[i] = raws[i];
+		}
+		return pal;
+	}
 };
 
 static_assert(sizeof(Palette[16]) == 0x0200);
@@ -130,9 +138,9 @@ static_assert(alignof(ScreenEntry) == alignof(u16));
 
 /// 4 bpp tile
 union STile {
-	byte raw[32];
-	u16 index_quads[16];
 	u32 index_octs[8];
+	u16 index_quads[16];
+	byte raw[32];
 };
 static_assert(sizeof(STile) == 32);
 

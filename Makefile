@@ -53,7 +53,7 @@ CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions \
 	-Wnull-dereference -Werror=format-security \
 	-Werror=missing-field-initializers -Werror=return-type \
 	-Werror=conversion -Werror=sign-conversion -Werror=float-conversion \
-	-std=gnu++20
+	-std=gnu++23
 
 ASFLAGS := -g $(ARCH)
 LDFLAGS = -g $(ARCH) -flto -Wl,-Map,$(notdir $*.map)

@@ -1,6 +1,11 @@
 #pragma once
 
 #include "state.h"
+#include <array>
+
+extern "C" {
+#include <tonc_types.h>
+}
 
 namespace tty {
 
@@ -13,7 +18,7 @@ class TtyMode : public state::Mode {
 	static constexpr size_t SIZE = LINE_LEN * COLUMN_LEN;
 
   private:
-	char buffer[SIZE];
+	std::array<char, SIZE> buffer;
 	size_t len = 0;
 	bool in_focus = false;
 
@@ -36,6 +41,7 @@ class TtyMode : public state::Mode {
 	void clear_buffer();
 	void scroll_down();
 	void print(const char *);
+	void printf(const char *format, ...);
 	void print(const char *, const size_t);
 	void println(const char *);
 	void println(const char *, const size_t);

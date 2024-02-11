@@ -1,10 +1,11 @@
 Draw stuff √
 Move cursor + additional hexgrid maths - Brage
 Move characters
-Mode system (navigation, menu, animation, etc) - Samuel
+Mode system (navigation, menu, animation, etc) √
 Audio system (music + sound effects) - Izaz
+Hexgrid rendering with layer hacks - Samuel
 * Levels (w/ different maps)
-* Scrollable map
+* Scrollable map √
 * Shortest path char → cursor
 * Animation
 * Context menus
@@ -15,4 +16,5 @@ Audio system (music + sound effects) - Izaz
 ** Saves
 ** Battle animations
 **** Figure out any hardware specific bugs
+**** "User" facing headers
 ***** Enemy AI
