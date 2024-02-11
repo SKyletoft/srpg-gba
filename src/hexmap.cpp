@@ -23,6 +23,7 @@ constexpr u16 TILE_SIZE = 9;
 void Hexmap::load_tilesets(Layer &layer) {
 	debug::printf("Loading tilesets: 0x%X\n", layer.tile_source);
 	memcpy_(&CHARBLOCKS[layer.tile_source][1], completeTiles);
+	CHARBLOCKS[layer.tile_source][0] = STile{.index_octs = {0}};
 }
 
 void Hexmap::load_palettes(Layer &) {
