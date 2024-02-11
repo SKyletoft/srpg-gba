@@ -4,8 +4,8 @@
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
-#include <stdarg.h>
 #include <span>
+#include <stdarg.h>
 
 extern "C" {
 #include <tonc.h>
@@ -109,6 +109,8 @@ void decompress_1bpp_to_4bpp(
 }
 
 void TtyMode::restore() {
+	this->in_focus = true;
+
 	decompress_1bpp_to_4bpp(CHARBLOCKS[BG0_TILE_SOURCE], sys8Glyphs, '~' - ' ');
 
 	this->clear_screen();
@@ -119,13 +121,16 @@ void TtyMode::restore() {
 		BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_4BPP | BG_REG_32x32;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
 
-	this->in_focus = true;
 	this->draw_buffer();
 }
 
 void TtyMode::vsync_hook() {}
 
 void TtyMode::clear_screen() {
+	if (!this->in_focus) {
+		return;
+	}
+
 	const ScreenEntry empty{0, 0, 0};
 	std::span<u16> tile_map{(u16 *)SCREENBLOCKS[BG0_TILE_MAP], 1024};
 
@@ -149,12 +154,18 @@ void TtyMode::scroll_down() {
 }
 
 void TtyMode::draw_char(size_t i) {
+	if (!this->in_focus) {
+		return;
+	}
 	size_t const idx = get_grid_index(i);
 	u16 const c = get_character_tile_index(this->buffer[i]);
 	SCREENBLOCKS[BG0_TILE_MAP][idx] = ScreenEntry(c, 0, 0);
 }
 
 void TtyMode::draw_buffer() {
+	if (!this->in_focus) {
+		return;
+	}
 	for (size_t i = 0; i < this->len; ++i) {
 		this->draw_char(i);
 	}
@@ -208,9 +219,7 @@ void TtyMode::print(const char *s, const size_t len) {
 		}
 		this->buffer[this->len] = c;
 
-		if (this->in_focus) {
-			this->draw_char(this->len - 1);
-		}
+		this->draw_char(this->len - 1);
 
 		this->len += 1;
 	}
