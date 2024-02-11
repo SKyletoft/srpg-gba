@@ -40,7 +40,8 @@ int main() {
 		util::wait_for_drawing_start();
 		if (mode != state::next_state) {
 			util::wait_for_vsync();
-			if (config::modes[mode]->blackout() || config::modes[state::next_state]->blackout())
+			if (config::modes[mode]->blackout()
+				|| config::modes[state::next_state]->blackout())
 			{
 				util::set_screen_to_black();
 			}
