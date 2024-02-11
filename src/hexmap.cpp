@@ -1,15 +1,13 @@
 #include "hexmap.h"
 
+#include "debug.h"
 #include "tiles.h"
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
 
 extern "C" {
-#include "flower.h"
-#include "grass.h"
-#include "water.h"
-#include "water2.h"
+#include "complete.h"
 }
 
 #define memcpy_(dest, src) std::memcpy((void *)dest, src, sizeof(src))
@@ -20,22 +18,15 @@ using tiles::CHARBLOCKS;
 using tiles::Palette;
 using tiles::PALETTE_MEMORY;
 
-constexpr u16 TILE_SIZE = 10;
+constexpr u16 TILE_SIZE = 9;
 
 void Hexmap::load_tilesets(Layer &layer) {
-	memcpy_((CHARBLOCKS[layer.tile_source] + 0 * TILE_SIZE), grassTiles);
-	memcpy_((CHARBLOCKS[layer.tile_source] + 1 * TILE_SIZE), waterTiles);
-	memcpy_((CHARBLOCKS[layer.tile_source] + 2 * TILE_SIZE), flowerTiles);
-	memcpy_((CHARBLOCKS[layer.tile_source] + 3 * TILE_SIZE), water2Tiles);
-	memcpy_((CHARBLOCKS[layer.tile_source] + 4 * TILE_SIZE), grassTiles);
+	debug::printf("Loading tilesets: 0x%X\n", layer.tile_source);
+	memcpy_(&CHARBLOCKS[layer.tile_source][1], completeTiles);
 }
 
 void Hexmap::load_palettes(Layer &) {
-	PALETTE_MEMORY[0] = Palette::from_raw(grassPal);
-	PALETTE_MEMORY[1] = Palette::from_raw(waterPal);
-	PALETTE_MEMORY[2] = Palette::from_raw(flowerPal);
-	PALETTE_MEMORY[3] = Palette::from_raw(waterPal);
-	PALETTE_MEMORY[4] = Palette::from_raw(grassPal);
+	PALETTE_MEMORY[0] = Palette::from_raw(completePal);
 }
 
 ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
@@ -57,13 +48,13 @@ ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
 	u8 palette = 0;
 	if (tile_x < WIDTH - (tile_y & 1) && tile_y < HEIGHT) {
 		u8 tile_type = this->map[tile_y, tile_x];
-		u16 tile_index = (u16)((y % 4) * 3 + (x % 3) + 1);
-		if (tile_index > TILE_SIZE - 1) {
-			tile_index = 0;
-		}
+		u16 tile_index = (u16)((y % 4) * 3 + (x % 3));
 		u16 hex_index = tile_type * TILE_SIZE;
-		palette = tile_type;
-		index = tile_index + hex_index;
+		index = (u16)(tile_index + hex_index + 1);
+
+		if (tile_index > TILE_SIZE - 1) {
+			index = 0;
+		}
 	}
 
 	return ScreenEntry(index, 0, palette);
