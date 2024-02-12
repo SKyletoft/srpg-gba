@@ -59,6 +59,7 @@ class InputState {
 
 void poll();
 std::array<InputState, 10> const &get_input();
+InputState get_button(Button);
 s8 horizontal_direction();
 s8 vertical_direction();
 

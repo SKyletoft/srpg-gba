@@ -57,6 +57,8 @@ void poll() {
 
 std::array<InputState, 10> const &get_input() { return BUTTON_STATES; }
 
+InputState get_button(Button button) { return BUTTON_STATES[button]; }
+
 s8 horizontal_direction() {
 	return (u8)BUTTON_STATES[Button::Right].is_down()
 		   - (u8)BUTTON_STATES[Button::Left].is_down();
