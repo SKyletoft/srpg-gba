@@ -3,6 +3,10 @@
 #include <array>
 #include <cstddef>
 
+extern "C" {
+#include <tonc_types.h>
+}
+
 namespace input {
 
 class Button {
@@ -55,5 +59,7 @@ class InputState {
 
 void poll();
 std::array<InputState, 10> const &get_input();
+s8 horizontal_direction();
+s8 vertical_direction();
 
 } // namespace input

@@ -57,4 +57,13 @@ void poll() {
 
 std::array<InputState, 10> const &get_input() { return BUTTON_STATES; }
 
+s8 horizontal_direction() {
+	return (u8)BUTTON_STATES[Button::Right].is_down()
+		   - (u8)BUTTON_STATES[Button::Left].is_down();
+}
+s8 vertical_direction() {
+	return (u8)BUTTON_STATES[Button::Down].is_down()
+		   - (u8)BUTTON_STATES[Button::Up].is_down();
+}
+
 } // namespace input
