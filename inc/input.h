@@ -1,8 +1,38 @@
 #pragma once
 
+#include <array>
+#include <cstddef>
+
 namespace input {
 
-enum class Button { A, B, L, R, Start, Select, Up, Down, Left, Right };
+class Button {
+  public:
+	enum InternalButton {
+		A = 0,
+		B,
+		Select,
+		Start,
+		Right,
+		Left,
+		Up,
+		Down,
+		R,
+		L,
+	};
+
+  private:
+	InternalButton const button = A;
+
+  public:
+	bool operator==(InternalButton const &rhs) const;
+	bool operator==(Button const &rhs) const;
+
+	constexpr operator size_t() const { return (size_t)this->button; }
+
+	Button(InternalButton const &from)
+		: button(from) {}
+	Button() {}
+};
 
 class InputState {
   public:
@@ -22,5 +52,8 @@ class InputState {
 		: state(from) {}
 	InputState() {}
 };
+
+void poll();
+std::array<InputState, 10> const &get_input();
 
 } // namespace input
