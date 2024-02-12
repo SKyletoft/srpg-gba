@@ -42,7 +42,7 @@ void poll() {
 	u16 raw = REG_KEYINPUT;
 
 	for (auto button : buttons) {
-		bool down = (bool)(raw & (1 << button));
+		bool down = !(bool)(raw & (1 << button));
 		if (down) {
 			BUTTON_STATES[button] = BUTTON_STATES[button].is_down()
 										? InputState::Held
