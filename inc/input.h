@@ -46,8 +46,8 @@ class InputState {
 	InternalInputState state = InputState::Up;
 
   public:
-	bool is_down();
-	bool is_up();
+	bool is_down() const;
+	bool is_up() const;
 
 	bool operator==(InternalInputState const &rhs) const;
 	bool operator==(InputState const &rhs) const;

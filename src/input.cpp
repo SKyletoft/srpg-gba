@@ -8,12 +8,12 @@ extern "C" {
 
 namespace input {
 
-bool InputState::is_down() {
+bool InputState::is_down() const {
 	return this->state == InputState::Pressed
 		   || this->state == InputState::Held;
 }
 
-bool InputState::is_up() { return !this->is_down(); }
+bool InputState::is_up() const { return !this->is_down(); }
 
 bool InputState::operator==(InternalInputState const &rhs) const {
 	return this->state == rhs;
