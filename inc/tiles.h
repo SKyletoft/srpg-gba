@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <cmath>
 #include <span>
 
 extern "C" {
@@ -14,6 +16,11 @@ class Colour {
 	u16 data;
 
 	static constexpr u16 convert(u8 red, u8 green, u8 blue) {
+		auto const clamp = [](u8 x) { return std::clamp(x, (u8)0, (u8)31); };
+		red = clamp(red);
+		green = clamp(green);
+		blue = clamp(blue);
+
 		constexpr u16 MASK = 0b11111;
 		const u16 be =
 			(u16)(((blue & MASK) << 10) | ((green & MASK) << 5) | (red & MASK));
@@ -28,6 +35,13 @@ class Colour {
 	};
 
   public:
+	consteval static Colour from_24bit_colour(u8 red, u8 green, u8 blue) {
+		auto const lerp = [](u8 x) {
+			return (u8)std::round(std::lerp(0, 31, (double)x / 255.0));
+		};
+		return Colour(lerp(red), lerp(green), lerp(blue));
+	}
+
 	constexpr Colour(u8 red, u8 green, u8 blue)
 		: data(convert(red, green, blue)) {}
 

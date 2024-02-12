@@ -1,13 +1,11 @@
 #include "scrolling_rainbow.h"
 
 #include "tiles.h"
-#include "util.h"
 #include <ranges>
 #include <span>
 
 extern "C" {
 #include <tonc.h>
-#include <tonc_input.h>
 #include <tonc_memdef.h>
 #include <tonc_memmap.h>
 }

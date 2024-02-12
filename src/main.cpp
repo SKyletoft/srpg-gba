@@ -1,3 +1,4 @@
+#include "input.h"
 #include "state.h"
 #include "tty.h"
 #include "util.h"
@@ -5,10 +6,6 @@
 #include <cstddef>
 #include <exception>
 #include <span>
-
-extern "C" {
-#include <tonc.h>
-}
 
 namespace config {
 extern std::span<state::Mode *const> modes;
@@ -52,7 +49,7 @@ int main() {
 			config::modes[mode]->restore();
 		}
 
-		key_poll();
+		input::poll();
 		config::modes[mode]->update();
 
 		for (auto mode : config::modes) {

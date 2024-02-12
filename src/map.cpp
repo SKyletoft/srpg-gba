@@ -1,13 +1,13 @@
 #include "map.h"
+
 #include "hex-overlay.h"
+#include "input.h"
 #include "state.h"
 #include "tiles.h"
-
 #include <cstring>
 
 extern "C" {
 #include <tonc.h>
-#include <tonc_input.h>
 #include <tonc_video.h>
 
 #include "arrow.h"
@@ -18,6 +18,8 @@ extern "C" {
 #define memcpy_(dest, src) std::memcpy((void *)dest, src, sizeof(src))
 
 namespace map {
+
+using input::Button;
 
 void MapMode::load_metr_pal() { memcpy_(pal_obj_mem, arrowPal); }
 
@@ -108,30 +110,28 @@ void MapMode::load_hexgrid() {
 }
 
 void MapMode::handle_input() {
-	switch (key_tri_vert()) {
-	case -1: {
+	if (input::get_button(Button::Up).is_down()) {
 		this->y--;
 		this->x += (this->y % 2 == 0);
 		this->cooldown = COOLDOWN_TIMER;
-	} break;
-	case 1: {
+	}
+	if (input::get_button(Button::Down).is_down()) {
 		this->y++;
 		this->x -= (this->y % 2 == 1);
 		this->cooldown = COOLDOWN_TIMER;
-	} break;
 	}
-	switch (key_tri_horz()) {
-	case -1: {
+	if (input::get_button(Button::Left).is_down()) {
 		this->x--;
 		this->cooldown = COOLDOWN_TIMER;
-	} break;
-	case 1: {
+	}
+	if (input::get_button(Button::Right).is_down()) {
 		this->x++;
 		this->cooldown = COOLDOWN_TIMER;
-	} break;
 	}
 
-	if (key_held(1 << KI_R) && key_held(1 << KI_L)) {
+	if (input::get_button(Button::R).is_down()
+		&& input::get_button(Button::L).is_down())
+	{
 		state::next_state = 1;
 	}
 }

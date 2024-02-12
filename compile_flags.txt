@@ -6,11 +6,12 @@
 -Wexta
 -Wpedantic
 -Wno-unused-parameter
+-Wno-unused-const
 -Wfloat-equal
 -Wnon-virtual-dtor
--Wcast-align
 -Wzero-as-null-pointer-constant
 -Wunused
+-Wunused-result
 -Woverloaded-virtual
 -Wmisleading-indentation
 -Wduplicated-cond
@@ -24,5 +25,6 @@
 -Werror=conversion
 -Werror=sign-conversion
 -Werror=float-conversion
+-Werror=cast-align
 -std=gnu++23
 -stdlib=libstdc++

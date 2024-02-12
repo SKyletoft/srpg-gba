@@ -4,11 +4,7 @@
 #include "tiles.h"
 
 extern "C" {
-#include "dry.h"
-#include "grass.h"
-
 #include <tonc.h>
-#include <tonc_input.h>
 #include <tonc_memdef.h>
 #include <tonc_memmap.h>
 }
