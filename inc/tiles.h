@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
 #include <span>
 
 extern "C" {
@@ -34,6 +35,13 @@ class Colour {
 	};
 
   public:
+	consteval static Colour from_24bit_colour(u8 red, u8 green, u8 blue) {
+		auto const lerp = [](u8 x) {
+			return (u8)std::round(std::lerp(0, 31, (double)x / 255.0));
+		};
+		return Colour(lerp(red), lerp(green), lerp(blue));
+	}
+
 	constexpr Colour(u8 red, u8 green, u8 blue)
 		: data(convert(red, green, blue)) {}
 
