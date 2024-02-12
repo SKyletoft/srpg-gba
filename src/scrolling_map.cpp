@@ -100,8 +100,8 @@ void ScrollingMap::update() {
 	this->update_layer(this->layer0);
 	this->update_layer(this->layer1);
 
-	if (input::get_input()[Button::L].is_down()
-		&& input::get_input()[Button::R].is_down())
+	if (input::get_button(Button::L).is_down()
+		&& input::get_button(Button::R).is_down())
 	{
 		state::next_state = 2;
 	}
