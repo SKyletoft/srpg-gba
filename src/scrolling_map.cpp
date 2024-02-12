@@ -1,21 +1,21 @@
 #include "scrolling_map.h"
 
+#include "input.h"
 #include "tiles.h"
 #include "util.h"
 #include <algorithm>
-#include <array>
 #include <cstring>
 
 extern "C" {
 #include <tonc.h>
-#include <tonc_input.h>
-#include <tonc_memdef.h>
 #include <tonc_memmap.h>
 }
 
 #define memcpy_(dest, src) std::memcpy((void *)dest, src, sizeof(src))
 
 namespace scrolling_map {
+
+using input::Button;
 
 size_t get_screenblock_offset_from_tiles(s16 x, s16 y) {
 	while (x < 0) {
@@ -55,10 +55,12 @@ void ScrollingMap::load_map(Layer &layer) {
 }
 
 void ScrollingMap::update_layer(Layer &layer) {
-	layer.x =
-		std::clamp((s16)(layer.x + key_tri_horz()), layer.min_x, layer.max_x);
-	layer.y =
-		std::clamp((s16)(layer.y + key_tri_vert()), layer.min_y, layer.max_y);
+	layer.x = std::clamp(
+		(s16)(layer.x + input::horizontal_direction()), layer.min_x, layer.max_x
+	);
+	layer.y = std::clamp(
+		(s16)(layer.y + input::vertical_direction()), layer.min_y, layer.max_y
+	);
 
 	ScreenEntry volatile *const base = tiles::SCREENBLOCKS[layer.tile_map];
 
@@ -97,7 +99,10 @@ void ScrollingMap::update_layer(Layer &layer) {
 void ScrollingMap::update() {
 	this->update_layer(this->layer0);
 	this->update_layer(this->layer1);
-	if (key_held(1 << KI_R) && key_held(1 << KI_L)) {
+
+	if (input::get_input()[Button::L].is_down()
+		&& input::get_input()[Button::R].is_down())
+	{
 		state::next_state = 2;
 	}
 }

@@ -1,5 +1,6 @@
 #include "tty.h"
 
+#include "input.h"
 #include "tiles.h"
 #include <cstddef>
 #include <cstdlib>
@@ -9,13 +10,13 @@
 
 extern "C" {
 #include <tonc.h>
-#include <tonc_input.h>
 
 extern const u32 sys8Glyphs[192];
 }
 
 namespace tty {
 
+using input::Button;
 using tiles::CHARBLOCKS;
 using tiles::Palette;
 using tiles::SCREENBLOCKS;
@@ -40,32 +41,34 @@ constexpr size_t get_grid_index(size_t i) {
 }
 
 void TtyMode::update() {
-	if (!(key_held(1 << KI_R) && key_held(1 << KI_L))) {
+	auto const &input = input::get_input();
+
+	if (input[Button::R].is_up() || input[Button::L].is_up()) {
 		state::next_state = 0;
 	}
 
-	if (key_held(1 << KI_LEFT)) {
+	if (input[Button::Left].is_down()) {
 		this->print("<");
 	}
-	if (key_held(1 << KI_RIGHT)) {
+	if (input[Button::Right].is_down()) {
 		this->print(">");
 	}
-	if (key_held(1 << KI_UP)) {
+	if (input[Button::Up].is_down()) {
 		this->print("^");
 	}
-	if (key_held(1 << KI_DOWN)) {
+	if (input[Button::Down].is_down()) {
 		this->print("v");
 	}
-	if (key_held(1 << KI_A)) {
+	if (input[Button::A].is_down()) {
 		this->print("a");
 	}
-	if (key_held(1 << KI_B)) {
+	if (input[Button::B].is_down()) {
 		this->print("b");
 	}
-	if (key_held(1 << KI_START)) {
+	if (input[Button::Start].is_down()) {
 		this->println("");
 	}
-	if (key_held(1 << KI_SELECT)) {
+	if (input[Button::Select].is_down()) {
 		this->clear();
 	}
 }
