@@ -41,34 +41,34 @@ constexpr size_t get_grid_index(size_t i) {
 }
 
 void TtyMode::update() {
-	auto const &input = input::get_input();
-
-	if (input[Button::R].is_up() || input[Button::L].is_up()) {
+	if (input::get_button(Button::R).is_up()
+		|| input::get_button(Button::L).is_up())
+	{
 		state::next_state = 0;
 	}
 
-	if (input[Button::Left].is_down()) {
+	if (input::get_button(Button::Left).is_down()) {
 		this->print("<");
 	}
-	if (input[Button::Right].is_down()) {
+	if (input::get_button(Button::Right).is_down()) {
 		this->print(">");
 	}
-	if (input[Button::Up].is_down()) {
+	if (input::get_button(Button::Up).is_down()) {
 		this->print("^");
 	}
-	if (input[Button::Down].is_down()) {
+	if (input::get_button(Button::Down).is_down()) {
 		this->print("v");
 	}
-	if (input[Button::A].is_down()) {
+	if (input::get_button(Button::A).is_down()) {
 		this->print("a");
 	}
-	if (input[Button::B].is_down()) {
+	if (input::get_button(Button::B).is_down()) {
 		this->print("b");
 	}
-	if (input[Button::Start].is_down()) {
+	if (input::get_button(Button::Start).is_down()) {
 		this->println("");
 	}
-	if (input[Button::Select].is_down()) {
+	if (input::get_button(Button::Select).is_down()) {
 		this->clear();
 	}
 }

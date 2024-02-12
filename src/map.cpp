@@ -110,27 +110,28 @@ void MapMode::load_hexgrid() {
 }
 
 void MapMode::handle_input() {
-	auto const &input = input::get_input();
-	if (input[Button::Up].is_down()) {
+	if (input::get_button(Button::Up).is_down()) {
 		this->y--;
 		this->x += (this->y % 2 == 0);
 		this->cooldown = COOLDOWN_TIMER;
 	}
-	if (input[Button::Down].is_down()) {
+	if (input::get_button(Button::Down).is_down()) {
 		this->y++;
 		this->x -= (this->y % 2 == 1);
 		this->cooldown = COOLDOWN_TIMER;
 	}
-	if (input[Button::Left].is_down()) {
+	if (input::get_button(Button::Left).is_down()) {
 		this->x--;
 		this->cooldown = COOLDOWN_TIMER;
 	}
-	if (input[Button::Right].is_down()) {
+	if (input::get_button(Button::Right).is_down()) {
 		this->x++;
 		this->cooldown = COOLDOWN_TIMER;
 	}
 
-	if (input[Button::R].is_down() && input[Button::L].is_down()) {
+	if (input::get_button(Button::R).is_down()
+		&& input::get_button(Button::L).is_down())
+	{
 		state::next_state = 1;
 	}
 }
