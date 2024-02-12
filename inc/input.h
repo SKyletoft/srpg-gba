@@ -25,7 +25,7 @@ class Button {
 	};
 
   private:
-	InternalButton const button = A;
+	InternalButton button = A;
 
   public:
 	bool operator==(InternalButton const &rhs) const;
