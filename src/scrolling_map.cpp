@@ -128,8 +128,7 @@ void ScrollingMap::restore() {
 	this->vsync_hook();
 }
 
-void ScrollingMap::suspend() {
-}
+void ScrollingMap::suspend() {}
 
 void ScrollingMap::vsync_hook() {
 	REG_BG0HOFS = (u16)this->layer0.x;
