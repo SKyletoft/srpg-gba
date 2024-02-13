@@ -43,7 +43,7 @@ CFLAGS := -g -Oz -flto \
 	-mcpu=arm7tdmi -mtune=arm7tdmi \
 	$(ARCH)
 
-CFLAGS += $(INCLUDE)
+CFLAGS += $(INCLUDE) -D_GLIBCXX_DEBUG
 
 CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions \
 	-Wall -Wextra -Wpedantic -Wno-unused-parameter -Wfloat-equal \
