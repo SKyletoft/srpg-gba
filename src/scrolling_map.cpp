@@ -1,6 +1,7 @@
 #include "scrolling_map.h"
 
 #include "input.h"
+#include "state.h"
 #include "tiles.h"
 #include "util.h"
 #include <algorithm>
@@ -104,6 +105,10 @@ void ScrollingMap::update() {
 		&& input::get_button(Button::R).is_down())
 	{
 		state::next_state = 2;
+	}
+
+	if (input::get_button(Button::A).is_down()) {
+		state::next_state = 3;
 	}
 }
 
