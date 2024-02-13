@@ -2,6 +2,7 @@
 
 #include "input.h"
 #include "tiles.h"
+#include "util.h"
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
@@ -134,12 +135,7 @@ void TtyMode::clear_screen() {
 		return;
 	}
 
-	const ScreenEntry empty{0, 0, 0};
-	std::span<u16> tile_map{(u16 *)SCREENBLOCKS[BG0_TILE_MAP], 1024};
-
-	for (u16 &tile : tile_map) {
-		tile = empty;
-	}
+	util::clear_layer(BG0_TILE_MAP);
 }
 
 void TtyMode::clear_buffer() { this->len = 0; }

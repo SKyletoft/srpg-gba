@@ -19,6 +19,14 @@ void spin() {
 	}
 }
 
+void clear_layer(size_t screenblock) {
+	const tiles::ScreenEntry empty{0, 0, 0};
+	std::span<u16> tile_map{(u16 *)tiles::SCREENBLOCKS[screenblock], 1024};
+	for (u16 &tile : tile_map) {
+		tile = empty;
+	}
+}
+
 void set_screen_to_black() {
 	for (auto &palette : tiles::PALETTE_MEMORY) {
 		palette = tiles::BLACK_ON_BLACK;
