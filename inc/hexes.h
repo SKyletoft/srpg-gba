@@ -6,7 +6,7 @@ extern "C" {
 
 namespace hexes {
 
-enum Direction { R, UR, UL, L, DL, DR };
+enum class Direction { R, UR, UL, L, DL, DR };
 
 struct CubeCoord {
 	s16 q;

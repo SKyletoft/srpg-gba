@@ -60,7 +60,7 @@ CubeCoord CubeCoord::subtract(CubeCoord vec) const {
 }
 
 CubeCoord CubeCoord::neighbour(Direction dir) const {
-	return CUBE_DIRECTION_VECTORS[dir];
+	return CUBE_DIRECTION_VECTORS[(size_t)dir];
 };
 
 s16 CubeCoord::distance(CubeCoord hex) const {
