@@ -13,7 +13,7 @@ namespace util {
 // runtime, but let's not rely on that until we've checked it out
 // with gdb
 vu32 x;
-void spin() {
+[[noreturn]] void spin() {
 	for (u32 i = 0;; ++i) {
 		x = i;
 	}

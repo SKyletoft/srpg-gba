@@ -3,7 +3,6 @@
 #include "tty.h"
 #include "util.h"
 
-#include <exception>
 #include <span>
 
 namespace config {
@@ -14,7 +13,7 @@ namespace debug {
 extern tty::TtyMode tty_mode;
 }
 
-void error_handler() {
+extern "C" [[noreturn]] void _exit(int) {
 	debug::tty_mode.restore();
 	debug::tty_mode.clear();
 	debug::tty_mode.println("Crashed!");
@@ -23,8 +22,6 @@ void error_handler() {
 }
 
 int main() {
-	std::set_terminate(error_handler);
-
 	state::next_state = 0;
 
 	state::current_state = state::next_state;

@@ -12,7 +12,7 @@ extern "C" {
 namespace util {
 
 extern vu32 x;
-void spin();
+[[noreturn]] void spin();
 
 void set_screen_to_black();
 void clear_layer(size_t);
