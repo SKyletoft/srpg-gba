@@ -47,4 +47,19 @@ class TtyMode : public state::Mode {
 	void println(const char *, const size_t);
 };
 
+constexpr u16 get_character_tile_index(char c) {
+	if (' ' <= c && c <= '~') {
+		return (u16)(c - ' ');
+	}
+	return 0;
+}
+
+constexpr size_t get_grid_index(size_t i) {
+	size_t d = i / TtyMode::LINE_LEN;
+	size_t r = i % TtyMode::LINE_LEN;
+
+	return d * 32 + r;
+}
+
+
 } // namespace tty

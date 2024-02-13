@@ -27,20 +27,6 @@ using tiles::STile;
 constexpr size_t BG0_TILE_SOURCE = 0;
 constexpr size_t BG0_TILE_MAP = 8;
 
-constexpr u16 get_character_tile_index(char c) {
-	if (' ' <= c && c <= '~') {
-		return (u16)(c - ' ');
-	}
-	return 0;
-}
-
-constexpr size_t get_grid_index(size_t i) {
-	size_t d = i / TtyMode::LINE_LEN;
-	size_t r = i % TtyMode::LINE_LEN;
-
-	return d * 32 + r;
-}
-
 void TtyMode::update() {
 	if (input::get_button(Button::R).is_up()
 		|| input::get_button(Button::L).is_up())
