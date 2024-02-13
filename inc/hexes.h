@@ -13,15 +13,15 @@ struct CubeCoord {
 	s16 r;
 	s16 s;
 
-	CubeCoord add(CubeCoord);
-	CubeCoord subtract(CubeCoord);
-	CubeCoord scale(s16);
-
-	CubeCoord neighbour(Direction);
-	s16 distance(CubeCoord);
+	CubeCoord add(CubeCoord) const;
 	CubeCoord operator+(CubeCoord) const;
+	CubeCoord subtract(CubeCoord) const;
 	CubeCoord operator-(CubeCoord) const;
+	CubeCoord scale(s16) const;
 	CubeCoord operator*(s16) const;
+
+	CubeCoord neighbour(Direction) const;
+	s16 distance(CubeCoord) const;
 };
 
 struct OffsetXYCoord {

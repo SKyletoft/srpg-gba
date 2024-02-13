@@ -41,27 +41,29 @@ AxialCoord offsetXY_to_axial(OffsetXYCoord hex) {
 
 CubeCoord CubeCoord::operator*(s16 factor) const { return this->scale(factor); }
 
-CubeCoord CubeCoord::scale(s16 factor) {
+CubeCoord CubeCoord::scale(s16 factor) const {
 	return CubeCoord(this->q * factor, this->r * factor, this->s * factor);
 }
 
 CubeCoord CubeCoord::operator+(CubeCoord vec) const { return this->add(vec); }
 
-CubeCoord CubeCoord::add(CubeCoord vec) {
+CubeCoord CubeCoord::add(CubeCoord vec) const {
 	return CubeCoord(this->q + vec.q, this->r + vec.r, this->s + vec.s);
 };
 
-CubeCoord CubeCoord::operator-(CubeCoord vec) const { return this->subtract(vec); }
+CubeCoord CubeCoord::operator-(CubeCoord vec) const {
+	return this->subtract(vec);
+}
 
-CubeCoord CubeCoord::subtract(CubeCoord vec) {
+CubeCoord CubeCoord::subtract(CubeCoord vec) const {
 	return CubeCoord(this->q - vec.q, this->r - vec.r, this->s - vec.s);
 }
 
-CubeCoord CubeCoord::neighbour(Direction dir) {
+CubeCoord CubeCoord::neighbour(Direction dir) const {
 	return CUBE_DIRECTION_VECTORS[dir];
 };
 
-s16 CubeCoord::distance(CubeCoord hex) {
+s16 CubeCoord::distance(CubeCoord hex) const {
 	CubeCoord vec = this->subtract(hex);
 	auto dist = (std::abs(vec.q) + std::abs(vec.r) + std::abs(vec.s)) / 2;
 	return (s16)dist;
