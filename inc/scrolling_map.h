@@ -89,6 +89,8 @@ class ScrollingMap : public state::Mode {
 			  .x = 4
 		  }) {}
 
+	bool blackout() override;
+
 	void update() override;
 	void always_update() override;
 	void restore() override;

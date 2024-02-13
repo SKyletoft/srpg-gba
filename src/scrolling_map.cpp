@@ -137,4 +137,11 @@ void ScrollingMap::vsync_hook() {
 	REG_BG1VOFS = (u16)this->layer1.y;
 }
 
+bool ScrollingMap::blackout() {
+	return !(
+		(state::current_state == 0 && state::next_state == 3)
+		|| (state::current_state == 3 && state::next_state == 0)
+	);
+}
+
 } // namespace scrolling_map
