@@ -158,6 +158,8 @@ union STile {
 };
 static_assert(sizeof(STile) == 32);
 
+constexpr STile EMPTY{{0, 0, 0, 0, 0, 0, 0, 0}};
+
 using Charblock = STile[512];
 static_assert(sizeof(Charblock) == 16 * 1024);
 static const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 4};
