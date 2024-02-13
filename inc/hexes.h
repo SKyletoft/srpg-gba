@@ -19,6 +19,9 @@ struct CubeCoord {
 
 	CubeCoord neighbour(Direction);
 	s16 distance(CubeCoord);
+	CubeCoord operator+(CubeCoord) const;
+	CubeCoord operator-(CubeCoord) const;
+	CubeCoord operator*(s16) const;
 };
 
 struct OffsetXYCoord {
