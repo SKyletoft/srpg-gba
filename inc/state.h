@@ -8,6 +8,7 @@ extern "C" {
 
 namespace state {
 
+extern size_t current_state;
 extern size_t next_state;
 extern size_t last_state;
 

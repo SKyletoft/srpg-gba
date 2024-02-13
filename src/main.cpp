@@ -3,7 +3,6 @@
 #include "tty.h"
 #include "util.h"
 
-#include <cstddef>
 #include <exception>
 #include <span>
 
@@ -28,36 +27,36 @@ int main() {
 
 	state::next_state = 0;
 
-	size_t mode = state::next_state;
+	state::current_state = state::next_state;
 	debug::tty_mode.println("Initialising...");
 
-	config::modes[mode]->restore();
+	config::modes[state::current_state]->restore();
 
 	for (;;) {
 		util::wait_for_drawing_start();
-		if (mode != state::next_state) {
+		if (state::current_state != state::next_state) {
 			util::wait_for_vsync();
-			if (config::modes[mode]->blackout()
+			if (config::modes[state::current_state]->blackout()
 				|| config::modes[state::next_state]->blackout())
 			{
 				util::set_screen_to_black();
 			}
-			config::modes[mode]->suspend();
-			state::last_state = mode;
-			mode = state::next_state;
+			config::modes[state::current_state]->suspend();
+			state::last_state = state::current_state;
+			state::current_state = state::next_state;
 			util::wait_for_vsync();
-			config::modes[mode]->restore();
+			config::modes[state::current_state]->restore();
 		}
 
 		input::poll();
-		config::modes[mode]->update();
+		config::modes[state::current_state]->update();
 
 		for (auto mode : config::modes) {
 			mode->always_update();
 		}
 
 		util::wait_for_drawing_complete();
-		config::modes[mode]->vsync_hook();
+		config::modes[state::current_state]->vsync_hook();
 	}
 
 	util::spin();
