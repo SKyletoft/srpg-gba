@@ -15,7 +15,8 @@ struct CubeCoord;
 struct OffsetXYCoord;
 struct AxialCoord;
 
-enum class Direction { R, UR, UL, L, DL, DR };
+// Note: Used for indexing, mirror any changes in CUBE_DIRECTION_VECTORS
+enum class Direction { R = 0, UR, UL, L, DL, DR };
 
 struct CubeCoord {
 	s16 const q;
