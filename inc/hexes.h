@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <cstdlib>
 #include <optional>
 
 extern "C" {
@@ -32,8 +33,8 @@ struct CubeCoord {
 	}
 
   public:
+	// Operators
 
-	s16 distance(CubeCoord) const;
 	constexpr CubeCoord operator+(CubeCoord vec) const {
 		return this->add(vec);
 	}
@@ -54,8 +55,17 @@ struct CubeCoord {
 		return CubeCoord(this->q * factor, this->r * factor, this->s * factor);
 	}
 
+	// Methods
+
+	constexpr s16 distance(CubeCoord hex) const {
+		CubeCoord vec = *this - hex;
+		auto dist = (std::abs(vec.q) + std::abs(vec.r) + std::abs(vec.s)) / 2;
+		return (s16)dist;
+	}
 
 	constexpr CubeCoord neighbour(Direction dir) const;
+
+	// Factories
 
 	static constexpr std::optional<CubeCoord> from_qrs(s16 q, s16 r, s16 s) {
 		if (check_invariant(q, r, s)) {
@@ -68,28 +78,96 @@ struct CubeCoord {
 		return CubeCoord(q, r, s);
 	}
 
-	friend CubeCoord offsetXY_to_cube(OffsetXYCoord);
-	friend CubeCoord axial_to_cube(AxialCoord);
+	constexpr OffsetXYCoord to_offset_xy();
+	static constexpr CubeCoord from_offset_xy(OffsetXYCoord);
+
+	constexpr AxialCoord to_axial_coord();
+	static constexpr CubeCoord from_axial_coord(AxialCoord);
 };
 
 struct OffsetXYCoord {
 	s16 col;
 	s16 row;
+
+	constexpr CubeCoord to_cube_coord();
+	static constexpr OffsetXYCoord from_cube_coord(CubeCoord);
+
+	constexpr AxialCoord to_axial_coord();
+	static constexpr OffsetXYCoord from_axial_coord(AxialCoord);
 };
 
 struct AxialCoord {
 	s16 q;
 	s16 r;
+
+	constexpr CubeCoord to_cube_coord();
+	static constexpr AxialCoord from_cube_coord(CubeCoord);
+
+	constexpr OffsetXYCoord to_offset_xy();
+	static constexpr AxialCoord from_offset_xy(OffsetXYCoord);
 };
 
-OffsetXYCoord cube_to_offsetXY(CubeCoord hex);
-OffsetXYCoord axial_to_offsetXY(AxialCoord hex);
+constexpr OffsetXYCoord CubeCoord::to_offset_xy() {
+	auto hex = *this;
+	auto col = hex.q + (hex.r - (hex.r & 1)) / 2;
+	auto row = hex.r;
+	return OffsetXYCoord((s16)col, (s16)row);
+}
 
-CubeCoord offsetXY_to_cube(OffsetXYCoord hex);
-CubeCoord axial_to_cube(AxialCoord hex);
+constexpr CubeCoord CubeCoord::from_offset_xy(OffsetXYCoord rhs) {
+	return rhs.to_cube_coord();
+}
 
-AxialCoord cube_to_axial(CubeCoord hex);
-AxialCoord offsetXY_to_axial(OffsetXYCoord hex);
+constexpr AxialCoord CubeCoord::to_axial_coord() {
+	auto hex = *this;
+	s16 q = hex.q;
+	s16 r = hex.r;
+	return AxialCoord(q, r);
+}
+
+constexpr CubeCoord CubeCoord::from_axial_coord(AxialCoord rhs) {
+	return rhs.to_cube_coord();
+}
+
+constexpr CubeCoord OffsetXYCoord::to_cube_coord() {
+	auto hex = *this;
+	auto q = hex.col - (hex.row - (hex.row & 1)) / 2;
+	auto r = hex.row;
+	auto s = -q - r;
+	return CubeCoord::unsafe_from_qrs_unchecked((s16)q, (s16)r, (s16)s);
+}
+
+constexpr OffsetXYCoord OffsetXYCoord::from_cube_coord(CubeCoord rhs) {
+	return rhs.to_offset_xy();
+}
+
+constexpr AxialCoord OffsetXYCoord::to_axial_coord() {
+	return this->to_cube_coord().to_axial_coord();
+}
+
+constexpr OffsetXYCoord OffsetXYCoord::from_axial_coord(AxialCoord rhs) {
+	return rhs.to_offset_xy();
+}
+
+constexpr CubeCoord AxialCoord::to_cube_coord() {
+	auto hex = *this;
+	s16 q = hex.q;
+	s16 r = hex.r;
+	s16 s = (s16)-q - (s16)r;
+	return CubeCoord::unsafe_from_qrs_unchecked(q, r, s);
+}
+
+constexpr AxialCoord AxialCoord::from_cube_coord(CubeCoord rhs) {
+	return rhs.to_axial_coord();
+}
+
+constexpr OffsetXYCoord AxialCoord::to_offset_xy() {
+	return this->to_cube_coord().to_offset_xy();
+}
+
+constexpr AxialCoord AxialCoord::from_offset_xy(OffsetXYCoord rhs) {
+	return rhs.to_axial_coord();
+}
 
 static constexpr std::array<CubeCoord, 6> CUBE_DIRECTION_VECTORS = {
 	CubeCoord::unsafe_from_qrs_unchecked(1, 0, -1),
