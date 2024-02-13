@@ -59,10 +59,6 @@ CubeCoord CubeCoord::subtract(CubeCoord vec) const {
 	return CubeCoord(this->q - vec.q, this->r - vec.r, this->s - vec.s);
 }
 
-CubeCoord CubeCoord::neighbour(Direction dir) const {
-	return CUBE_DIRECTION_VECTORS[(size_t)dir];
-};
-
 s16 CubeCoord::distance(CubeCoord hex) const {
 	CubeCoord vec = this->subtract(hex);
 	auto dist = (std::abs(vec.q) + std::abs(vec.r) + std::abs(vec.s)) / 2;

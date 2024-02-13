@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 extern "C" {
 #include <tonc_types.h>
 }
@@ -20,8 +22,9 @@ struct CubeCoord {
 	CubeCoord scale(s16) const;
 	CubeCoord operator*(s16) const;
 
-	CubeCoord neighbour(Direction) const;
 	s16 distance(CubeCoord) const;
+
+	constexpr CubeCoord neighbour(Direction dir) const;
 };
 
 struct OffsetXYCoord {
@@ -43,13 +46,17 @@ CubeCoord axial_to_cube(AxialCoord hex);
 AxialCoord cube_to_axial(CubeCoord hex);
 AxialCoord offsetXY_to_axial(OffsetXYCoord hex);
 
-CubeCoord const CUBE_DIRECTION_VECTORS[] = {
+static constexpr CubeCoord CUBE_DIRECTION_VECTORS[] = {
 	CubeCoord(1, 0, -1),
 	CubeCoord(1, -1, 0),
 	CubeCoord(0, -1, 1),
 	CubeCoord(-1, 0, 1),
 	CubeCoord(-1, 1, 0),
 	CubeCoord(0, 1, -1),
+};
+
+constexpr CubeCoord CubeCoord::neighbour(Direction dir) const {
+	return CUBE_DIRECTION_VECTORS[(size_t)dir];
 };
 
 } // namespace hexes
