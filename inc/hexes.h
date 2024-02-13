@@ -32,14 +32,28 @@ struct CubeCoord {
 	}
 
   public:
-	CubeCoord add(CubeCoord) const;
-	CubeCoord operator+(CubeCoord) const;
-	CubeCoord subtract(CubeCoord) const;
-	CubeCoord operator-(CubeCoord) const;
-	CubeCoord scale(s16) const;
-	CubeCoord operator*(s16) const;
 
 	s16 distance(CubeCoord) const;
+	constexpr CubeCoord operator+(CubeCoord vec) const {
+		return this->add(vec);
+	}
+	constexpr CubeCoord operator*(s16 factor) const {
+		return this->scale(factor);
+	}
+	constexpr CubeCoord operator-(CubeCoord vec) const {
+		return this->subtract(vec);
+	}
+
+	constexpr CubeCoord add(CubeCoord const vec) const {
+		return CubeCoord(this->q + vec.q, this->r + vec.r, this->s + vec.s);
+	}
+	constexpr CubeCoord subtract(CubeCoord vec) const {
+		return CubeCoord(this->q - vec.q, this->r - vec.r, this->s - vec.s);
+	}
+	constexpr CubeCoord scale(s16 factor) const {
+		return CubeCoord(this->q * factor, this->r * factor, this->s * factor);
+	}
+
 
 	constexpr CubeCoord neighbour(Direction dir) const;
 

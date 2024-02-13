@@ -39,25 +39,7 @@ AxialCoord offsetXY_to_axial(OffsetXYCoord hex) {
 	return cube_to_axial(cube);
 };
 
-CubeCoord CubeCoord::operator*(s16 factor) const { return this->scale(factor); }
 
-CubeCoord CubeCoord::scale(s16 factor) const {
-	return CubeCoord(this->q * factor, this->r * factor, this->s * factor);
-}
-
-CubeCoord CubeCoord::operator+(CubeCoord vec) const { return this->add(vec); }
-
-CubeCoord CubeCoord::add(CubeCoord vec) const {
-	return CubeCoord(this->q + vec.q, this->r + vec.r, this->s + vec.s);
-};
-
-CubeCoord CubeCoord::operator-(CubeCoord vec) const {
-	return this->subtract(vec);
-}
-
-CubeCoord CubeCoord::subtract(CubeCoord vec) const {
-	return CubeCoord(this->q - vec.q, this->r - vec.r, this->s - vec.s);
-}
 
 s16 CubeCoord::distance(CubeCoord hex) const {
 	CubeCoord vec = this->subtract(hex);
