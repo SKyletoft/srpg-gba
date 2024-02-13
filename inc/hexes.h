@@ -6,30 +6,29 @@ extern "C" {
 
 namespace hexes {
 
-enum Direction {R, UR, UL, L, DL, DR};
+enum Direction { R, UR, UL, L, DL, DR };
 
 struct CubeCoord {
-  s16 q;
-  s16 r;
-  s16 s;
+	s16 q;
+	s16 r;
+	s16 s;
 
-  CubeCoord add(CubeCoord);
+	CubeCoord add(CubeCoord);
 	CubeCoord subtract(CubeCoord);
 	CubeCoord scale(s16);
 
 	CubeCoord neighbour(Direction);
 	s16 distance(CubeCoord);
-
 };
 
 struct OffsetXYCoord {
-  s16 col;
-  s16 row;
+	s16 col;
+	s16 row;
 };
 
 struct AxialCoord {
-  s16 q;
-  s16 r;
+	s16 q;
+	s16 r;
 };
 
 OffsetXYCoord cube_to_offsetXY(CubeCoord hex);
@@ -42,8 +41,12 @@ AxialCoord cube_to_axial(CubeCoord hex);
 AxialCoord offsetXY_to_axial(OffsetXYCoord hex);
 
 CubeCoord const CUBE_DIRECTION_VECTORS[] = {
-    CubeCoord( 1, 0, -1), CubeCoord( 1, -1, 0), CubeCoord(0, -1,  1), 
-    CubeCoord(-1, 0,  1), CubeCoord(-1,  1, 0), CubeCoord(0,  1, -1), 
+	CubeCoord(1, 0, -1),
+	CubeCoord(1, -1, 0),
+	CubeCoord(0, -1, 1),
+	CubeCoord(-1, 0, 1),
+	CubeCoord(-1, 1, 0),
+	CubeCoord(0, 1, -1),
 };
 
-}
+} // namespace hexes
