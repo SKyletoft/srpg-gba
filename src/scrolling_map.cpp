@@ -119,10 +119,10 @@ void ScrollingMap::restore() {
 
 	REG_BG0CNT = (u16)(BG_CBB((u16)this->layer0.tile_source)
 					   | BG_SBB((u16)this->layer0.tile_map) | BG_4BPP
-					   | BG_REG_32x32 | BG_PRIO(0));
+					   | BG_REG_32x32 | BG_PRIO(3));
 	REG_BG1CNT = (u16)(BG_CBB((u16)this->layer1.tile_source)
 					   | BG_SBB((u16)this->layer1.tile_map) | BG_4BPP
-					   | BG_REG_32x32 | BG_PRIO(1));
+					   | BG_REG_32x32 | BG_PRIO(3));
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1;
 
 	this->vsync_hook();
