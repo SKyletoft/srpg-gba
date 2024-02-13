@@ -1,6 +1,10 @@
 #pragma once
 
+#include <cstddef>
+#include <span>
+
 extern "C" {
+#include <tonc.h>
 #include <tonc_types.h>
 }
 
@@ -23,5 +27,7 @@ struct alignas(8) Sprite {
 	u8 palette : 4;
 };
 static_assert(sizeof(Sprite) == 4 * sizeof(u16));
+
+static const std::span<volatile Sprite> SPRITE_MEM{(Sprite *)oam_mem, 128};
 
 } // namespace sprite
