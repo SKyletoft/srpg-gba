@@ -129,10 +129,6 @@ void ScrollingMap::restore() {
 }
 
 void ScrollingMap::suspend() {
-	REG_BG0HOFS = 0;
-	REG_BG0VOFS = 0;
-	REG_BG1HOFS = 0;
-	REG_BG1VOFS = 0;
 }
 
 void ScrollingMap::vsync_hook() {

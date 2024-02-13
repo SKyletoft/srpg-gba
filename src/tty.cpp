@@ -125,6 +125,9 @@ void TtyMode::restore() {
 		BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_4BPP | BG_REG_32x32;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
 
+	REG_BG0HOFS = 0;
+	REG_BG0VOFS = 0;
+
 	this->draw_buffer();
 }
 
