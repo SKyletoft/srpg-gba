@@ -30,7 +30,7 @@ BUILD    := build
 SOURCES  := src
 INCLUDES := inc
 DATA     :=
-MUSIC    :=
+MUSIC    := audio
 GRAPHICS := gfx
 
 #---------------------------------------------------------------------------------
