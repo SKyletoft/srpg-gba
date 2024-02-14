@@ -120,21 +120,25 @@ void PopupMenu::restore() {
 			 v::iota(0uz, menu_height + 2), v::iota(0uz, menu_width + 3)
 		 ))
 	{
-		SCREENBLOCKS[this->tile_map0][y * 32 + x] = ScreenEntry(1, 0, 15);
+		auto const y_ = (y + (size_t)this->y);
+		auto const x_ = x + (size_t)this->x;
+		SCREENBLOCKS[this->tile_map0][y_ * 32 + x_] = ScreenEntry(1, 0, 15);
 	}
 	for (auto const [y, t] : this->entries | v::enumerate) {
 		auto [s, l] = t;
 		for (auto const [x, c] : s | v::enumerate) {
+			auto const y_ = y + this->y;
+			auto const x_ = x + 34 + this->x;
 			// Indent by one for the cursor to fit
-			SCREENBLOCKS[this->tile_map1][y * 32 + x + 1] =
+			SCREENBLOCKS[this->tile_map1][y_ * 32 + x_] =
 				ScreenEntry(tty::get_character_tile_index(c), 0, 15);
 		}
 	}
 
-	REG_BG2HOFS = (u16) - this->x;
-	REG_BG2VOFS = (u16) - this->y;
-	REG_BG3HOFS = (u16) - this->x - 8;
-	REG_BG3VOFS = (u16) - this->y - 8;
+	REG_BG2HOFS = 0;
+	REG_BG2VOFS = 0;
+	REG_BG3HOFS = 0;
+	REG_BG3VOFS = 0;
 
 	util::wait_for_drawing_complete();
 
@@ -148,8 +152,8 @@ void PopupMenu::restore() {
 }
 
 void PopupMenu::vsync_hook() {
-	this->cursor.x = (u8)(this->x % 240) + 8;
-	this->cursor.y = (u8)(this->y % 160 + 8 * (1 + this->selection));
+	this->cursor.x = (u8)((this->x * 8) % 240) + 8;
+	this->cursor.y = (u8)((this->y * 8) % 160 + 8 * (1 + this->selection));
 	this->cursor.write_to_screen(0);
 }
 
