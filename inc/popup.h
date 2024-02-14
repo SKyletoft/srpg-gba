@@ -2,8 +2,11 @@
 
 #include "sprite.h"
 #include "state.h"
+#include <algorithm>
+#include <cstring>
 #include <functional>
 #include <initializer_list>
+#include <ranges>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -14,12 +17,15 @@ extern "C" {
 
 namespace popup {
 
+namespace r = std::ranges;
+
 using sprite::Sprite;
 
 class PopupMenu : public state::Mode {
 
 	// TODO: Replace std::vector with something more platform appropriate
-	std::vector<std::tuple<std::string, std::function<void()>>> entries;
+	std::vector<std::tuple<std::span<const char>, std::function<void()>>>
+		entries;
 
 	size_t const tile_source0;
 	size_t const tile_source1;
@@ -52,15 +58,32 @@ class PopupMenu : public state::Mode {
 	PopupMenu();
 
 	PopupMenu(
-		std::initializer_list<std::tuple<std::string, std::function<void()>>> l
+		std::initializer_list<std::tuple<char const *, std::function<void()>>> l
 	)
 		: Mode()
-		, entries(l)
 		, tile_source0(28)
 		, tile_source1(27)
 		, sprite_tile_source(4)
 		, tile_map0(2)
-		, tile_map1(3) {}
+		, tile_map1(3) {
+
+		for (auto &[s, f] : l) {
+			this->entries.push_back({std::span{s, std::strlen(s)}, f});
+		}
+	}
+
+	PopupMenu(
+		std::initializer_list<std::tuple<char const *, std::function<void()>>>
+			l,
+		size_t tile_source0, size_t tile_source1, size_t sprite_tile_source,
+		size_t tile_map0, size_t tile_map1
+	)
+		: Mode()
+		, tile_source0(tile_source0)
+		, tile_source1(tile_source1)
+		, sprite_tile_source(sprite_tile_source)
+		, tile_map0(tile_map0)
+		, tile_map1(tile_map1) {}
 };
 
 } // namespace popup
