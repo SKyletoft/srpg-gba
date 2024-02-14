@@ -62,5 +62,4 @@ constexpr size_t get_grid_index(size_t i) {
 	return d * 32 + r;
 }
 
-
 } // namespace tty

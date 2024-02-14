@@ -26,6 +26,7 @@ using tiles::Palette;
 using tiles::PALETTE_MEMORY;
 using tiles::SCREENBLOCKS;
 using tiles::ScreenEntry;
+using tiles::SPRITE_CHARBLOCK;
 
 bool PopupMenu::blackout() {
 	return !(

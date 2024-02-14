@@ -163,6 +163,7 @@ constexpr STile EMPTY{{0, 0, 0, 0, 0, 0, 0, 0}};
 using Charblock = STile[512];
 static_assert(sizeof(Charblock) == 16 * 1024);
 static const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 4};
+static Charblock &SPRITE_CHARBLOCK = *(Charblock *)&(tile_mem[4]);
 
 using Screenblock = ScreenEntry[1024];
 static_assert(sizeof(Screenblock) == 2048);

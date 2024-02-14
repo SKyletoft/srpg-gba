@@ -33,14 +33,15 @@ class PopupMenu : public state::Mode {
 	size_t const tile_map0;
 	size_t const tile_map1;
 
-	s16 x = 0;
-	s16 y = 0;
-	s16 selection = 0;
+	s16 x = 80;
+	s16 y = 50;
+	u16 selection = 0;
 
-	Sprite cursor {
+	Sprite cursor{
 		.y = 76,
 		.x = 116,
-		.tile_index = 0,
+		.horizontal_flip = true,
+		.tile_index = 1,
 		.palette = 15,
 	};
 
