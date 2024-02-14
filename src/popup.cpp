@@ -34,6 +34,22 @@ void PopupMenu::update() {
 	if (input::get_button(Button::B).is_down()) {
 		state::next_state = 0;
 	}
+
+	if (input::get_button(Button::A) == input::InputState::Pressed) {
+		auto &[_, f] = this->entries[this->selection];
+		f();
+	}
+
+	if (input::get_button(Button::Up) == input::InputState::Pressed) {
+		if (this->selection == 0) {
+			this->selection = (u16)this->entries.size();
+		}
+		this->selection--;
+	}
+
+	if (input::get_button(Button::Down) == input::InputState::Pressed) {
+		this->selection = (u16)((this->selection + 1) % this->entries.size());
+	}
 }
 
 void PopupMenu::always_update() {}
