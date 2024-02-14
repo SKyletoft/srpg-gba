@@ -93,7 +93,7 @@ void PopupMenu::restore() {
 	BG_PALETTE_MEMORY[15] = Palette{{
 		tiles::TRANSPARENT,
 		tiles::WHITE,
-		// clangd does not consider this a constant expression, gcc, does
+		// clangd does not consider this a constant expression, gcc does
 		Colour::from_24bit_colour(198, 164, 89),
 	}};
 
