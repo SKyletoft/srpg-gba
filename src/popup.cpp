@@ -126,10 +126,10 @@ void PopupMenu::restore() {
 		}
 	}
 
-	REG_BG2HOFS = (u16)this->x;
-	REG_BG2VOFS = (u16)this->y;
-	REG_BG3HOFS = (u16)this->x - 8;
-	REG_BG3VOFS = (u16)this->y - 8;
+	REG_BG2HOFS = (u16) - this->x;
+	REG_BG2VOFS = (u16) - this->y;
+	REG_BG3HOFS = (u16) - this->x - 8;
+	REG_BG3VOFS = (u16) - this->y - 8;
 
 	util::wait_for_drawing_complete();
 	REG_BG2CNT = (u16)(BG_CBB(this->tile_source0) | BG_SBB(this->tile_map0)
