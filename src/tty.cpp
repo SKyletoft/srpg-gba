@@ -168,6 +168,12 @@ void TtyMode::pad_to_newline() {
 	this->len = len;
 }
 
+void TtyMode::println(s32 i) {
+	char buf[12];
+	itoa(i, buf, 10);
+	this->println(buf);
+}
+
 void TtyMode::println(const char *s) {
 	this->print(s);
 	this->print("\n");
