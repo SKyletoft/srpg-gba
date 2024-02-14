@@ -1,17 +1,23 @@
 Draw stuff √
-Move cursor + additional hexgrid maths - Brage
+Move cursor - Samuel
+Basic hexgrid maths √
+Additional hexgrid algorithms
+Map representations - Brage
+Sprite hardware abstraction √
+Sprite usability abstraction - Samuel
 Move characters
 Mode system (navigation, menu, animation, etc) √
 Audio system (music + sound effects) - Izaz
-Hexgrid rendering with layer hacks - Samuel
+Hexgrid rendering with layer hacks √
+* Character attributes
+* Better VSync - Izaz
 * Levels (w/ different maps)
 * Scrollable map √
 * Shortest path char → cursor
 * Animation
-* Context menus
+* Context menus - Samuel*
 * Dialogue seqs
 * Turn system
-* Character attributes
 ** Terrain variations (logic)
 ** Saves
 ** Battle animations
