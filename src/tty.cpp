@@ -207,7 +207,7 @@ void TtyMode::print(const char *s, const size_t len) {
 		}
 		this->buffer[this->len] = c;
 
-		this->draw_char(this->len - 1);
+		this->draw_char(this->len);
 
 		this->len += 1;
 	}
