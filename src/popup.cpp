@@ -28,12 +28,7 @@ using tiles::SCREENBLOCKS;
 using tiles::ScreenEntry;
 using tiles::SPRITE_CHARBLOCK;
 
-bool PopupMenu::blackout() {
-	return !(
-		(state::current_state == 0 && state::next_state == 3)
-		|| (state::current_state == 3 && state::next_state == 0)
-	);
-}
+bool PopupMenu::blackout() { return false; }
 
 void PopupMenu::update() {
 	if (input::get_button(Button::B).is_down()) {
