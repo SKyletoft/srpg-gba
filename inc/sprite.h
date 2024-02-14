@@ -44,6 +44,8 @@ struct alignas(4) __attribute((packed)) Sprite {
 static_assert(sizeof(Sprite) == sizeof(OBJ_ATTR));
 static_assert(alignof(Sprite) == alignof(OBJ_ATTR));
 
+// This *should* be volatile, but it can't be due to a literal language bug
+// https://timsong-cpp.github.io/lwg-issues/3813
 static const std::span<Sprite> SPRITE_MEM{(Sprite *)MEM_OAM, 128};
 
 } // namespace sprite
