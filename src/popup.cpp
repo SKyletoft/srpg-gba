@@ -53,7 +53,10 @@ void PopupMenu::update() {
 }
 
 void PopupMenu::always_update() {}
-void PopupMenu::suspend() { REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_BG2); }
+
+void PopupMenu::suspend() {
+	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_BG2 | DCNT_OBJ | DCNT_OBJ_1D);
+}
 
 void PopupMenu::restore() {
 	this->selection = 0;
@@ -133,7 +136,7 @@ void PopupMenu::restore() {
 					   | BG_4BPP | BG_REG_32x32 | BG_PRIO(1));
 	REG_BG3CNT = (u16)(BG_CBB(this->tile_source1) | BG_SBB(this->tile_map1)
 					   | BG_4BPP | BG_REG_32x32 | BG_PRIO(0));
-	REG_DISPCNT |= DCNT_BG3 | DCNT_BG2;
+	REG_DISPCNT |= DCNT_BG3 | DCNT_BG2 | DCNT_OBJ | DCNT_OBJ_1D;
 }
 
 void PopupMenu::vsync_hook() {
