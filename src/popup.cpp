@@ -28,6 +28,7 @@ using tiles::Palette;
 using tiles::SCREENBLOCKS;
 using tiles::ScreenEntry;
 using tiles::SPRITE_CHARBLOCK;
+using tiles::SPRITE_PALETTE_MEMORY;
 
 bool PopupMenu::blackout() { return false; }
 
@@ -99,6 +100,7 @@ void PopupMenu::restore() {
 		tiles::RED,
 		Colour(31, 15, 15),
 	}};
+	SPRITE_PALETTE_MEMORY[15] = BG_PALETTE_MEMORY[15];
 
 	util::clear_layer(this->tile_map0);
 	util::clear_layer(this->tile_map1);
