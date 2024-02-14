@@ -1,6 +1,7 @@
 #include "scrolling_map.h"
 
 #include "input.h"
+#include "state.h"
 #include "tiles.h"
 #include "util.h"
 #include <algorithm>
@@ -105,6 +106,10 @@ void ScrollingMap::update() {
 	{
 		state::next_state = 2;
 	}
+
+	if (input::get_button(Button::A).is_down()) {
+		state::next_state = 3;
+	}
 }
 
 void ScrollingMap::always_update() {}
@@ -117,29 +122,38 @@ void ScrollingMap::restore() {
 	util::wait_for_drawing_start();
 	this->load_palettes(this->layer0);
 
+	tiles::BG_PALETTE_MEMORY[15] = tiles::Palette{{
+		tiles::TRANSPARENT,
+		tiles::WHITE,
+		// clangd does not consider this a constant expression, gcc does
+		tiles::Colour::from_24bit_colour(198, 164, 89),
+	}};
+
 	REG_BG0CNT = (u16)(BG_CBB((u16)this->layer0.tile_source)
 					   | BG_SBB((u16)this->layer0.tile_map) | BG_4BPP
-					   | BG_REG_32x32 | BG_PRIO(0));
+					   | BG_REG_32x32 | BG_PRIO(3));
 	REG_BG1CNT = (u16)(BG_CBB((u16)this->layer1.tile_source)
 					   | BG_SBB((u16)this->layer1.tile_map) | BG_4BPP
-					   | BG_REG_32x32 | BG_PRIO(1));
+					   | BG_REG_32x32 | BG_PRIO(3));
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1;
 
 	this->vsync_hook();
 }
 
-void ScrollingMap::suspend() {
-	REG_BG0HOFS = 0;
-	REG_BG0VOFS = 0;
-	REG_BG1HOFS = 0;
-	REG_BG1VOFS = 0;
-}
+void ScrollingMap::suspend() {}
 
 void ScrollingMap::vsync_hook() {
 	REG_BG0HOFS = (u16)this->layer0.x;
 	REG_BG0VOFS = (u16)this->layer0.y;
 	REG_BG1HOFS = (u16)this->layer1.x;
 	REG_BG1VOFS = (u16)this->layer1.y;
+}
+
+bool ScrollingMap::blackout() {
+	return !(
+		(state::current_state == 0 && state::next_state == 3)
+		|| (state::current_state == 3 && state::next_state == 0)
+	);
 }
 
 } // namespace scrolling_map

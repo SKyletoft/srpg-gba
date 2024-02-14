@@ -14,9 +14,9 @@ extern "C" {
 
 namespace hexmap {
 
+using tiles::BG_PALETTE_MEMORY;
 using tiles::CHARBLOCKS;
 using tiles::Palette;
-using tiles::PALETTE_MEMORY;
 
 constexpr u16 TILE_SIZE = 9;
 
@@ -27,7 +27,7 @@ void Hexmap::load_tilesets(Layer &layer) {
 }
 
 void Hexmap::load_palettes(Layer &) {
-	PALETTE_MEMORY[0] = Palette::from_raw(completePal);
+	BG_PALETTE_MEMORY[0] = Palette::from_raw(completePal);
 }
 
 ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
@@ -71,7 +71,7 @@ void SimpleHexmap::load_tilesets(Layer &layer) {
 
 void SimpleHexmap::load_palettes(Layer &layer) {
 	std::memcpy(
-		PALETTE_MEMORY.data(),
+		BG_PALETTE_MEMORY.data(),
 		this->palettes.data(),
 		this->palettes.size_bytes()
 	);

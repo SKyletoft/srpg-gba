@@ -2,6 +2,7 @@
 
 #include "input.h"
 #include "tiles.h"
+#include "util.h"
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
@@ -25,20 +26,6 @@ using tiles::STile;
 
 constexpr size_t BG0_TILE_SOURCE = 0;
 constexpr size_t BG0_TILE_MAP = 8;
-
-constexpr u16 get_character_tile_index(char c) {
-	if (' ' <= c && c <= '~') {
-		return (u16)(c - ' ');
-	}
-	return 0;
-}
-
-constexpr size_t get_grid_index(size_t i) {
-	size_t d = i / TtyMode::LINE_LEN;
-	size_t r = i % TtyMode::LINE_LEN;
-
-	return d * 32 + r;
-}
 
 void TtyMode::update() {
 	if (input::get_button(Button::R).is_up()
@@ -119,10 +106,13 @@ void TtyMode::restore() {
 	this->clear_screen();
 
 	vid_vsync();
-	tiles::PALETTE_MEMORY[0] = YELLOW_ON_BLACK;
+	tiles::BG_PALETTE_MEMORY[0] = YELLOW_ON_BLACK;
 	REG_BG0CNT =
 		BG_CBB(BG0_TILE_SOURCE) | BG_SBB(BG0_TILE_MAP) | BG_4BPP | BG_REG_32x32;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
+
+	REG_BG0HOFS = 0;
+	REG_BG0VOFS = 0;
 
 	this->draw_buffer();
 }
@@ -134,12 +124,7 @@ void TtyMode::clear_screen() {
 		return;
 	}
 
-	const ScreenEntry empty{0, 0, 0};
-	std::span<u16> tile_map{(u16 *)SCREENBLOCKS[BG0_TILE_MAP], 1024};
-
-	for (u16 &tile : tile_map) {
-		tile = empty;
-	}
+	util::clear_layer(BG0_TILE_MAP);
 }
 
 void TtyMode::clear_buffer() { this->len = 0; }
@@ -183,6 +168,12 @@ void TtyMode::pad_to_newline() {
 	this->len = len;
 }
 
+void TtyMode::println(s32 i) {
+	char buf[12];
+	itoa(i, buf, 10);
+	this->println(buf);
+}
+
 void TtyMode::println(const char *s) {
 	this->print(s);
 	this->print("\n");
@@ -222,7 +213,7 @@ void TtyMode::print(const char *s, const size_t len) {
 		}
 		this->buffer[this->len] = c;
 
-		this->draw_char(this->len - 1);
+		this->draw_char(this->len);
 
 		this->len += 1;
 	}

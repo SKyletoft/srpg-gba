@@ -26,9 +26,9 @@ void MapMode::load_metr_pal() { memcpy_(pal_obj_mem, arrowPal); }
 void MapMode::load_metr_data() {
 	memcpy_(tiles::CHARBLOCKS[SPRITE_SOURCE], arrowTiles);
 
-	oam_init(obj_buffer, 128);
+	oam_init(this->obj_buffer, 128);
 
-	ObjectAttribute *cur = &obj_buffer[0];
+	ObjectAttribute *cur = &this->obj_buffer[0];
 
 	const u16 palette = ATTR2_PALBANK(0);
 	const u16 tile = 0;
@@ -170,6 +170,6 @@ void MapMode::restore() {
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 }
 
-void MapMode::vsync_hook() { oam_copy(oam_mem, obj_buffer, 1); }
+void MapMode::vsync_hook() { oam_copy(oam_mem, this->obj_buffer, 1); }
 
 } // namespace map

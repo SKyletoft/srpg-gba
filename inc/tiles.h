@@ -102,7 +102,8 @@ struct Palette {
 
 static_assert(sizeof(Palette[16]) == 0x0200);
 
-const std::span<Palette, 16> PALETTE_MEMORY{(Palette *)pal_bg_mem, 16};
+const std::span<Palette, 16> BG_PALETTE_MEMORY{(Palette *)pal_bg_mem, 16};
+const std::span<Palette, 16> SPRITE_PALETTE_MEMORY{(Palette *)pal_obj_mem, 16};
 
 constexpr Palette BLACK_ON_BLACK = Palette{{
 	tiles::BLACK,
@@ -158,16 +159,21 @@ union STile {
 };
 static_assert(sizeof(STile) == 32);
 
+constexpr STile EMPTY{{0, 0, 0, 0, 0, 0, 0, 0}};
+
 using Charblock = STile[512];
 static_assert(sizeof(Charblock) == 16 * 1024);
-static const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 6};
+static const std::span<Charblock> CHARBLOCKS{(Charblock *)tile_mem, 4};
+static const std::span<Charblock> SPRITE_CHARBLOCK{
+	(Charblock *)tile_mem + 4, 2
+};
 
 using Screenblock = ScreenEntry[1024];
 static_assert(sizeof(Screenblock) == 2048);
 static_assert(alignof(Screenblock) == alignof(ScreenEntry));
 
 static const std::span<volatile Screenblock> SCREENBLOCKS{
-	(Screenblock *)se_mem, 16
+	(Screenblock *)se_mem, 32
 };
 static_assert(sizeof(SCREENBLOCKS) <= 96 * 1024);
 

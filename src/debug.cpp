@@ -14,6 +14,7 @@ void printf(const char *format, ...) {
 	va_end(args);
 }
 void print(const char *c, const size_t s) { tty_mode.print(c, s); }
+void println(s32 i) { tty_mode.println(i); }
 void println(const char *c) { tty_mode.println(c); }
 void println(const char *c, const size_t s) { tty_mode.println(c, s); }
 
