@@ -148,7 +148,11 @@ void PopupMenu::vsync_hook() {
 	this->cursor.x = (u8)(this->x % 240) + 8;
 	this->cursor.y = (u8)(this->y % 160 + 8 * (1 + this->selection));
 	this->cursor.write_to_screen(0);
+}
 
+void PopupMenu::set_position(s16 x, s16 y) {
+	this->x = x;
+	this->y = y;
 }
 
 PopupMenu::PopupMenu()
