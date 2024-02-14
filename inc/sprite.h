@@ -12,7 +12,7 @@ namespace sprite {
 
 enum class ColourMode { BPP4 = 0, BPP8 = 1 };
 
-struct alignas(4) __attribute((packed)) Sprite {
+struct alignas(8) __attribute((packed)) Sprite {
 	// attr0
 	u8 y : 8 = 0;
 	u8 object_mode : 2 = 0;
@@ -36,16 +36,15 @@ struct alignas(4) __attribute((packed)) Sprite {
 	// padding
 	u16 _pad1 = 0;
 
-	// constexpr Sprite &operator=(const Sprite &rhs) volatile {
-	//	return *(Sprite *)this;
-	// }
 	void write_to_screen(size_t hardware_sprite_id);
 };
 static_assert(sizeof(Sprite) == sizeof(OBJ_ATTR));
-static_assert(alignof(Sprite) == alignof(OBJ_ATTR));
+static_assert(alignof(Sprite) >= alignof(OBJ_ATTR));
 
-// This *should* be volatile, but it can't be due to a literal language bug
+// Due to fun literal language bugs, this is read only and you have to use the
+// `Sprite::write_to_screen` function to write
+//
 // https://timsong-cpp.github.io/lwg-issues/3813
-static const std::span<Sprite> SPRITE_MEM{(Sprite *)MEM_OAM, 128};
+static const std::span<const Sprite> SPRITE_MEM{(Sprite *)MEM_OAM, 128};
 
 } // namespace sprite
