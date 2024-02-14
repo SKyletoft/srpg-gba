@@ -28,7 +28,7 @@ void clear_layer(size_t screenblock) {
 }
 
 void set_screen_to_black() {
-	for (auto &palette : tiles::PALETTE_MEMORY) {
+	for (auto &palette : tiles::BG_PALETTE_MEMORY) {
 		palette = tiles::BLACK_ON_BLACK;
 	}
 	REG_DISPCNT = 0;

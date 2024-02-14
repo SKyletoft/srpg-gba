@@ -20,10 +20,10 @@ namespace popup {
 namespace v = std::views;
 
 using input::Button;
+using tiles::BG_PALETTE_MEMORY;
 using tiles::CHARBLOCKS;
 using tiles::Colour;
 using tiles::Palette;
-using tiles::PALETTE_MEMORY;
 using tiles::SCREENBLOCKS;
 using tiles::ScreenEntry;
 using tiles::SPRITE_CHARBLOCK;
@@ -65,18 +65,18 @@ void PopupMenu::restore() {
 		0x22222222,
 		0x22222222,
 	}};
-	CHARBLOCKS[this->sprite_tile_source][0] = tiles::STile{{
-		0x00011000,
-		0x00011100,
-		0x11111110,
-		0x11111111,
-		0x11111112,
-		0x22211120,
-		0x00011200,
-		0x00022000,
+	SPRITE_CHARBLOCK[0][1] = tiles::STile{{
+		0x00033000,
+		0x00033300,
+		0x33333330,
+		0x33333333,
+		0x33333334,
+		0x44433340,
+		0x00033400,
+		0x00044000,
 	}};
 
-	PALETTE_MEMORY[15] = Palette{{
+	BG_PALETTE_MEMORY[15] = Palette{{
 		tiles::TRANSPARENT,
 		tiles::WHITE,
 		// clangd does not consider this a constant expression, gcc, does
@@ -132,9 +132,21 @@ void PopupMenu::vsync_hook() {
 PopupMenu::PopupMenu()
 	: Mode()
 	, entries({
-		  {"Red", []() { PALETTE_MEMORY[15].colours[1] = tiles::RED; }},
-		  {"Green", []() { PALETTE_MEMORY[15].colours[1] = tiles::GREEN; }},
-		  {"Blue", []() { PALETTE_MEMORY[15].colours[1] = tiles::BLUE; }},
+		  {"Red",
+		   []() {
+			   debug::println("Setting text to red");
+			   BG_PALETTE_MEMORY[15].colours[1] = tiles::RED;
+		   }},
+		  {"Green",
+		   []() {
+			   debug::println("Setting text to green");
+			   BG_PALETTE_MEMORY[15].colours[1] = tiles::GREEN;
+		   }},
+		  {"Blue",
+		   []() {
+			   debug::println("Setting text to blue");
+			   BG_PALETTE_MEMORY[15].colours[1] = tiles::BLUE;
+		   }},
 		  {"Exit", []() { state::next_state = 0; }},
 	  })
 	, tile_source0(2)
