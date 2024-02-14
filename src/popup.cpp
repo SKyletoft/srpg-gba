@@ -134,6 +134,9 @@ void PopupMenu::restore() {
 	REG_BG3VOFS = (u16) - this->y - 8;
 
 	util::wait_for_drawing_complete();
+
+	this->cursor.write_to_screen(0);
+
 	REG_BG2CNT = (u16)(BG_CBB(this->tile_source0) | BG_SBB(this->tile_map0)
 					   | BG_4BPP | BG_REG_32x32 | BG_PRIO(1));
 	REG_BG3CNT = (u16)(BG_CBB(this->tile_source1) | BG_SBB(this->tile_map1)
@@ -142,6 +145,9 @@ void PopupMenu::restore() {
 }
 
 void PopupMenu::vsync_hook() {
+	this->cursor.x = (u8)(this->x % 240) + 8;
+	this->cursor.y = (u8)(this->y % 160 + 8 * (1 + this->selection));
+	this->cursor.write_to_screen(0);
 
 }
 
