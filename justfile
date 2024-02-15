@@ -1,5 +1,9 @@
 build: setup
 	mkdir out | true
+	mkdir src | true
+	mkdir inc | true
+	mkdir gfx | true
+	mkdir audio | true
 	-rm -rf out/*.gba
 	docker run -v $(pwd)/out:/gba-dev/out builder
 
