@@ -13,7 +13,7 @@ extern "C" {
 #include <tonc.h>
 #include <tonc_memdef.h>
 
-extern const u32 sys8Glyphs[192];
+#include "font.h"
 }
 
 namespace popup {
@@ -66,21 +66,19 @@ void PopupMenu::restore() {
 	// We don't blackout, but we do disable gui
 	util::wait_for_drawing_complete();
 	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_BG2);
-
-	tty::decompress_1bpp_to_4bpp(
-		CHARBLOCKS[this->tile_source1], sys8Glyphs, '~' - ' '
-	);
+	constexpr size_t END_OF_ALPHABET = '~' - ' ' + 3;
 	CHARBLOCKS[this->tile_source0][0] = tiles::EMPTY;
-	CHARBLOCKS[this->tile_source0][1] = tiles::STile{{
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
+	CHARBLOCKS[this->tile_source0][END_OF_ALPHABET] = tiles::STile{{
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
 	}};
+	std::memcpy(CHARBLOCKS[this->tile_source0] + 1, fontTiles, fontTilesLen);
 	SPRITE_CHARBLOCK[0][1] = tiles::STile{{
 		0x00033000,
 		0x00033300,
@@ -94,13 +92,17 @@ void PopupMenu::restore() {
 
 	BG_PALETTE_MEMORY[15] = Palette{{
 		tiles::TRANSPARENT,
-		tiles::WHITE,
-		// clangd does not consider this a constant expression, gcc does
 		Colour::from_24bit_colour(198, 164, 89),
+		tiles::WHITE,
+		Colour(25, 25, 25),
+	}};
+	SPRITE_PALETTE_MEMORY[15] = Palette{{
+		tiles::TRANSPARENT,
+		tiles::BLACK,
+		tiles::BLACK,
 		tiles::RED,
 		Colour(31, 15, 15),
 	}};
-	SPRITE_PALETTE_MEMORY[15] = BG_PALETTE_MEMORY[15];
 
 	util::clear_layer(this->tile_map0);
 	util::clear_layer(this->tile_map1);
@@ -122,16 +124,16 @@ void PopupMenu::restore() {
 	{
 		auto const y_ = (y + (size_t)this->y);
 		auto const x_ = x + (size_t)this->x;
-		SCREENBLOCKS[this->tile_map0][y_ * 32 + x_] = ScreenEntry(1, 0, 15);
+		SCREENBLOCKS[this->tile_map0][y_ * 32 + x_] = ScreenEntry((u16)END_OF_ALPHABET, 0, 15);
 	}
 	for (auto const [y, t] : this->entries | v::enumerate) {
 		auto [s, l] = t;
-		for (auto const [x, c] : s | v::enumerate) {
+		for (auto const [x, c] : s | v::enumerate | v::take(s.size() - 1)) {
 			auto const y_ = y + this->y;
 			auto const x_ = x + 34 + this->x;
 			// Indent by one for the cursor to fit
-			SCREENBLOCKS[this->tile_map1][y_ * 32 + x_] =
-				ScreenEntry(tty::get_character_tile_index(c), 0, 15);
+			SCREENBLOCKS[this->tile_map0][y_ * 32 + x_] =
+				ScreenEntry(tty::get_character_tile_index(c + 2), 0, 15);
 		}
 	}
 
