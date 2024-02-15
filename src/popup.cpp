@@ -13,7 +13,7 @@ extern "C" {
 #include <tonc.h>
 #include <tonc_memdef.h>
 
-extern const u32 sys8Glyphs[192];
+#include "font.h"
 }
 
 namespace popup {
@@ -38,8 +38,12 @@ void PopupMenu::update() {
 	}
 
 	if (input::get_button(Button::A) == input::InputState::Pressed) {
+		this->cursor.x = (u8)((this->x * 8) % 240) + 8;
 		auto &[_, f] = this->entries[this->selection];
 		f();
+	}
+	if (input::get_button(Button::A) == input::InputState::Released) {
+		this->cursor.x = (u8)((this->x * 8) % 240) + 5;
 	}
 
 	if (input::get_button(Button::Up) == input::InputState::Pressed) {
@@ -57,7 +61,7 @@ void PopupMenu::update() {
 void PopupMenu::always_update() {}
 
 void PopupMenu::suspend() {
-	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_BG2 | DCNT_OBJ | DCNT_OBJ_1D);
+	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_OBJ | DCNT_OBJ_1D);
 }
 
 void PopupMenu::restore() {
@@ -66,21 +70,19 @@ void PopupMenu::restore() {
 	// We don't blackout, but we do disable gui
 	util::wait_for_drawing_complete();
 	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_BG2);
-
-	tty::decompress_1bpp_to_4bpp(
-		CHARBLOCKS[this->tile_source1], sys8Glyphs, '~' - ' '
-	);
-	CHARBLOCKS[this->tile_source0][0] = tiles::EMPTY;
-	CHARBLOCKS[this->tile_source0][1] = tiles::STile{{
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
-		0x22222222,
+	constexpr size_t END_OF_ALPHABET = '~' - ' ' + 3;
+	CHARBLOCKS[this->tile_source][0] = tiles::EMPTY;
+	CHARBLOCKS[this->tile_source][END_OF_ALPHABET] = tiles::STile{{
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
+		0x11111111,
 	}};
+	std::memcpy(CHARBLOCKS[this->tile_source] + 1, fontTiles, fontTilesLen);
 	SPRITE_CHARBLOCK[0][1] = tiles::STile{{
 		0x00033000,
 		0x00033300,
@@ -94,16 +96,19 @@ void PopupMenu::restore() {
 
 	BG_PALETTE_MEMORY[15] = Palette{{
 		tiles::TRANSPARENT,
-		tiles::WHITE,
-		// clangd does not consider this a constant expression, gcc does
 		Colour::from_24bit_colour(198, 164, 89),
-		tiles::RED,
+		tiles::WHITE,
+		Colour(25, 25, 25),
+	}};
+	SPRITE_PALETTE_MEMORY[15] = Palette{{
+		tiles::TRANSPARENT,
+		tiles::BLACK,
+		tiles::BLACK,
+		Colour(32, 10, 10),
 		Colour(31, 15, 15),
 	}};
-	SPRITE_PALETTE_MEMORY[15] = BG_PALETTE_MEMORY[15];
 
-	util::clear_layer(this->tile_map0);
-	util::clear_layer(this->tile_map1);
+	util::clear_layer(this->tile_map);
 
 	size_t const menu_width = ([&]() {
 		size_t longest = 0;
@@ -116,43 +121,41 @@ void PopupMenu::restore() {
 	})();
 	size_t const menu_height = this->entries.size();
 
+	// TODO: Merge these loops
 	for (auto const [y, x] : v::cartesian_product(
 			 v::iota(0uz, menu_height + 2), v::iota(0uz, menu_width + 3)
 		 ))
 	{
 		auto const y_ = (y + (size_t)this->y);
 		auto const x_ = x + (size_t)this->x;
-		SCREENBLOCKS[this->tile_map0][y_ * 32 + x_] = ScreenEntry(1, 0, 15);
+		SCREENBLOCKS[this->tile_map][y_ * 32 + x_] =
+			ScreenEntry((u16)END_OF_ALPHABET, 0, 15);
 	}
 	for (auto const [y, t] : this->entries | v::enumerate) {
 		auto [s, l] = t;
-		for (auto const [x, c] : s | v::enumerate) {
+		for (auto const [x, c] : s | v::enumerate | v::take(s.size() - 1)) {
 			auto const y_ = y + this->y;
 			auto const x_ = x + 34 + this->x;
 			// Indent by one for the cursor to fit
-			SCREENBLOCKS[this->tile_map1][y_ * 32 + x_] =
-				ScreenEntry(tty::get_character_tile_index(c), 0, 15);
+			SCREENBLOCKS[this->tile_map][y_ * 32 + x_] =
+				ScreenEntry(tty::get_character_tile_index(c + 2), 0, 15);
 		}
 	}
 
-	REG_BG2HOFS = 0;
-	REG_BG2VOFS = 0;
 	REG_BG3HOFS = 0;
 	REG_BG3VOFS = 0;
 
 	util::wait_for_drawing_complete();
 
+	this->cursor.x = (u8)((this->x * 8) % 240) + 8;
 	this->cursor.write_to_screen(0);
 
-	REG_BG2CNT = (u16)(BG_CBB(this->tile_source0) | BG_SBB(this->tile_map0)
-					   | BG_4BPP | BG_REG_32x32 | BG_PRIO(1));
-	REG_BG3CNT = (u16)(BG_CBB(this->tile_source1) | BG_SBB(this->tile_map1)
+	REG_BG3CNT = (u16)(BG_CBB(this->tile_source) | BG_SBB(this->tile_map)
 					   | BG_4BPP | BG_REG_32x32 | BG_PRIO(0));
-	REG_DISPCNT |= DCNT_BG3 | DCNT_BG2 | DCNT_OBJ | DCNT_OBJ_1D;
+	REG_DISPCNT |= DCNT_BG3 | DCNT_OBJ | DCNT_OBJ_1D;
 }
 
 void PopupMenu::vsync_hook() {
-	this->cursor.x = (u8)((this->x * 8) % 240) + 8;
 	this->cursor.y = (u8)((this->y * 8) % 160 + 8 * (1 + this->selection));
 	this->cursor.write_to_screen(0);
 }
@@ -182,10 +185,8 @@ PopupMenu::PopupMenu()
 		   }},
 		  {"Exit", []() { state::next_state = 0; }},
 	  })
-	, tile_source0(2)
-	, tile_source1(3)
+	, tile_source(3)
 	, sprite_tile_source(4)
-	, tile_map0(27)
-	, tile_map1(28) {}
+	, tile_map(28) {}
 
 } // namespace popup
