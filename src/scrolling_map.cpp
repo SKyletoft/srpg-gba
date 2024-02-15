@@ -107,7 +107,7 @@ void ScrollingMap::update() {
 		state::next_state = 2;
 	}
 
-	if (input::get_button(Button::A).is_down()) {
+	if (input::get_button(Button::A) == input::InputState::Pressed) {
 		state::next_state = 3;
 	}
 }

@@ -38,8 +38,12 @@ void PopupMenu::update() {
 	}
 
 	if (input::get_button(Button::A) == input::InputState::Pressed) {
+		this->cursor.x = (u8)((this->x * 8) % 240) + 8;
 		auto &[_, f] = this->entries[this->selection];
 		f();
+	}
+	if (input::get_button(Button::A) == input::InputState::Released) {
+		this->cursor.x = (u8)((this->x * 8) % 240) + 5;
 	}
 
 	if (input::get_button(Button::Up) == input::InputState::Pressed) {
@@ -100,7 +104,7 @@ void PopupMenu::restore() {
 		tiles::TRANSPARENT,
 		tiles::BLACK,
 		tiles::BLACK,
-		tiles::RED,
+		Colour(32, 10, 10),
 		Colour(31, 15, 15),
 	}};
 
@@ -143,6 +147,7 @@ void PopupMenu::restore() {
 
 	util::wait_for_drawing_complete();
 
+	this->cursor.x = (u8)((this->x * 8) % 240) + 8;
 	this->cursor.write_to_screen(0);
 
 	REG_BG3CNT = (u16)(BG_CBB(this->tile_source) | BG_SBB(this->tile_map)
@@ -151,7 +156,6 @@ void PopupMenu::restore() {
 }
 
 void PopupMenu::vsync_hook() {
-	this->cursor.x = (u8)((this->x * 8) % 240) + 8;
 	this->cursor.y = (u8)((this->y * 8) % 160 + 8 * (1 + this->selection));
 	this->cursor.write_to_screen(0);
 }
