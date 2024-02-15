@@ -27,11 +27,9 @@ class PopupMenu : public state::Mode {
 	std::vector<std::tuple<std::span<const char>, std::function<void()>>>
 		entries;
 
-	size_t const tile_source0;
-	size_t const tile_source1;
+	size_t const tile_source;
 	size_t const sprite_tile_source;
-	size_t const tile_map0;
-	size_t const tile_map1;
+	size_t const tile_map;
 
 	s16 x = 10;
 	s16 y = 6;
@@ -62,11 +60,9 @@ class PopupMenu : public state::Mode {
 		std::initializer_list<std::tuple<char const *, std::function<void()>>> l
 	)
 		: Mode()
-		, tile_source0(28)
-		, tile_source1(27)
+		, tile_source(27)
 		, sprite_tile_source(4)
-		, tile_map0(2)
-		, tile_map1(3) {
+		, tile_map(3) {
 
 		for (auto &[s, f] : l) {
 			this->entries.push_back({std::span{s, std::strlen(s)}, f});
@@ -76,15 +72,12 @@ class PopupMenu : public state::Mode {
 	PopupMenu(
 		std::initializer_list<std::tuple<char const *, std::function<void()>>>
 			l,
-		size_t tile_source0, size_t tile_source1, size_t sprite_tile_source,
-		size_t tile_map0, size_t tile_map1
+		size_t tile_source, size_t sprite_tile_source, size_t tile_map
 	)
 		: Mode()
-		, tile_source0(tile_source0)
-		, tile_source1(tile_source1)
+		, tile_source(tile_source)
 		, sprite_tile_source(sprite_tile_source)
-		, tile_map0(tile_map0)
-		, tile_map1(tile_map1) {}
+		, tile_map(tile_map) {}
 };
 
 } // namespace popup
