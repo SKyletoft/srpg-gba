@@ -117,13 +117,15 @@ void PopupMenu::restore() {
 	})();
 	size_t const menu_height = this->entries.size();
 
+	// TODO: Merge these loops
 	for (auto const [y, x] : v::cartesian_product(
 			 v::iota(0uz, menu_height + 2), v::iota(0uz, menu_width + 3)
 		 ))
 	{
 		auto const y_ = (y + (size_t)this->y);
 		auto const x_ = x + (size_t)this->x;
-		SCREENBLOCKS[this->tile_map][y_ * 32 + x_] = ScreenEntry((u16)END_OF_ALPHABET, 0, 15);
+		SCREENBLOCKS[this->tile_map][y_ * 32 + x_] =
+			ScreenEntry((u16)END_OF_ALPHABET, 0, 15);
 	}
 	for (auto const [y, t] : this->entries | v::enumerate) {
 		auto [s, l] = t;
