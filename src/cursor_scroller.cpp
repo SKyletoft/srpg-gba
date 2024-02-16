@@ -46,7 +46,11 @@ void CursorScroller::handle_input() {
 	if (input::get_button(Button::R).is_down()
 		&& input::get_button(Button::L).is_down())
 	{
-		state::next_state = 1;
+		state::next_state = 2;
+	}
+
+	if (input::get_button(Button::A) == input::InputState::Pressed) {
+		state::next_state = 3;
 	}
 }
 
