@@ -36,7 +36,7 @@ void CursorScroller::restore() {
 	this->ScrollingMap::restore();
 
 	std::memcpy(&tiles::SPRITE_PALETTE_MEMORY[0], arrowPal, sizeof(arrowPal));
-	std::memcpy(tiles::SPRITE_CHARBLOCK[0], arrowTiles, sizeof(arrowTiles));
+	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
 
 	REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
 }
