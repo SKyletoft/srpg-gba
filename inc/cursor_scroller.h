@@ -19,7 +19,7 @@ static constexpr s16 COOLDOWN = 8;
 class CursorScroller : public scrolling_map::ScrollingMap {
   protected:
 	CubeCoord cursor = CubeCoord::from_offset_xy({.col = 5, .row = 5});
-	sprite::Sprite cursor_sprite{};
+	sprite::Sprite cursor_sprite = sprite::X16;
 	/// Up, Down, Left, Right
 	std::array<s16, 4> directional_cooldowns{0, 0, 0, 0};
 
