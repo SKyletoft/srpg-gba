@@ -45,8 +45,8 @@ void CursorScroller::handle_input() {
 	std::array<std::tuple<Button, size_t, Direction>, 4> const inputs{
 		std::tuple
 		// Thanks C++ not needing nested {} for 2d arrays so this breaks instead
-		{Button::Up, 0, Direction::UL},
-		{Button::Down, 1, Direction::DL},
+		{Button::Up, 0, Direction::U},
+		{Button::Down, 1, Direction::D},
 		{Button::Left, 2, Direction::L},
 		{Button::Right, 3, Direction::R},
 	};
