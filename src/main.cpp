@@ -2,6 +2,7 @@
 #include "state.h"
 #include "tty.h"
 #include "util.h"
+#include "perf.h"
 
 #include <span>
 
@@ -54,6 +55,8 @@ int main() {
 
 		util::wait_for_drawing_complete();
 		config::modes[state::current_state]->vsync_hook();
+
+		perf::record_frame();
 	}
 
 	util::spin();
