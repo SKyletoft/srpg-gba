@@ -56,12 +56,6 @@ void ScrollingMap::load_map(Layer &layer) {
 }
 
 void ScrollingMap::update_layer(Layer &layer) {
-	layer.x = std::clamp(
-		(s16)(layer.x + input::horizontal_direction()), layer.min_x, layer.max_x
-	);
-	layer.y = std::clamp(
-		(s16)(layer.y + input::vertical_direction()), layer.min_y, layer.max_y
-	);
 
 	ScreenEntry volatile *const base = tiles::SCREENBLOCKS[layer.tile_map];
 
@@ -98,6 +92,27 @@ void ScrollingMap::update_layer(Layer &layer) {
 }
 
 void ScrollingMap::update() {
+	this->layer0.x = std::clamp(
+		(s16)(this->layer0.x + input::horizontal_direction()),
+		this->layer0.min_x,
+		this->layer0.max_x
+	);
+	this->layer0.y = std::clamp(
+		(s16)(this->layer0.y + input::vertical_direction()),
+		this->layer0.min_y,
+		this->layer0.max_y
+	);
+
+	this->layer1.x = std::clamp(
+		(s16)(this->layer1.x + input::horizontal_direction()),
+		this->layer1.min_x,
+		this->layer1.max_x
+	);
+	this->layer1.y = std::clamp(
+		(s16)(this->layer1.y + input::vertical_direction()),
+		this->layer1.min_y,
+		this->layer1.max_y
+	);
 	this->update_layer(this->layer0);
 	this->update_layer(this->layer1);
 
