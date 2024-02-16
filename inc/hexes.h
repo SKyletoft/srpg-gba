@@ -88,10 +88,10 @@ struct CubeCoord {
 		return CubeCoord(q, r, s);
 	}
 
-	constexpr OffsetXYCoord to_offset_xy();
+	constexpr OffsetXYCoord to_offset_xy() const;
 	static constexpr CubeCoord from_offset_xy(OffsetXYCoord);
 
-	constexpr AxialCoord to_axial_coord();
+	constexpr AxialCoord to_axial_coord() const;
 	static constexpr CubeCoord from_axial_coord(AxialCoord);
 };
 
@@ -99,10 +99,10 @@ struct OffsetXYCoord {
 	s16 col;
 	s16 row;
 
-	constexpr CubeCoord to_cube_coord();
+	constexpr CubeCoord to_cube_coord() const;
 	static constexpr OffsetXYCoord from_cube_coord(CubeCoord);
 
-	constexpr AxialCoord to_axial_coord();
+	constexpr AxialCoord to_axial_coord() const;
 	static constexpr OffsetXYCoord from_axial_coord(AxialCoord);
 };
 
@@ -110,14 +110,14 @@ struct AxialCoord {
 	s16 q;
 	s16 r;
 
-	constexpr CubeCoord to_cube_coord();
+	constexpr CubeCoord to_cube_coord() const;
 	static constexpr AxialCoord from_cube_coord(CubeCoord);
 
-	constexpr OffsetXYCoord to_offset_xy();
+	constexpr OffsetXYCoord to_offset_xy() const;
 	static constexpr AxialCoord from_offset_xy(OffsetXYCoord);
 };
 
-constexpr OffsetXYCoord CubeCoord::to_offset_xy() {
+constexpr OffsetXYCoord CubeCoord::to_offset_xy() const {
 	auto hex = *this;
 	auto col = hex.q + (hex.r - (hex.r & 1)) / 2;
 	auto row = hex.r;
@@ -128,7 +128,7 @@ constexpr CubeCoord CubeCoord::from_offset_xy(OffsetXYCoord rhs) {
 	return rhs.to_cube_coord();
 }
 
-constexpr AxialCoord CubeCoord::to_axial_coord() {
+constexpr AxialCoord CubeCoord::to_axial_coord() const {
 	auto hex = *this;
 	s16 q = hex.q;
 	s16 r = hex.r;
@@ -139,7 +139,7 @@ constexpr CubeCoord CubeCoord::from_axial_coord(AxialCoord rhs) {
 	return rhs.to_cube_coord();
 }
 
-constexpr CubeCoord OffsetXYCoord::to_cube_coord() {
+constexpr CubeCoord OffsetXYCoord::to_cube_coord() const {
 	auto hex = *this;
 	auto q = hex.col - (hex.row - (hex.row & 1)) / 2;
 	auto r = hex.row;
@@ -151,7 +151,7 @@ constexpr OffsetXYCoord OffsetXYCoord::from_cube_coord(CubeCoord rhs) {
 	return rhs.to_offset_xy();
 }
 
-constexpr AxialCoord OffsetXYCoord::to_axial_coord() {
+constexpr AxialCoord OffsetXYCoord::to_axial_coord() const {
 	return this->to_cube_coord().to_axial_coord();
 }
 
@@ -159,7 +159,7 @@ constexpr OffsetXYCoord OffsetXYCoord::from_axial_coord(AxialCoord rhs) {
 	return rhs.to_offset_xy();
 }
 
-constexpr CubeCoord AxialCoord::to_cube_coord() {
+constexpr CubeCoord AxialCoord::to_cube_coord() const {
 	auto hex = *this;
 	s16 q = hex.q;
 	s16 r = hex.r;
@@ -171,7 +171,7 @@ constexpr AxialCoord AxialCoord::from_cube_coord(CubeCoord rhs) {
 	return rhs.to_axial_coord();
 }
 
-constexpr OffsetXYCoord AxialCoord::to_offset_xy() {
+constexpr OffsetXYCoord AxialCoord::to_offset_xy() const {
 	return this->to_cube_coord().to_offset_xy();
 }
 
