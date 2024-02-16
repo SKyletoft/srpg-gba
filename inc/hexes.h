@@ -19,9 +19,9 @@ struct AxialCoord;
 enum class Direction { R = 0, UR, UL, L, DL, DR };
 
 struct CubeCoord {
-	s16 const q;
-	s16 const r;
-	s16 const s;
+	s16 const q = 0;
+	s16 const r = 0;
+	s16 const s = 0;
 
   private:
 	constexpr CubeCoord(s16 q, s16 r, s16 s)
@@ -67,6 +67,8 @@ struct CubeCoord {
 	constexpr CubeCoord neighbour(Direction dir) const;
 
 	// Factories
+
+	constexpr CubeCoord() {}
 
 	static constexpr std::optional<CubeCoord> from_qrs(s16 q, s16 r, s16 s) {
 		if (check_invariant(q, r, s)) {
