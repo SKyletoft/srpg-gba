@@ -36,6 +36,7 @@ class CursorScroller : public scrolling_map::ScrollingMap {
 			width, height, bg0_tile_source, bg0_tile_map, bg1_tile_source,
 			bg1_tile_map
 		) {}
+	void restore() override;
 };
 
 } // namespace cursor_scroller

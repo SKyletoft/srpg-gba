@@ -16,6 +16,15 @@ void CursorScroller::update() {
 	this->update_layer(this->layer1);
 }
 
+
+void CursorScroller::restore() {
+	this->ScrollingMap::restore();
+
+	std::memcpy(&tiles::SPRITE_PALETTE_MEMORY[0], arrowPal, sizeof(arrowPal));
+	std::memcpy(tiles::SPRITE_CHARBLOCK[0], arrowTiles, sizeof(arrowTiles));
+
+	REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
+}
 void CursorScroller::handle_input() {
 	std::array<std::tuple<Button, size_t, Direction>, 4> const inputs{
 		std::tuple
