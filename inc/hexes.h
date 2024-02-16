@@ -36,6 +36,8 @@ struct CubeCoord {
   public:
 	// Operators
 
+	CubeCoord &operator=(CubeCoord vec);
+
 	constexpr CubeCoord operator+(CubeCoord vec) const {
 		return this->add(vec);
 	}
