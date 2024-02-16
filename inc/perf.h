@@ -10,6 +10,8 @@ extern "C" {
 namespace perf {
 
 void record_frame();
+
+// Total, Rolling, in 1024ths of a scanline
 std::tuple<u32, u32> get_perf_data();
 
 } // namespace perf
