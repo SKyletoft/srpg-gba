@@ -21,7 +21,6 @@ class CursorScroller : public scrolling_map::ScrollingMap {
 	/// Up, Down, Left, Right
 	std::array<s16, 4> directional_cooldowns{0, 0, 0, 0};
 
-	void update() override;
 	void handle_input();
 
   public:
@@ -36,6 +35,7 @@ class CursorScroller : public scrolling_map::ScrollingMap {
 			width, height, bg0_tile_source, bg0_tile_map, bg1_tile_source,
 			bg1_tile_map
 		) {}
+	void update() override;
 	void restore() override;
 };
 
