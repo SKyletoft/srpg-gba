@@ -41,6 +41,7 @@ struct CubeCoord {
 	constexpr CubeCoord operator+(CubeCoord vec) const {
 		return this->add(vec);
 	}
+	constexpr CubeCoord operator+(Direction) const;
 	constexpr CubeCoord operator*(s16 factor) const {
 		return this->scale(factor);
 	}
@@ -186,5 +187,9 @@ static constexpr std::array<CubeCoord, 6> CUBE_DIRECTION_VECTORS = {
 constexpr CubeCoord CubeCoord::neighbour(Direction dir) const {
 	return CUBE_DIRECTION_VECTORS[(size_t)dir];
 };
+
+constexpr CubeCoord CubeCoord::operator+(Direction dir) const {
+	return this->neighbour(dir);
+}
 
 } // namespace hexes
