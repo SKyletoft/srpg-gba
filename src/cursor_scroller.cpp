@@ -27,7 +27,8 @@ void CursorScroller::vsync_hook() {
 	this->ScrollingMap::vsync_hook();
 
 	auto const xy = this->cursor.to_offset_xy();
-	this->cursor_sprite.x = (u8)(xy.col * 24 + 12 * (xy.row & 1) + this->layer0.x + 5);
+	this->cursor_sprite.x =
+		(u8)(xy.col * 24 + 12 * (xy.row & 1) + this->layer0.x + 5);
 	this->cursor_sprite.y = (u8)(xy.row * 16 + this->layer0.y - 4);
 	this->cursor_sprite.write_to_screen(0);
 }
