@@ -16,7 +16,7 @@ struct OffsetXYCoord;
 struct AxialCoord;
 
 // Note: Used for indexing, mirror any changes in CUBE_DIRECTION_VECTORS
-enum class Direction { R = 0, UR, UL, L, DL, DR };
+enum class Direction { R = 0, U, UR, UL, L, D, DR, DL };
 
 struct CubeCoord {
 	s16 const q = 0;
@@ -179,17 +179,27 @@ constexpr AxialCoord AxialCoord::from_offset_xy(OffsetXYCoord rhs) {
 	return rhs.to_axial_coord();
 }
 
-static constexpr std::array<CubeCoord, 6> CUBE_DIRECTION_VECTORS = {
+static constexpr std::array<CubeCoord, 8> CUBE_DIRECTION_VECTORS = {
 	CubeCoord::unsafe_from_qrs_unchecked(1, 0, -1),
+	CubeCoord{},
 	CubeCoord::unsafe_from_qrs_unchecked(1, -1, 0),
 	CubeCoord::unsafe_from_qrs_unchecked(0, -1, 1),
 	CubeCoord::unsafe_from_qrs_unchecked(-1, 0, 1),
-	CubeCoord::unsafe_from_qrs_unchecked(-1, 1, 0),
+	CubeCoord{},
 	CubeCoord::unsafe_from_qrs_unchecked(0, 1, -1),
+	CubeCoord::unsafe_from_qrs_unchecked(-1, 1, 0),
 };
 
 constexpr CubeCoord CubeCoord::neighbour(Direction dir) const {
-	return CUBE_DIRECTION_VECTORS[(size_t)dir];
+	size_t idx = (size_t)dir;
+	if (dir == Direction::U || dir == Direction::D) {
+		if (this->to_offset_xy().row & 1) {
+			idx += 1;
+		} else {
+			idx += 2;
+		}
+	}
+	return CUBE_DIRECTION_VECTORS[idx];
 };
 
 constexpr CubeCoord CubeCoord::operator+(Direction dir) const {
