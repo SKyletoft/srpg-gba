@@ -32,6 +32,16 @@ size_t get_screenblock_offset_from_camera(s16 x, s16 y) {
 	return get_screenblock_offset_from_tiles(x / 8, y / 8);
 }
 
+void Layer::move_in_bounds(s16 x, s16 y) {
+	this->x = std::clamp((s16)(this->x + x), this->min_x, this->max_x);
+	this->y = std::clamp((s16)(this->y + y), this->min_y, this->max_y);
+}
+
+void ScrollingMap::move_in_bounds(s16 x, s16 y) {
+	this->layer0.move_in_bounds(x, y);
+	this->layer1.move_in_bounds(x, y);
+}
+
 ScreenEntry ScrollingMap::get_tile_from_camera(Layer &layer, s16 x, s16 y) {
 	return this->get_tile(layer, x / 8, y / 8);
 }
@@ -92,26 +102,8 @@ void ScrollingMap::update_layer(Layer &layer) {
 }
 
 void ScrollingMap::update() {
-	this->layer0.x = std::clamp(
-		(s16)(this->layer0.x + input::horizontal_direction()),
-		this->layer0.min_x,
-		this->layer0.max_x
-	);
-	this->layer0.y = std::clamp(
-		(s16)(this->layer0.y + input::vertical_direction()),
-		this->layer0.min_y,
-		this->layer0.max_y
-	);
-
-	this->layer1.x = std::clamp(
-		(s16)(this->layer1.x + input::horizontal_direction()),
-		this->layer1.min_x,
-		this->layer1.max_x
-	);
-	this->layer1.y = std::clamp(
-		(s16)(this->layer1.y + input::vertical_direction()),
-		this->layer1.min_y,
-		this->layer1.max_y
+	this->move_in_bounds(
+		input::horizontal_direction(), input::vertical_direction()
 	);
 	this->update_layer(this->layer0);
 	this->update_layer(this->layer1);

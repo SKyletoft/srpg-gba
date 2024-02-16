@@ -33,6 +33,8 @@ struct Layer {
 
 	bool operator==(Layer const &) const = default;
 	bool operator!=(Layer const &) const = default;
+
+	void move_in_bounds(s16, s16);
 };
 
 class ScrollingMap : public state::Mode {
@@ -88,6 +90,8 @@ class ScrollingMap : public state::Mode {
 			  .max_y = height,
 			  .x = 4
 		  }) {}
+
+	void move_in_bounds(s16, s16);
 
 	bool blackout() override;
 
