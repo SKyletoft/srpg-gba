@@ -193,7 +193,7 @@ constexpr CubeCoord CubeCoord::neighbour(Direction dir) const {
 };
 
 constexpr CubeCoord CubeCoord::operator+(Direction dir) const {
-	return this->neighbour(dir);
+	return *this + this->neighbour(dir);
 }
 
 } // namespace hexes
