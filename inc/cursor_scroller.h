@@ -4,6 +4,7 @@
 
 #include "hexes.h"
 #include "scrolling_map.h"
+#include "sprite.h"
 
 extern "C" {
 #include <tonc_types.h>
@@ -17,7 +18,8 @@ static constexpr s16 COOLDOWN = 8;
 
 class CursorScroller : public scrolling_map::ScrollingMap {
   protected:
-	CubeCoord cursor{};
+	CubeCoord cursor = CubeCoord::from_offset_xy({.col = 5, .row = 5});
+	sprite::Sprite cursor_sprite{};
 	/// Up, Down, Left, Right
 	std::array<s16, 4> directional_cooldowns{0, 0, 0, 0};
 
@@ -35,7 +37,9 @@ class CursorScroller : public scrolling_map::ScrollingMap {
 			width, height, bg0_tile_source, bg0_tile_map, bg1_tile_source,
 			bg1_tile_map
 		) {}
+
 	void update() override;
+	void vsync_hook() override;
 	void restore() override;
 };
 

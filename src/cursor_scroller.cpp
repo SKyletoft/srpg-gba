@@ -1,9 +1,16 @@
 #include "cursor_scroller.h"
 
+#include "debug.h"
 #include "hexes.h"
 #include "input.h"
+#include "tiles.h"
 #include <array>
+#include <cstring>
 #include <tuple>
+
+extern "C" {
+#include "arrow.h"
+}
 
 namespace cursor_scroller {
 
@@ -16,6 +23,14 @@ void CursorScroller::update() {
 	this->update_layer(this->layer1);
 }
 
+void CursorScroller::vsync_hook() {
+	this->ScrollingMap::vsync_hook();
+
+	auto const xy = this->cursor.to_offset_xy();
+	this->cursor_sprite.x = (u8)(xy.row * 8 + this->layer0.x);
+	this->cursor_sprite.y = (u8)(xy.col * 8 + this->layer0.y);
+	this->cursor_sprite.write_to_screen(0);
+}
 
 void CursorScroller::restore() {
 	this->ScrollingMap::restore();
@@ -25,6 +40,7 @@ void CursorScroller::restore() {
 
 	REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
 }
+
 void CursorScroller::handle_input() {
 	std::array<std::tuple<Button, size_t, Direction>, 4> const inputs{
 		std::tuple
@@ -36,11 +52,17 @@ void CursorScroller::handle_input() {
 	};
 	for (auto const &[button, index, dir] : inputs) {
 		if (input::get_button(button).is_down()
-			&& this->directional_cooldowns[index] >= 0)
+			&& this->directional_cooldowns[index] <= 0)
 		{
 			this->cursor = this->cursor + dir;
 			this->directional_cooldowns[index] = COOLDOWN;
+
+			debug::clear();
+			debug::println(this->cursor.q);
+			debug::println(this->cursor.r);
+			debug::println(this->cursor.s);
 		}
+		this->directional_cooldowns[index]--;
 	}
 
 	if (input::get_button(Button::R).is_down()
