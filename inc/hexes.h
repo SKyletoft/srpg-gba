@@ -72,6 +72,10 @@ struct CubeCoord {
 	// Factories
 
 	constexpr CubeCoord() {}
+	constexpr CubeCoord(CubeCoord const &vec)
+		: q(vec.q)
+		, r(vec.r)
+		, s(vec.s) {}
 
 	static constexpr std::optional<CubeCoord> from_qrs(s16 q, s16 r, s16 s) {
 		if (check_invariant(q, r, s)) {
