@@ -1,8 +1,8 @@
 #pragma once
 
-#include "scrolling_map.h"
-#include "tiles.h"
+#include "cursor_scroller.h"
 #include "mdspan.h"
+#include "tiles.h"
 
 namespace hexmap {
 
@@ -14,7 +14,7 @@ using tiles::STile;
 static constexpr s16 WIDTH = (s16)40;
 static constexpr s16 HEIGHT = (s16)29;
 
-class Hexmap : public scrolling_map::ScrollingMap {
+class Hexmap : public cursor_scroller::CursorScroller {
   protected:
 	void load_tilesets(Layer &) override;
 	void load_palettes(Layer &) override;
@@ -25,7 +25,7 @@ class Hexmap : public scrolling_map::ScrollingMap {
 
   public:
 	Hexmap(std::array<std::array<u8, WIDTH>, HEIGHT> const &map)
-		: ScrollingMap(WIDTH * 3 * 8 - 240, HEIGHT * 16 - 155, 1, 26, 0, 30)
+		: CursorScroller(WIDTH * 3 * 8 - 240, HEIGHT * 16 - 155, 1, 26, 0, 30)
 		, map(map) {}
 };
 
