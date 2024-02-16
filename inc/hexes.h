@@ -69,6 +69,8 @@ struct CubeCoord {
 
 	constexpr CubeCoord neighbour(Direction dir) const;
 
+	constexpr bool is_odd() const;
+
 	// Factories
 
 	constexpr CubeCoord() {}
@@ -190,10 +192,14 @@ static constexpr std::array<CubeCoord, 8> CUBE_DIRECTION_VECTORS = {
 	CubeCoord::unsafe_from_qrs_unchecked(-1, 1, 0),
 };
 
+constexpr bool CubeCoord::is_odd() const {
+	return this->to_offset_xy().row & 1;
+}
+
 constexpr CubeCoord CubeCoord::neighbour(Direction dir) const {
 	size_t idx = (size_t)dir;
 	if (dir == Direction::U || dir == Direction::D) {
-		if (this->to_offset_xy().row & 1) {
+		if (this->is_odd()) {
 			idx += 1;
 		} else {
 			idx += 2;
