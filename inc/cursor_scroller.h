@@ -16,7 +16,7 @@ namespace cursor_scroller {
 using hexes::CubeCoord;
 using point::Point;
 
-static constexpr s16 COOLDOWN = 8;
+static constexpr s16 COOLDOWN = 12;
 
 class CursorScroller : public scrolling_map::ScrollingMap {
   protected:
