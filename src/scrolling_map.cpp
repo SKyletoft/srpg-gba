@@ -38,6 +38,9 @@ void Layer::move_in_bounds(s16 x, s16 y) {
 }
 
 void ScrollingMap::move_in_bounds(s16 x, s16 y) {
+	if (x == 0 && y == 0) {
+		return;
+	}
 	this->layer0.move_in_bounds(x, y);
 	this->layer1.move_in_bounds(x, y);
 }
