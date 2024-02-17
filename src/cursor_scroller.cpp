@@ -18,18 +18,60 @@ using hexes::Direction;
 using input::Button;
 
 void CursorScroller::update() {
+	auto old_cursor = this->cursor;
+	auto old_offset = this->cursor_animation;
 	this->handle_input();
-	this->update_layer(this->layer0);
-	this->update_layer(this->layer1);
+
+	auto const xy = this->cursor.to_offset_xy();
+
+	Point<s32> screen_centre{
+		.x = layer0.x + 120,
+		.y = layer0.y + 80,
+	};
+
+	Point<s32> const cursor{
+		.x = xy.col * 24 + 12 * (xy.row & 1),
+		.y = xy.row * 16,
+	};
+
+	Point<s16> d{};
+	if (screen_centre.x - cursor.x < -90 + 16) {
+		d.x = 1;
+	} else if (screen_centre.x - cursor.x > 90) {
+		d.x = -1;
+	}
+	if (screen_centre.y - cursor.y < -50 + 16) {
+		d.y = 1;
+	} else if (screen_centre.y - cursor.y > 50) {
+		d.y = -1;
+	}
+	this->move_in_bounds(d.x, d.y);
+
+	if (screen_centre.x - cursor.x < -120 + 16
+		|| screen_centre.x - cursor.x > 120
+		|| screen_centre.y - cursor.y < -80 + 16
+		|| screen_centre.y - cursor.y > 80)
+	{
+		this->cursor = old_cursor;
+		this->cursor_animation = old_offset;
+	} else {
+		this->cursor_sprite.x =
+			(u8)(cursor.x - this->layer0.x + 5 + this->cursor_animation.x);
+		this->cursor_sprite.y =
+			(u8)(cursor.y - this->layer0.y - 4 + this->cursor_animation.y);
+
+		this->update_layer(this->layer0);
+		this->update_layer(this->layer1);
+	}
+
+	this->cursor_animation.x =
+		(s16)((this->cursor_animation.x * (s16)3) / (s16)4);
+	this->cursor_animation.y =
+		(s16)((this->cursor_animation.y * (s16)3) / (s16)4);
 }
 
 void CursorScroller::vsync_hook() {
 	this->ScrollingMap::vsync_hook();
-
-	auto const xy = this->cursor.to_offset_xy();
-	this->cursor_sprite.x =
-		(u8)(xy.col * 24 + 12 * (xy.row & 1) + this->layer0.x + 5);
-	this->cursor_sprite.y = (u8)(xy.row * 16 + this->layer0.y - 4);
 	this->cursor_sprite.write_to_screen(0);
 }
 
@@ -44,25 +86,31 @@ void CursorScroller::restore() {
 
 void CursorScroller::handle_input() {
 	bool const is_odd = this->cursor.is_odd();
-	std::array<std::tuple<Button, size_t, Direction>, 4> const inputs{
-		std::tuple
-		// Thanks C++ not needing nested {} for 2d arrays so this breaks instead
-		{Button::Up, 0, is_odd ? Direction::UL : Direction::UR},
-		{Button::Down, 1, is_odd ? Direction::DL : Direction::DR},
-		{Button::Left, 2, Direction::L},
-		{Button::Right, 3, Direction::R},
-	};
-	for (auto const &[button, index, dir] : inputs) {
+
+	auto const [up_dir, up_offset] =
+		is_odd ? std::tuple{Direction::UL, Point<s16>{12, 16}}
+			   : std::tuple{Direction::UR, Point<s16>{-12, 16}};
+	auto const [down_dir, down_offset] =
+		is_odd ? std::tuple{Direction::DL, Point<s16>{12, -16}}
+			   : std::tuple{Direction::DR, Point<s16>{-12, -16}};
+
+	std::array<std::tuple<Button, size_t, Direction, Point<s16>>, 4> const
+		inputs{
+			std::tuple
+			// Thanks C++ not needing nested {} for 2d arrays so
+			// this breaks instead
+			{Button::Up, 0, up_dir, up_offset},
+			{Button::Down, 1, down_dir, down_offset},
+			{Button::Left, 2, Direction::L, Point<s16>{24, 0}},
+			{Button::Right, 3, Direction::R, Point<s16>{-24, 0}},
+		};
+	for (auto const &[button, index, dir, animation_offset] : inputs) {
 		if (input::get_button(button).is_down()
 			&& this->directional_cooldowns[index] <= 0)
 		{
 			this->cursor = this->cursor + dir;
 			this->directional_cooldowns[index] = COOLDOWN;
-
-			debug::clear();
-			debug::println(this->cursor.q);
-			debug::println(this->cursor.r);
-			debug::println(this->cursor.s);
+			this->cursor_animation = this->cursor_animation + animation_offset;
 		}
 		this->directional_cooldowns[index]--;
 	}
