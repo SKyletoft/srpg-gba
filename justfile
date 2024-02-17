@@ -17,7 +17,7 @@ setup-env:
 	git clone https://github.com/devkitPro/libtonc.git
 
 mgba: build
-	mgba-qt out/gba-dev.gba -4
+	mgba-qt out/gba-dev.elf -4
 
 clean:
 	-rm -rf out/*
