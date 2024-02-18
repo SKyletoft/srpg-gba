@@ -17,22 +17,24 @@ namespace cursor_scroller {
 using hexes::Direction;
 using input::Button;
 
+Point<s32> hex_to_grid(CubeCoord cursor) {
+	auto const xy = cursor.to_offset_xy();
+	return Point{
+		.x = xy.col * 24 + 12 * (xy.row & 1),
+		.y = xy.row * 16,
+	};
+}
+
 void CursorScroller::update() {
 	auto old_cursor = this->cursor;
 	auto old_offset = this->cursor_animation;
 	this->handle_input();
 
-	auto const xy = this->cursor.to_offset_xy();
-
-	Point<s32> screen_centre{
+	Point<s32> const screen_centre{
 		.x = layer0.x + 120,
 		.y = layer0.y + 80,
 	};
-
-	Point<s32> const cursor{
-		.x = xy.col * 24 + 12 * (xy.row & 1),
-		.y = xy.row * 16,
-	};
+	Point<s32> const cursor = hex_to_grid(this->cursor);
 
 	Point<s16> d{};
 	// 240px wide, split in two = 120px, with 30px buffer = 90px
