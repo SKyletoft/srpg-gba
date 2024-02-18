@@ -15,6 +15,7 @@ bash: setup
 
 setup-env:
 	git clone https://github.com/devkitPro/libtonc.git
+	git clone https://github.com/devkitPro/maxmod.git
 
 mgba: build
 	mgba-qt out/gba-dev.gba -4
