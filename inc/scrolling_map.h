@@ -9,8 +9,8 @@ extern "C" {
 
 namespace scrolling_map {
 
-using ScreenEntry = tiles::ScreenEntry;
-using STile = tiles::STile;
+using tiles::ScreenEntry;
+using tiles::STile;
 
 size_t get_screenblock_offset_from_tiles(s16 x, s16 y);
 size_t get_screenblock_offset_from_camera(s16 x, s16 y);
