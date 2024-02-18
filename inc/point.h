@@ -21,6 +21,13 @@ template <NumericType T> struct Point {
 		};
 	}
 
+	[[nodiscard]] constexpr bool operator==(Self const &rhs) const noexcept {
+		return this->x == rhs.x && this->y == rhs.y;
+	}
+
+	[[nodiscard]] constexpr bool operator!=(Self const &rhs
+	) const noexcept = default;
+
 	[[nodiscard]] constexpr Self operator+(Self const &rhs) const noexcept {
 		return Self{
 			.x = (T)(this->x + rhs.x),
