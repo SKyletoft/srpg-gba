@@ -13,8 +13,13 @@ template <NumericType T> struct Point {
 	T x{0};
 	T y{0};
 
-	[[nodiscard]] constexpr Self operator+(Point<T> const &rhs) const noexcept {
-		return Point{
+	template <NumericType U>
+	[[nodiscard]] constexpr Point<U> into() const noexcept {
+		return Point<U>{
+			.x = (U)this->x,
+			.y = (U)this->y,
+		};
+	}
 
 	[[nodiscard]] constexpr Self operator+(Self const &rhs) const noexcept {
 		return Self{
