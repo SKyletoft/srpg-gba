@@ -1,5 +1,6 @@
 #pragma once
 
+#include "point.h"
 #include "state.h"
 #include "tiles.h"
 
@@ -9,6 +10,7 @@ extern "C" {
 
 namespace scrolling_map {
 
+using point::Point;
 using tiles::ScreenEntry;
 using tiles::STile;
 
@@ -24,8 +26,7 @@ struct Layer {
 	const s16 max_x = 40 * 3 * 8;
 	const s16 max_y = 30 * 4 * 8;
 
-	s16 x = 0;
-	s16 y = 0;
+	Point<s16> pos;
 	s16 last_load_at_x = -100;
 	s16 last_load_at_y = -100;
 	bool updated_x = false;
@@ -59,7 +60,7 @@ class ScrollingMap : public state::Mode {
 			  .tile_map = 30,
 			  .max_x = width,
 			  .max_y = height,
-			  .x = 0
+			  .pos = Point<s16>{.x = 0}
 		  })
 		, layer1(Layer{
 			  .tile_source = 1,
@@ -67,7 +68,7 @@ class ScrollingMap : public state::Mode {
 			  .min_x = 4,
 			  .max_x = (s16)(width + 4),
 			  .max_y = height,
-			  .x = 4
+			  .pos = Point<s16>{.x = 4}
 		  }) {}
 
 	ScrollingMap(
@@ -80,7 +81,7 @@ class ScrollingMap : public state::Mode {
 			  .tile_map = bg0_tile_map,
 			  .max_x = width,
 			  .max_y = height,
-			  .x = 0
+			  .pos = Point<s16>{.x = 0}
 		  })
 		, layer1(Layer{
 			  .tile_source = bg1_tile_source,
@@ -88,7 +89,7 @@ class ScrollingMap : public state::Mode {
 			  .min_x = 4,
 			  .max_x = (s16)(width + 4),
 			  .max_y = height,
-			  .x = 4
+			  .pos = Point<s16>{.x = 4}
 		  }) {}
 
 	void move_in_bounds(s16, s16);

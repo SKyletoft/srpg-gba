@@ -30,10 +30,8 @@ void CursorScroller::update() {
 	auto old_offset = this->cursor_animation;
 	this->handle_input();
 
-	Point<s32> const screen_centre{
-		.x = layer0.x + 120,
-		.y = layer0.y + 80,
-	};
+	Point<s32> const screen_centre =
+		this->layer0.pos.into<s32>() + Point{120, 80};
 	Point<s32> const cursor = hex_to_grid(this->cursor);
 
 	Point<s16> d{};
@@ -59,9 +57,9 @@ void CursorScroller::update() {
 		this->cursor_animation = old_offset;
 	} else {
 		this->cursor_sprite.x =
-			(u8)(cursor.x - this->layer0.x + 5 + this->cursor_animation.x);
+			(u8)(cursor.x - this->layer0.pos.x + 5 + this->cursor_animation.x);
 		this->cursor_sprite.y =
-			(u8)(cursor.y - this->layer0.y - 4 + this->cursor_animation.y);
+			(u8)(cursor.y - this->layer0.pos.y - 4 + this->cursor_animation.y);
 
 		this->move_in_bounds(d.x, d.y);
 		this->update_layer(this->layer0);

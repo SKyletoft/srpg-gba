@@ -33,8 +33,8 @@ size_t get_screenblock_offset_from_camera(s16 x, s16 y) {
 }
 
 void Layer::move_in_bounds(s16 x, s16 y) {
-	this->x = std::clamp((s16)(this->x + x), this->min_x, this->max_x);
-	this->y = std::clamp((s16)(this->y + y), this->min_y, this->max_y);
+	this->pos.x = std::clamp((s16)(this->pos.x + x), this->min_x, this->max_x);
+	this->pos.y = std::clamp((s16)(this->pos.y + y), this->min_y, this->max_y);
 }
 
 void ScrollingMap::move_in_bounds(s16 x, s16 y) {
@@ -63,44 +63,43 @@ void ScrollingMap::load_map(Layer &layer) {
 	// Yes, load one row too many
 	for (s16 x = 0; x <= 30 * 8; x += 8) {
 		for (s16 y = 0; y <= 20 * 8; y += 8) {
-			this->update_tile(base, layer, layer.x + x, layer.y + y);
+			this->update_tile(base, layer, layer.pos.x + x, layer.pos.y + y);
 		}
 	}
 }
 
 void ScrollingMap::update_layer(Layer &layer) {
-
 	ScreenEntry volatile *const base = tiles::SCREENBLOCKS[layer.tile_map];
 
-	s16 const dy = layer.y - layer.last_load_at_y;
+	s16 const dy = layer.pos.y - layer.last_load_at_y;
 	if (abs(dy) > 4) {
 		s16 const diff = dy < 0 ? -4 : 164;
-		s16 const cam_y = layer.y + diff;
+		s16 const cam_y = layer.pos.y + diff;
 
 		for (s16 d_cam_x = -8; d_cam_x < 248; d_cam_x += 7) {
-			this->update_tile(base, layer, layer.x + d_cam_x, cam_y);
+			this->update_tile(base, layer, layer.pos.x + d_cam_x, cam_y);
 		}
 
 		layer.updated_y = true;
 	}
 
-	s16 const dx = layer.x - layer.last_load_at_x;
+	s16 const dx = layer.pos.x - layer.last_load_at_x;
 	if (abs(dx) > 4) {
 		s16 const diff = dx < 0 ? -4 : 244;
-		s16 const cam_x = layer.x + diff;
+		s16 const cam_x = layer.pos.x + diff;
 		for (s16 d_cam_y = -8; d_cam_y < 168; d_cam_y += 7) {
-			this->update_tile(base, layer, cam_x, layer.y + d_cam_y);
+			this->update_tile(base, layer, cam_x, layer.pos.y + d_cam_y);
 		}
 		layer.updated_x = true;
 	}
 
 	if (layer.updated_x) {
 		layer.updated_x = false;
-		layer.last_load_at_x = layer.x;
+		layer.last_load_at_x = layer.pos.x;
 	}
 	if (layer.updated_y) {
 		layer.updated_y = false;
-		layer.last_load_at_y = layer.y;
+		layer.last_load_at_y = layer.pos.y;
 	}
 }
 
@@ -153,10 +152,10 @@ void ScrollingMap::restore() {
 void ScrollingMap::suspend() {}
 
 void ScrollingMap::vsync_hook() {
-	REG_BG0HOFS = (u16)this->layer0.x;
-	REG_BG0VOFS = (u16)this->layer0.y;
-	REG_BG1HOFS = (u16)this->layer1.x;
-	REG_BG1VOFS = (u16)this->layer1.y;
+	REG_BG0HOFS = (u16)this->layer0.pos.x;
+	REG_BG0VOFS = (u16)this->layer0.pos.y;
+	REG_BG1HOFS = (u16)this->layer1.pos.x;
+	REG_BG1VOFS = (u16)this->layer1.pos.y;
 }
 
 bool ScrollingMap::blackout() {
