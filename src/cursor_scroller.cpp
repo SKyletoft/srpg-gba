@@ -91,30 +91,29 @@ void CursorScroller::restore() {
 void CursorScroller::handle_input() {
 	bool const is_odd = this->cursor.is_odd();
 
-	auto const [up_dir, up_offset] =
-		is_odd ? std::tuple{Direction::UL, Point<s16>{12, 16}}
-			   : std::tuple{Direction::UR, Point<s16>{-12, 16}};
-	auto const [down_dir, down_offset] =
-		is_odd ? std::tuple{Direction::DL, Point<s16>{12, -16}}
-			   : std::tuple{Direction::DR, Point<s16>{-12, -16}};
+	auto const up_dir = is_odd ? Direction::UL : Direction::UR;
+	auto const down_dir = is_odd ? Direction::DL : Direction::DR;
 
-	std::array<std::tuple<Button, size_t, Direction, Point<s16>>, 4> const
-		inputs{
-			std::tuple
-			// Thanks C++ not needing nested {} for 2d arrays so
-			// this breaks instead
-			{Button::Up, 0, up_dir, up_offset},
-			{Button::Down, 1, down_dir, down_offset},
-			{Button::Left, 2, Direction::L, Point<s16>{24, 0}},
-			{Button::Right, 3, Direction::R, Point<s16>{-24, 0}},
-		};
-	for (auto const &[button, index, dir, animation_offset] : inputs) {
+	std::array<std::tuple<Button, size_t, Direction>, 4> const inputs{
+		std::tuple
+		// Thanks C++ not needing nested {} for 2d arrays so
+		// this breaks instead
+		{Button::Up, 0, up_dir},
+		{Button::Down, 1, down_dir},
+		{Button::Left, 2, Direction::L},
+		{Button::Right, 3, Direction::R},
+	};
+	for (auto const &[button, index, dir] : inputs) {
 		if (input::get_button(button).is_down()
 			&& this->directional_cooldowns[index] <= 0)
 		{
+			auto const old_cur_screen = hex_to_grid(this->cursor);
 			this->cursor = this->cursor + dir;
+			auto const new_cur_screen = hex_to_grid(this->cursor);
 			this->directional_cooldowns[index] = COOLDOWN;
-			this->cursor_animation = this->cursor_animation + animation_offset;
+			this->cursor_animation =
+				this->cursor_animation
+				+ (old_cur_screen - new_cur_screen).into<s16>();
 		}
 		this->directional_cooldowns[index]--;
 	}
