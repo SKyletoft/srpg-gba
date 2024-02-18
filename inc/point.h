@@ -11,28 +11,28 @@ template <NumericType T> struct Point {
 	T x{0};
 	T y{0};
 
-	[[nodiscard]] constexpr Point<T> operator+(Point<T> const &rhs) noexcept {
+	[[nodiscard]] constexpr Point<T> operator+(Point<T> const &rhs) const noexcept {
 		return Point{
 			.x = (T)(this->x + rhs.x),
 			.y = (T)(this->y + rhs.y),
 		};
 	}
 
-	[[nodiscard]] constexpr Point<T> operator-(Point<T> const &rhs) noexcept {
+	[[nodiscard]] constexpr Point<T> operator-(Point<T> const &rhs) const noexcept {
 		return Point{
 			.x = (T)(this->x - rhs.x),
 			.y = (T)(this->y - rhs.y),
 		};
 	}
 
-	[[nodiscard]] constexpr Point<T> operator*(T const &rhs) noexcept {
+	[[nodiscard]] constexpr Point<T> operator*(T const &rhs) const noexcept {
 		return Point{
 			.x = (T)(this->x * rhs),
 			.y = (T)(this->y * rhs),
 		};
 	}
 
-	[[nodiscard]] constexpr Point<T> operator/(T const &rhs) noexcept {
+	[[nodiscard]] constexpr Point<T> operator/(T const &rhs) const noexcept {
 		return Point{
 			.x = (T)(this->x / rhs),
 			.y = (T)(this->y / rhs),
