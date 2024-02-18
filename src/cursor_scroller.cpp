@@ -49,7 +49,6 @@ void CursorScroller::update() {
 	} else if (screen_centre.y - cursor.y > 50) {
 		d.y = -1;
 	}
-	this->move_in_bounds(d.x, d.y);
 
 	if (screen_centre.x - cursor.x < -120 + 16
 		|| screen_centre.x - cursor.x > 120
@@ -64,6 +63,7 @@ void CursorScroller::update() {
 		this->cursor_sprite.y =
 			(u8)(cursor.y - this->layer0.y - 4 + this->cursor_animation.y);
 
+		this->move_in_bounds(d.x, d.y);
 		this->update_layer(this->layer0);
 		this->update_layer(this->layer1);
 	}
