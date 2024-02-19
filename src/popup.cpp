@@ -172,16 +172,19 @@ PopupMenu::PopupMenu()
 		   []() {
 			   debug::println("Setting text to red");
 			   BG_PALETTE_MEMORY[15].colours[1] = tiles::RED;
+			   SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::RED;
 		   }},
 		  {"Green",
 		   []() {
 			   debug::println("Setting text to green");
 			   BG_PALETTE_MEMORY[15].colours[1] = tiles::GREEN;
+			   SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::GREEN;
 		   }},
 		  {"Blue",
 		   []() {
 			   debug::println("Setting text to blue");
 			   BG_PALETTE_MEMORY[15].colours[1] = tiles::BLUE;
+			   SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::BLUE;
 		   }},
 		  {"Exit", []() { state::next_state = 0; }},
 	  })
