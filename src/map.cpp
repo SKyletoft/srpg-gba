@@ -4,6 +4,7 @@
 #include "input.h"
 #include "state.h"
 #include "tiles.h"
+#include "util.h"
 #include <cstring>
 
 extern "C" {
@@ -158,7 +159,8 @@ void MapMode::restore() {
 	load_hexgrid();
 	load_metr_data();
 
-	vid_vsync();
+	//vid_vsync();
+	util::wait_for_vsync();
 	load_fe8_pal();
 	load_metr_pal();
 
