@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "hexes.h"
 #include "input.h"
+#include "state.h"
 #include "tiles.h"
 #include <array>
 #include <cstring>
@@ -80,7 +81,11 @@ void CursorScroller::vsync_hook() {
 void CursorScroller::restore() {
 	this->ScrollingMap::restore();
 
-	std::memcpy(&tiles::SPRITE_PALETTE_MEMORY[0], arrowPal, sizeof(arrowPal));
+	if (state::last_state != 3) {
+		std::memcpy(
+			&tiles::SPRITE_PALETTE_MEMORY[0], arrowPal, sizeof(arrowPal)
+		);
+	}
 	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
 
 	REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
