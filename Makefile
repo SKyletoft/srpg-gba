@@ -55,6 +55,7 @@ CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions \
 	-Werror=missing-field-initializers -Werror=return-type \
 	-Werror=conversion -Werror=sign-conversion -Werror=float-conversion \
 	-Wno-unused-parameter -Wno-unused-const-variable \
+	-fno-strict-aliasing \
 	-std=gnu++23
 
 ASFLAGS := -g $(ARCH)
