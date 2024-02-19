@@ -2,7 +2,9 @@
 #include "tiles.h"
 
 extern "C" {
-#include <tonc_memmap.h>
+	#include <tonc_memmap.h>
+	#include <tonc_bios.h>
+#include <maxmod.h>
 }
 
 namespace util {
@@ -40,12 +42,16 @@ void wait_for_drawing_start() {
 }
 
 void wait_for_drawing_complete() {
-	while (REG_VCOUNT < 160)
-		;
+	//mmFrame();
+	// 	while (REG_VCOUNT < 160)
+	//		;
+	mmFrame();
+	VBlankIntrWait();
 }
 
 void wait_for_vsync() {
-	wait_for_drawing_start();
+	//mmFrame();
+	//wait_for_drawing_start();
 	wait_for_drawing_complete();
 }
 
