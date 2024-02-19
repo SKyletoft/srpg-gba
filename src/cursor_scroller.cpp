@@ -37,15 +37,15 @@ void CursorScroller::update() {
 	Point<s16> d{};
 	// 240px wide, split in two = 120px, with 30px buffer = 90px
 	if (screen_centre.x - cursor.x < -90 + 16) {
-		d.x = 1;
+		d.x = this->scroll_speed;
 	} else if (screen_centre.x - cursor.x > 90) {
-		d.x = -1;
+		d.x = -this->scroll_speed;
 	}
 	// 160px tall, split in two = 80px, with a 30px buffer = 50px
 	if (screen_centre.y - cursor.y < -50 + 16) {
-		d.y = 1;
+		d.y = this->scroll_speed;
 	} else if (screen_centre.y - cursor.y > 50) {
-		d.y = -1;
+		d.y = -this->scroll_speed;
 	}
 
 	if (screen_centre.x - cursor.x < -120 + 16

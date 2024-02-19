@@ -32,6 +32,7 @@ class CursorScroller : public scrolling_map::ScrollingMap {
 	/// Up, Down, Left, Right
 	std::array<s16, 4> directional_cooldowns{0, 0, 0, 0};
 	size_t t = 0;
+	s16 scroll_speed = 2;
 
 	void handle_input();
 
