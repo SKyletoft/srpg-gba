@@ -124,19 +124,21 @@ void ScrollingMap::update() {
 void ScrollingMap::always_update() {}
 
 void ScrollingMap::restore() {
-	this->load_tilesets(this->layer0);
-	this->load_tilesets(this->layer1);
-	this->load_map(this->layer0);
-	this->load_map(this->layer1);
-	util::wait_for_drawing_start();
-	this->load_palettes(this->layer0);
+	if (state::last_state != 3) {
+		this->load_tilesets(this->layer0);
+		this->load_tilesets(this->layer1);
+		this->load_map(this->layer0);
+		this->load_map(this->layer1);
+		util::wait_for_drawing_start();
+		this->load_palettes(this->layer0);
 
-	tiles::BG_PALETTE_MEMORY[15] = tiles::Palette{{
-		tiles::TRANSPARENT,
-		tiles::WHITE,
-		// clangd does not consider this a constant expression, gcc does
-		tiles::Colour::from_24bit_colour(198, 164, 89),
-	}};
+		tiles::BG_PALETTE_MEMORY[15] = tiles::Palette{{
+			tiles::TRANSPARENT,
+			tiles::WHITE,
+			// clangd does not consider this a constant expression, gcc does
+			tiles::Colour::from_24bit_colour(198, 164, 89),
+		}};
+	}
 
 	REG_BG0CNT = (u16)(BG_CBB((u16)this->layer0.tile_source)
 					   | BG_SBB((u16)this->layer0.tile_map) | BG_4BPP
