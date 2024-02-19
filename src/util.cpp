@@ -43,10 +43,10 @@ void wait_for_drawing_start() {
 
 void wait_for_drawing_complete() {
 	// mmFrame();
-	while (REG_VCOUNT < 160)
-		;
-	// mmFrame();
-	// VBlankIntrWait();
+//	while (REG_VCOUNT < 160)
+//		;
+	 mmFrame();
+	 VBlankIntrWait();
 }
 
 void wait_for_vsync() {

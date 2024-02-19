@@ -40,7 +40,7 @@ int main() {
 	config::modes[state::current_state]->restore();
 
 	for (;;) {
-		util::wait_for_vsync();
+		//util::wait_for_vsync();
 		// util::wait_for_drawing_start();
 		if (state::current_state != state::next_state) {
 			util::wait_for_vsync();
@@ -63,7 +63,7 @@ int main() {
 		}
 
 		perf::record_frame();
-		util::wait_for_drawing_complete();
+		util::wait_for_vsync();
 		config::modes[state::current_state]->vsync_hook();
 	}
 
