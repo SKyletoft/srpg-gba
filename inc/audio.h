@@ -2,11 +2,8 @@
 
 #include <cstddef>
 
-
-
 namespace audio {
-
 
 void initialise();
 void play_song();
-}
+} // namespace audio

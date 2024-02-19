@@ -1,10 +1,10 @@
+#include "audio.h"
 #include "input.h"
 #include "interrupts.h"
 #include "perf.h"
 #include "state.h"
 #include "tty.h"
 #include "util.h"
-#include "audio.h"
 #include <span>
 
 namespace config {
@@ -41,7 +41,7 @@ int main() {
 
 	for (;;) {
 		util::wait_for_vsync();
-		//util::wait_for_drawing_start();
+		// util::wait_for_drawing_start();
 		if (state::current_state != state::next_state) {
 			util::wait_for_vsync();
 			if (config::modes[state::current_state]->blackout()

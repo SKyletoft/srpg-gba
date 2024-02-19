@@ -31,9 +31,7 @@ template <typename T> class Span2d {
 	constexpr T *begin() const { return this->data; }
 	constexpr T const *cbegin() const { return (T const *)this->begin(); }
 
-	constexpr T *end() const {
-		return this->data + this->width * this->height;
-	}
+	constexpr T *end() const { return this->data + this->width * this->height; }
 	constexpr T const *cend() const { return (T const *)this->end(); }
 
 	template <size_t W, size_t H>
