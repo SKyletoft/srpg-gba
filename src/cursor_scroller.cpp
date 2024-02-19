@@ -118,6 +118,9 @@ void CursorScroller::handle_input() {
 				this->cursor_animation
 				+ (old_cur_screen - new_cur_screen).into<s16>();
 		}
+		if (this->directional_cooldowns[index] > COOLDOWN) {
+			this->directional_cooldowns[index] = 0;
+		}
 		this->directional_cooldowns[index]--;
 	}
 
