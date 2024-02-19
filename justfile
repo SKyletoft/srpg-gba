@@ -18,7 +18,7 @@ setup-env:
 	git clone https://github.com/devkitPro/maxmod.git
 
 mgba: build
-	mgba-qt out/gba-dev.gba -4
+	mgba-qt out/gba-dev.elf -4
 
 clean:
 	-rm -rf out/*

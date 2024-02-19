@@ -19,7 +19,7 @@ struct alignas(8) __attribute((packed)) Sprite {
 	u8 graphics_mode : 2 = 0;
 	bool mosaic : 1 = 0;
 	ColourMode colour_mode : 1 = ColourMode::BPP4;
-	u8 sprite_shape : 2 = 0;
+	u8 shape : 2 = 0;
 
 	// attr1
 	u16 x : 9 = 0;
@@ -40,6 +40,23 @@ struct alignas(8) __attribute((packed)) Sprite {
 };
 static_assert(sizeof(Sprite) == sizeof(OBJ_ATTR));
 static_assert(alignof(Sprite) >= alignof(OBJ_ATTR));
+
+static constexpr Sprite X8{
+	.shape = 0b00,
+	.size = 0b00,
+};
+static constexpr Sprite X16{
+	.shape = 0b00,
+	.size = 0b01,
+};
+static constexpr Sprite X32{
+	.shape = 0b00,
+	.size = 0b10,
+};
+static constexpr Sprite X64{
+	.shape = 0b00,
+	.size = 0b11,
+};
 
 // Due to fun literal language bugs, this is read only and you have to use the
 // `Sprite::write_to_screen` function to write

@@ -16,6 +16,8 @@
 						gdb
 						mgba
 						just
+
+						mangohud
 					];
 				};
 			}

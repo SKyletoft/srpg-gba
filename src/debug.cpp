@@ -6,6 +6,7 @@ namespace debug {
 
 tty::TtyMode tty_mode{};
 
+void clear() { tty_mode.clear(); }
 void print(const char *c) { tty_mode.print(c); }
 void printf(const char *format, ...) {
 	va_list args;

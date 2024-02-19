@@ -16,16 +16,16 @@ template <typename T> class Span2d {
 	size_t const height;
 
 	/// Y, X
-	constexpr T &operator[](size_t i, size_t j) const {
-		return this->data[j + i * this->width];
+	constexpr T &operator[](size_t y, size_t x) const {
+		return this->data[x + y * this->width];
 	}
 
 	/// Y, X
-	constexpr T &at(size_t i, size_t j) const {
-		if (j >= this->width || i >= this->height) {
+	constexpr T &at(size_t y, size_t x) const {
+		if (x >= this->width || y >= this->height) {
 			std::terminate();
 		}
-		return this[i, j];
+		return this[y, x];
 	}
 
 	constexpr T *begin() const { return this->data; }

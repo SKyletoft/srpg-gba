@@ -12,6 +12,8 @@
 #include <array>
 #include <span>
 
+#define EXPORT(list) std::span<state::Mode *const> modes{list};
+
 namespace debug {
 extern tty::TtyMode tty_mode;
 }
@@ -30,6 +32,6 @@ std::array<state::Mode *, 4> const modes_data{
 	&debug::tty_mode,
 	&popup,
 };
-std::span<state::Mode *const> modes{modes_data};
+EXPORT(modes_data);
 
 } // namespace config

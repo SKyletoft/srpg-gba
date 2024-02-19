@@ -8,6 +8,7 @@ extern "C" {
 
 namespace debug {
 
+void clear();
 void print(const char *);
 void printf(const char *format, ...);
 void print(const char *, const size_t);
