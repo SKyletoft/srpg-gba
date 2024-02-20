@@ -18,13 +18,6 @@ namespace cursor_scroller {
 using hexes::Direction;
 using input::Button;
 
-Point<s32> hex_to_grid(CubeCoord cursor) {
-	auto const xy = cursor.to_offset_xy();
-	return Point{
-		.x = xy.col * 24 + 12 * (xy.row & 1),
-		.y = xy.row * 16,
-	};
-}
 
 void CursorScroller::update() {
 	auto old_cursor = this->cursor;
@@ -33,7 +26,7 @@ void CursorScroller::update() {
 
 	Point<s32> const screen_centre =
 		this->layer0.pos.into<s32>() + Point{120, 80};
-	Point<s32> const cursor = hex_to_grid(this->cursor);
+	Point<s32> const cursor = this->cursor.to_pixel_space();
 
 	Point<s16> d{};
 	// 240px wide, split in two = 120px, with 30px buffer = 90px
@@ -110,9 +103,9 @@ void CursorScroller::handle_input() {
 		if (input::get_button(button).is_down()
 			&& this->directional_cooldowns[index] <= 0)
 		{
-			auto const old_cur_screen = hex_to_grid(this->cursor);
+			auto const old_cur_screen = this->cursor.to_pixel_space();
 			this->cursor = this->cursor + dir;
-			auto const new_cur_screen = hex_to_grid(this->cursor);
+			auto const new_cur_screen = this->cursor.to_pixel_space();
 			this->directional_cooldowns[index] = COOLDOWN;
 			this->cursor_animation =
 				this->cursor_animation
