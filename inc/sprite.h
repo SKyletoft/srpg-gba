@@ -1,5 +1,7 @@
 #pragma once
 
+#include "hexes.h"
+#include "point.h"
 #include <cstddef>
 #include <span>
 
@@ -71,6 +73,69 @@ static constexpr HardwareSprite X32{
 static constexpr HardwareSprite X64{
 	.shape = 0b00,
 	.size = 0b11,
+};
+
+enum class SpriteSize : u8 {
+	x8 = 0b0000,
+	x16 = 0b0001,
+	x32 = 0b0010,
+	x64 = 0b0011,
+	w16h8 = 0b0100,
+	w32h8 = 0b0101,
+	w32h16 = 0b0110,
+	w64h32 = 0b0111,
+	w8h16 = 0b1000,
+	w8h32 = 0b1001,
+	w16h32 = 0b1010,
+	w32h64 = 0b1011
+};
+
+struct __attribute((packed)) HexSprite {
+	CubeCoord pos{};
+	SpriteSize size : 4 = SpriteSize::x8;
+	u8 hardware_id : 7 = 0;
+	bool horizontal_flip : 1 = false;
+	bool vertical_flip : 1 = false;
+	u16 tile_index : 10 = 0;
+	u8 prio : 2 = 0;
+	u8 palette : 4 = 0;
+	ObjectMode object_mode : 2 = ObjectMode::Hidden;
+	ColourMode colour_mode : 2 = ColourMode::BPP4;
+
+	constexpr HexSprite &translate(Direction d) {
+		this->pos += d;
+		return *this;
+	}
+
+	constexpr HexSprite &translate(CubeCoord vec) {
+		this->pos += vec;
+		return *this;
+	}
+
+	constexpr void hide() const {
+		HardwareSprite{.object_mode = ObjectMode::Hidden}.write_to_screen(
+			(size_t)this->hardware_id
+		);
+	}
+
+	constexpr void render(Point<s16> const camera_offset) const {
+		auto const pixel_space = this->pos.to_pixel_space().into<s16>();
+		auto const screen_space = (pixel_space - camera_offset).into<u8>();
+
+		HardwareSprite{
+			.y = screen_space.y,
+			.colour_mode = this->colour_mode,
+			.shape = (u8)(((u8)this->size & 0b1100) >> 2),
+			.x = screen_space.x,
+			.horizontal_flip = this->horizontal_flip,
+			.vertical_flip = this->vertical_flip,
+			.size = (u8)((u8)this->size & 0b11),
+			.tile_index = this->tile_index,
+			.prio = this->prio,
+			.palette = this->palette,
+		}
+			.write_to_screen((size_t)this->hardware_id);
+	}
 };
 
 // Due to fun literal language bugs, this is read only and you have to use the
