@@ -9,6 +9,7 @@
 
 namespace config {
 extern std::span<state::Mode *const> modes;
+extern u32 the_startup_song;
 }
 
 namespace debug {

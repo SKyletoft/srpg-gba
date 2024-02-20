@@ -9,10 +9,14 @@
 #include "test_map.h"
 #include "tty.h"
 
+#include "soundbank.h"
+
 #include <array>
 #include <span>
 
-#define EXPORT(list) std::span<state::Mode *const> modes{list};
+#define EXPORT(list, song)                                                     \
+	std::span<state::Mode *const> modes{list};                                 \
+	u32 the_startup_song = (u32)song;
 
 namespace debug {
 extern tty::TtyMode tty_mode;
@@ -32,6 +36,9 @@ std::array<state::Mode *, 4> const modes_data{
 	&debug::tty_mode,
 	&popup,
 };
-EXPORT(modes_data);
+
+u32 startup_song = MOD_BAD_APPLE;
+
+EXPORT(modes_data, startup_song);
 
 } // namespace config
