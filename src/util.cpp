@@ -18,6 +18,7 @@ vu32 x;
 [[noreturn]] void spin() {
 	for (u32 i = 0;; ++i) {
 		x = i;
+		wait_for_vsync();
 	}
 }
 
