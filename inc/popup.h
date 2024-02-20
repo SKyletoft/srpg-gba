@@ -37,6 +37,7 @@ class PopupMenu : public state::Mode {
 
 	HardwareSprite cursor{
 		.y = 76,
+		.object_mode = sprite::ObjectMode::Normal,
 		.x = 116,
 		.horizontal_flip = true,
 		.tile_index = 1,

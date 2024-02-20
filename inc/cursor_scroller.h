@@ -25,6 +25,7 @@ class CursorScroller : public scrolling_map::ScrollingMap {
 	Point<s16> cursor_animation{};
 	HardwareSprite cursor_sprite{
 		// 16x16
+		.object_mode = sprite::ObjectMode::Normal,
 		.shape = 0,
 		.size = 1,
 		// First tile is reserved for transparency
