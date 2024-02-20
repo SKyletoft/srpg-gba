@@ -8,7 +8,11 @@ extern "C" {
 
 namespace audio {
 
-void initialise() { mmInitDefault((mm_addr)soundbank_bin, 8); }
+void initialise() {
+	mmInitDefault((mm_addr)soundbank_bin, 8);
+	// irq_add(II_VBLANK, mmFrame);
+	mmSetVBlankHandler((void *)mmFrame);
+}
 
 void play_song() { mmStart(MOD_BAD_APPLE, MM_PLAY_LOOP); }
 

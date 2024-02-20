@@ -45,7 +45,7 @@ void wait_for_drawing_complete() {
 	// mmFrame();
 //	while (REG_VCOUNT < 160)
 //		;
-	 mmFrame();
+	 // mmFrame();
 	 VBlankIntrWait();
 }
 
