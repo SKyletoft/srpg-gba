@@ -1,7 +1,8 @@
 #include "interrupts.h"
 
-extern "C" {
 #include <maxmod.h>
+
+extern "C" {
 #include <tonc_irq.h>
 }
 

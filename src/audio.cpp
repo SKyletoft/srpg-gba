@@ -1,9 +1,10 @@
 #include "audio.h"
 
-extern "C" {
-#include "soundbank.h"
 #include "soundbank_bin.h"
 #include <maxmod.h>
+
+extern "C" {
+#include <tonc_irq.h>
 }
 
 namespace audio {
