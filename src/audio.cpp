@@ -11,7 +11,6 @@ namespace audio {
 
 void initialise() {
 	mmInitDefault((mm_addr)soundbank_bin, 8);
-	// irq_add(II_VBLANK, mmFrame);
 	mmSetVBlankHandler((void *)mmFrame);
 }
 

@@ -41,8 +41,6 @@ int main() {
 	config::modes[state::current_state]->restore();
 
 	for (;;) {
-		//util::wait_for_vsync();
-		// util::wait_for_drawing_start();
 		if (state::current_state != state::next_state) {
 			util::wait_for_vsync();
 			if (config::modes[state::current_state]->blackout()

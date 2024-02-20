@@ -105,7 +105,6 @@ void TtyMode::restore() {
 
 	this->clear_screen();
 
-	// vid_vsync();
 	util::wait_for_vsync();
 	tiles::BG_PALETTE_MEMORY[0] = YELLOW_ON_BLACK;
 	REG_BG0CNT =
