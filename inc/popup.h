@@ -65,6 +65,7 @@ class PopupMenu : public state::Mode {
 		, sprite_tile_source(4)
 		, tile_map(3) {
 
+		this->entries.reserve(l.size() - this->entries.capacity());
 		for (auto &[s, f] : l) {
 			this->entries.push_back({std::span{s, std::strlen(s)}, f});
 		}
