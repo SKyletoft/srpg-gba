@@ -41,12 +41,22 @@ struct CubeCoord {
 	constexpr CubeCoord operator+(CubeCoord vec) const {
 		return this->add(vec);
 	}
+	constexpr CubeCoord &operator+=(CubeCoord v) { return *this = *this + v; }
 	constexpr CubeCoord operator+(Direction) const;
+	constexpr CubeCoord &operator+=(Direction d) { return *this = *this + d; }
+
 	constexpr CubeCoord operator*(s16 factor) const {
 		return this->scale(factor);
 	}
+	constexpr CubeCoord &operator*=(s16 factor) {
+		return *this = *this * factor;
+	}
+
 	constexpr CubeCoord operator-(CubeCoord vec) const {
 		return this->subtract(vec);
+	}
+	constexpr CubeCoord &operator-=(CubeCoord vec) {
+		return *this = *this - vec;
 	}
 
 	constexpr CubeCoord add(CubeCoord const vec) const {
