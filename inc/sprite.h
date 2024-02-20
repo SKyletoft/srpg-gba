@@ -93,6 +93,7 @@ enum class SpriteSize : u8 {
 
 struct HexSprite {
 	CubeCoord pos{};
+	Point<s16> animation{};
 	SpriteSize size : 4 = SpriteSize::x8;
 	u8 hardware_id : 7 = 0;
 	bool horizontal_flip : 1 = false;

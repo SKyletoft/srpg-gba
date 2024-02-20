@@ -18,15 +18,14 @@ namespace cursor_scroller {
 using hexes::Direction;
 using input::Button;
 
-
 void CursorScroller::update() {
 	auto old_cursor = this->cursor;
-	auto old_offset = this->cursor_animation;
+	auto old_offset = this->cursor.animation;
 	this->handle_input();
 
 	Point<s32> const screen_centre =
 		this->layer0.pos.into<s32>() + Point{120, 80};
-	Point<s32> const cursor = this->cursor.to_pixel_space();
+	Point<s32> const cursor = this->cursor.pos.to_pixel_space();
 
 	Point<s16> d{};
 	// 240px wide, split in two = 120px, with 30px buffer = 90px
@@ -48,27 +47,23 @@ void CursorScroller::update() {
 		|| screen_centre.y - cursor.y > 80)
 	{
 		this->cursor = old_cursor;
-		this->cursor_animation = old_offset;
+		this->cursor.animation = old_offset;
 	} else {
-		this->cursor_sprite.x =
-			(u8)(cursor.x - this->layer0.pos.x + 5 + this->cursor_animation.x);
-		this->cursor_sprite.y =
-			(u8)(cursor.y - this->layer0.pos.y - 4 + this->cursor_animation.y);
 
 		this->move_in_bounds(d.x, d.y);
 		this->update_layer(this->layer0);
 		this->update_layer(this->layer1);
 	}
 
-	this->cursor_animation.x =
-		(s16)((this->cursor_animation.x * (s16)3) / (s16)4);
-	this->cursor_animation.y =
-		(s16)((this->cursor_animation.y * (s16)3) / (s16)4);
+	this->cursor.animation.x =
+		(s16)((this->cursor.animation.x * (s16)3) / (s16)4);
+	this->cursor.animation.y =
+		(s16)((this->cursor.animation.y * (s16)3) / (s16)4);
 }
 
 void CursorScroller::vsync_hook() {
 	this->ScrollingMap::vsync_hook();
-	this->cursor_sprite.write_to_screen(0);
+	this->cursor.render(this->layer0.pos);
 }
 
 void CursorScroller::restore() {
@@ -84,8 +79,10 @@ void CursorScroller::restore() {
 	REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
 }
 
+void CursorScroller::suspend() { this->cursor.hide(); }
+
 void CursorScroller::handle_input() {
-	bool const is_odd = this->cursor.is_odd();
+	bool const is_odd = this->cursor.pos.is_odd();
 
 	auto const up_dir = is_odd ? Direction::UL : Direction::UR;
 	auto const down_dir = is_odd ? Direction::DL : Direction::DR;
@@ -103,13 +100,12 @@ void CursorScroller::handle_input() {
 		if (input::get_button(button).is_down()
 			&& this->directional_cooldowns[index] <= 0)
 		{
-			auto const old_cur_screen = this->cursor.to_pixel_space();
-			this->cursor = this->cursor + dir;
-			auto const new_cur_screen = this->cursor.to_pixel_space();
+			auto const old_cur_screen = this->cursor.pos.to_pixel_space();
+			this->cursor.pos += dir;
+			auto const new_cur_screen = this->cursor.pos.to_pixel_space();
 			this->directional_cooldowns[index] = COOLDOWN;
-			this->cursor_animation =
-				this->cursor_animation
-				+ (old_cur_screen - new_cur_screen).into<s16>();
+			this->cursor.animation +=
+				(old_cur_screen - new_cur_screen).into<s16>();
 		}
 		if (this->directional_cooldowns[index] > COOLDOWN) {
 			this->directional_cooldowns[index] = 0;
