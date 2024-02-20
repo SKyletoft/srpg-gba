@@ -1,9 +1,12 @@
 #pragma once
 
-#include <cstddef>
+extern "C" {
+#include <tonc_types.h>
+}
 
 namespace audio {
 
 void initialise();
-void play_song();
+void play_song(u32);
+
 } // namespace audio

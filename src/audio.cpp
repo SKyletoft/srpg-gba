@@ -14,6 +14,6 @@ void initialise() {
 	mmSetVBlankHandler((void *)mmFrame);
 }
 
-void play_song() { mmStart(MOD_BAD_APPLE, MM_PLAY_LOOP); }
+void play_song(u32 song) { mmStart(song, MM_PLAY_LOOP); }
 
 } // namespace audio
