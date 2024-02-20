@@ -54,6 +54,7 @@ struct alignas(8) __attribute((packed)) HardwareSprite {
 	u16 _pad1 = 0;
 
 	void write_to_screen(size_t hardware_sprite_id);
+	static void hide(size_t hardware_sprite_id);
 };
 static_assert(sizeof(HardwareSprite) == sizeof(OBJ_ATTR));
 static_assert(alignof(HardwareSprite) >= alignof(OBJ_ATTR));
@@ -112,30 +113,8 @@ struct HexSprite {
 		return *this;
 	}
 
-	constexpr void hide() const {
-		HardwareSprite{.object_mode = ObjectMode::Hidden}.write_to_screen(
-			(size_t)this->hardware_id
-		);
-	}
-
-	constexpr void render(Point<s16> const camera_offset) const {
-		auto const pixel_space = this->pos.to_pixel_space().into<s16>();
-		auto const screen_space = (pixel_space - camera_offset).into<u8>();
-
-		HardwareSprite{
-			.y = screen_space.y,
-			.colour_mode = this->colour_mode,
-			.shape = (u8)(((u8)this->size & 0b1100) >> 2),
-			.x = screen_space.x,
-			.horizontal_flip = this->horizontal_flip,
-			.vertical_flip = this->vertical_flip,
-			.size = (u8)((u8)this->size & 0b11),
-			.tile_index = this->tile_index,
-			.prio = this->prio,
-			.palette = this->palette,
-		}
-			.write_to_screen((size_t)this->hardware_id);
-	}
+	void hide() const;
+	void render(Point<s16> const camera_offset) const;
 };
 
 // Due to fun literal language bugs, this is read only and you have to use the
