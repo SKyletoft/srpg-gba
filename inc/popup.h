@@ -19,7 +19,7 @@ namespace popup {
 
 namespace r = std::ranges;
 
-using sprite::Sprite;
+using sprite::HardwareSprite;
 
 class PopupMenu : public state::Mode {
 
@@ -35,7 +35,7 @@ class PopupMenu : public state::Mode {
 	s16 y = 6;
 	u16 selection = 0;
 
-	Sprite cursor{
+	HardwareSprite cursor{
 		.y = 76,
 		.x = 116,
 		.horizontal_flip = true,

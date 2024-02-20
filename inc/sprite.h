@@ -12,7 +12,7 @@ namespace sprite {
 
 enum class ColourMode { BPP4 = 0, BPP8 = 1 };
 
-struct alignas(8) __attribute((packed)) Sprite {
+struct alignas(8) __attribute((packed)) HardwareSprite {
 	// attr0
 	u8 y : 8 = 0;
 	u8 object_mode : 2 = 0;
@@ -38,22 +38,22 @@ struct alignas(8) __attribute((packed)) Sprite {
 
 	void write_to_screen(size_t hardware_sprite_id);
 };
-static_assert(sizeof(Sprite) == sizeof(OBJ_ATTR));
-static_assert(alignof(Sprite) >= alignof(OBJ_ATTR));
+static_assert(sizeof(HardwareSprite) == sizeof(OBJ_ATTR));
+static_assert(alignof(HardwareSprite) >= alignof(OBJ_ATTR));
 
-static constexpr Sprite X8{
+static constexpr HardwareSprite X8{
 	.shape = 0b00,
 	.size = 0b00,
 };
-static constexpr Sprite X16{
+static constexpr HardwareSprite X16{
 	.shape = 0b00,
 	.size = 0b01,
 };
-static constexpr Sprite X32{
+static constexpr HardwareSprite X32{
 	.shape = 0b00,
 	.size = 0b10,
 };
-static constexpr Sprite X64{
+static constexpr HardwareSprite X64{
 	.shape = 0b00,
 	.size = 0b11,
 };
@@ -62,6 +62,8 @@ static constexpr Sprite X64{
 // `Sprite::write_to_screen` function to write
 //
 // https://timsong-cpp.github.io/lwg-issues/3813
-static const std::span<const Sprite> SPRITE_MEM{(Sprite *)MEM_OAM, 128};
+static const std::span<const HardwareSprite> SPRITE_MEM{
+	(HardwareSprite *)MEM_OAM, 128
+};
 
 } // namespace sprite

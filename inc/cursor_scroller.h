@@ -15,6 +15,7 @@ namespace cursor_scroller {
 
 using hexes::CubeCoord;
 using point::Point;
+using sprite::HardwareSprite;
 
 static constexpr s16 COOLDOWN = 12;
 
@@ -22,7 +23,7 @@ class CursorScroller : public scrolling_map::ScrollingMap {
   protected:
 	CubeCoord cursor = CubeCoord::from_offset_xy({.col = 5, .row = 5});
 	Point<s16> cursor_animation{};
-	sprite::Sprite cursor_sprite{
+	HardwareSprite cursor_sprite{
 		// 16x16
 		.shape = 0,
 		.size = 1,
