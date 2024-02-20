@@ -19,7 +19,7 @@ namespace popup {
 
 namespace r = std::ranges;
 
-using sprite::Sprite;
+using sprite::HardwareSprite;
 
 class PopupMenu : public state::Mode {
 
@@ -35,8 +35,9 @@ class PopupMenu : public state::Mode {
 	s16 y = 6;
 	u16 selection = 0;
 
-	Sprite cursor{
+	HardwareSprite cursor{
 		.y = 76,
+		.object_mode = sprite::ObjectMode::Normal,
 		.x = 116,
 		.horizontal_flip = true,
 		.tile_index = 1,
@@ -64,6 +65,7 @@ class PopupMenu : public state::Mode {
 		, sprite_tile_source(4)
 		, tile_map(3) {
 
+		this->entries.reserve(l.size() - this->entries.capacity());
 		for (auto &[s, f] : l) {
 			this->entries.push_back({std::span{s, std::strlen(s)}, f});
 		}

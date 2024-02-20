@@ -1,5 +1,6 @@
 #pragma once
 
+#include "point.h"
 #include <array>
 #include <cstddef>
 #include <cstdlib>
@@ -41,12 +42,22 @@ struct CubeCoord {
 	constexpr CubeCoord operator+(CubeCoord vec) const {
 		return this->add(vec);
 	}
+	constexpr CubeCoord &operator+=(CubeCoord v) { return *this = *this + v; }
 	constexpr CubeCoord operator+(Direction) const;
+	constexpr CubeCoord &operator+=(Direction d) { return *this = *this + d; }
+
 	constexpr CubeCoord operator*(s16 factor) const {
 		return this->scale(factor);
 	}
+	constexpr CubeCoord &operator*=(s16 factor) {
+		return *this = *this * factor;
+	}
+
 	constexpr CubeCoord operator-(CubeCoord vec) const {
 		return this->subtract(vec);
+	}
+	constexpr CubeCoord &operator-=(CubeCoord vec) {
+		return *this = *this - vec;
 	}
 
 	constexpr CubeCoord add(CubeCoord const vec) const {
@@ -95,6 +106,8 @@ struct CubeCoord {
 
 	constexpr AxialCoord to_axial_coord() const;
 	static constexpr CubeCoord from_axial_coord(AxialCoord);
+
+	constexpr point::Point<s32> to_pixel_space() const;
 };
 
 struct OffsetXYCoord {
@@ -128,6 +141,14 @@ constexpr OffsetXYCoord CubeCoord::to_offset_xy() const {
 
 constexpr CubeCoord CubeCoord::from_offset_xy(OffsetXYCoord rhs) {
 	return rhs.to_cube_coord();
+}
+
+constexpr point::Point<s32> CubeCoord::to_pixel_space() const {
+	auto const xy = this->to_offset_xy();
+	return point::Point{
+		.x = xy.col * 24 + 12 * (xy.row & 1),
+		.y = xy.row * 16,
+	};
 }
 
 constexpr AxialCoord CubeCoord::to_axial_coord() const {

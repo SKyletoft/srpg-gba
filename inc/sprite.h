@@ -1,5 +1,7 @@
 #pragma once
 
+#include "hexes.h"
+#include "point.h"
 #include <cstddef>
 #include <span>
 
@@ -10,13 +12,28 @@ extern "C" {
 
 namespace sprite {
 
-enum class ColourMode { BPP4 = 0, BPP8 = 1 };
+using hexes::CubeCoord;
+using hexes::Direction;
+using point::Point;
 
-struct alignas(8) __attribute((packed)) Sprite {
+enum class ColourMode : u8 { BPP4 = 0, BPP8 = 1 };
+enum class ObjectMode : u8 {
+	Normal = 0b00,
+	Affine = 0b01,
+	Hidden = 0b10,
+	Large = 0b11
+};
+enum class GraphicsMode : u8 {
+	Normal = 0b00,
+	Alpha = 0b01,
+	Mask = 0b10,
+};
+
+struct alignas(8) __attribute((packed)) HardwareSprite {
 	// attr0
 	u8 y : 8 = 0;
-	u8 object_mode : 2 = 0;
-	u8 graphics_mode : 2 = 0;
+	ObjectMode object_mode : 2 = ObjectMode::Hidden;
+	GraphicsMode graphics_mode : 2 = GraphicsMode::Normal;
 	bool mosaic : 1 = 0;
 	ColourMode colour_mode : 1 = ColourMode::BPP4;
 	u8 shape : 2 = 0;
@@ -37,31 +54,76 @@ struct alignas(8) __attribute((packed)) Sprite {
 	u16 _pad1 = 0;
 
 	void write_to_screen(size_t hardware_sprite_id);
+	static void hide(size_t hardware_sprite_id);
 };
-static_assert(sizeof(Sprite) == sizeof(OBJ_ATTR));
-static_assert(alignof(Sprite) >= alignof(OBJ_ATTR));
+static_assert(sizeof(HardwareSprite) == sizeof(OBJ_ATTR));
+static_assert(alignof(HardwareSprite) >= alignof(OBJ_ATTR));
 
-static constexpr Sprite X8{
+static constexpr HardwareSprite X8{
 	.shape = 0b00,
 	.size = 0b00,
 };
-static constexpr Sprite X16{
+static constexpr HardwareSprite X16{
 	.shape = 0b00,
 	.size = 0b01,
 };
-static constexpr Sprite X32{
+static constexpr HardwareSprite X32{
 	.shape = 0b00,
 	.size = 0b10,
 };
-static constexpr Sprite X64{
+static constexpr HardwareSprite X64{
 	.shape = 0b00,
 	.size = 0b11,
+};
+
+enum class SpriteSize : u8 {
+	x8 = 0b0000,
+	x16 = 0b0001,
+	x32 = 0b0010,
+	x64 = 0b0011,
+	w16h8 = 0b0100,
+	w32h8 = 0b0101,
+	w32h16 = 0b0110,
+	w64h32 = 0b0111,
+	w8h16 = 0b1000,
+	w8h32 = 0b1001,
+	w16h32 = 0b1010,
+	w32h64 = 0b1011
+};
+
+struct HexSprite {
+	CubeCoord pos{};
+	Point<s16> animation{};
+	SpriteSize size : 4 = SpriteSize::x8;
+	u8 hardware_id : 7 = 0;
+	bool horizontal_flip : 1 = false;
+	bool vertical_flip : 1 = false;
+	u16 tile_index : 10 = 0;
+	u8 prio : 2 = 0;
+	u8 palette : 4 = 0;
+	ObjectMode object_mode : 2 = ObjectMode::Hidden;
+	ColourMode colour_mode : 2 = ColourMode::BPP4;
+
+	constexpr HexSprite &translate(Direction d) {
+		this->pos += d;
+		return *this;
+	}
+
+	constexpr HexSprite &translate(CubeCoord vec) {
+		this->pos += vec;
+		return *this;
+	}
+
+	void hide() const;
+	void render(Point<s16> const camera_offset) const;
 };
 
 // Due to fun literal language bugs, this is read only and you have to use the
 // `Sprite::write_to_screen` function to write
 //
 // https://timsong-cpp.github.io/lwg-issues/3813
-static const std::span<const Sprite> SPRITE_MEM{(Sprite *)MEM_OAM, 128};
+static const std::span<const HardwareSprite> SPRITE_MEM{
+	(HardwareSprite *)MEM_OAM, 128
+};
 
 } // namespace sprite
