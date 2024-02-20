@@ -90,7 +90,7 @@ enum class SpriteSize : u8 {
 	w32h64 = 0b1011
 };
 
-struct __attribute((packed)) HexSprite {
+struct HexSprite {
 	CubeCoord pos{};
 	SpriteSize size : 4 = SpriteSize::x8;
 	u8 hardware_id : 7 = 0;
