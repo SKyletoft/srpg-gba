@@ -2,6 +2,8 @@
 #include "tiles.h"
 
 extern "C" {
+#include <maxmod.h>
+#include <tonc_bios.h>
 #include <tonc_memmap.h>
 }
 
@@ -40,12 +42,10 @@ void wait_for_drawing_start() {
 }
 
 void wait_for_drawing_complete() {
-	while (REG_VCOUNT < 160)
-		;
+	 VBlankIntrWait();
 }
 
 void wait_for_vsync() {
-	wait_for_drawing_start();
 	wait_for_drawing_complete();
 }
 

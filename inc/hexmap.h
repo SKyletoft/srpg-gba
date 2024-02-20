@@ -2,6 +2,7 @@
 
 #include "cursor_scroller.h"
 #include "mdspan.h"
+#include "scrolling_map.h"
 #include "tiles.h"
 
 namespace hexmap {

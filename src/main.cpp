@@ -1,13 +1,15 @@
+#include "audio.h"
 #include "input.h"
+#include "interrupts.h"
 #include "perf.h"
 #include "state.h"
 #include "tty.h"
 #include "util.h"
-
 #include <span>
 
 namespace config {
 extern std::span<state::Mode *const> modes;
+extern u32 the_startup_song;
 }
 
 namespace debug {
@@ -22,16 +24,23 @@ extern "C" [[noreturn]] void _exit(int) {
 	util::spin();
 }
 
+void initialise() {
+	interrupts::initialise();
+	audio::initialise();
+}
+
 int main() {
+
+	debug::tty_mode.println("Initialising...");
+	initialise();
+	audio::play_song(config::the_startup_song);
 	state::next_state = 0;
 
 	state::current_state = state::next_state;
-	debug::tty_mode.println("Initialising...");
 
 	config::modes[state::current_state]->restore();
 
 	for (;;) {
-		util::wait_for_drawing_start();
 		if (state::current_state != state::next_state) {
 			util::wait_for_vsync();
 			if (config::modes[state::current_state]->blackout()
@@ -48,15 +57,13 @@ int main() {
 
 		input::poll();
 		config::modes[state::current_state]->update();
-
 		for (auto mode : config::modes) {
 			mode->always_update();
 		}
 
 		perf::record_frame();
-		util::wait_for_drawing_complete();
+		util::wait_for_vsync();
 		config::modes[state::current_state]->vsync_hook();
-
 	}
 
 	util::spin();
