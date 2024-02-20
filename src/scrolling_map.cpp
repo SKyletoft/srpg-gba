@@ -129,7 +129,7 @@ void ScrollingMap::restore() {
 		this->load_tilesets(this->layer1);
 		this->load_map(this->layer0);
 		this->load_map(this->layer1);
-		util::wait_for_drawing_start();
+		util::wait_for_vsync();
 		this->load_palettes(this->layer0);
 
 		tiles::BG_PALETTE_MEMORY[15] = tiles::Palette{{
