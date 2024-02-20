@@ -1,5 +1,6 @@
 -xc++
 -isystemlibtonc/include
+-isystemmaxmod/include
 -Iout
 -Iinc
 -Wall
