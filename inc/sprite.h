@@ -10,13 +10,28 @@ extern "C" {
 
 namespace sprite {
 
-enum class ColourMode { BPP4 = 0, BPP8 = 1 };
+using hexes::CubeCoord;
+using hexes::Direction;
+using point::Point;
+
+enum class ColourMode : u8 { BPP4 = 0, BPP8 = 1 };
+enum class ObjectMode : u8 {
+	Normal = 0b00,
+	Affine = 0b01,
+	Hidden = 0b10,
+	Large = 0b11
+};
+enum class GraphicsMode : u8 {
+	Normal = 0b00,
+	Alpha = 0b01,
+	Mask = 0b10,
+};
 
 struct alignas(8) __attribute((packed)) HardwareSprite {
 	// attr0
 	u8 y : 8 = 0;
-	u8 object_mode : 2 = 0;
-	u8 graphics_mode : 2 = 0;
+	ObjectMode object_mode : 2 = ObjectMode::Hidden;
+	GraphicsMode graphics_mode : 2 = GraphicsMode::Normal;
 	bool mosaic : 1 = 0;
 	ColourMode colour_mode : 1 = ColourMode::BPP4;
 	u8 shape : 2 = 0;
