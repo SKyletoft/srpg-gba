@@ -1,4 +1,5 @@
 #include "audio.h"
+#include "debug.h"
 #include "input.h"
 #include "interrupts.h"
 #include "perf.h"
@@ -10,7 +11,7 @@
 namespace config {
 extern std::span<state::Mode *const> modes;
 extern u32 the_startup_song;
-}
+} // namespace config
 
 namespace debug {
 extern tty::TtyMode tty_mode;
@@ -31,7 +32,7 @@ void initialise() {
 
 int main() {
 
-	debug::tty_mode.println("Initialising...");
+	debug::println("Initialising...");
 	initialise();
 	audio::play_song(config::the_startup_song);
 	state::next_state = 0;
