@@ -22,11 +22,11 @@ void HexSprite::render(Point<s16> const camera_offset) const {
 	auto const screen_space = pixel_space - camera_offset;
 
 	HardwareSprite{
-		.y = (u8)(screen_space.y + this->animation.y - 4),
+		.y = (u8)(screen_space.y + this->animation.y + this->centre.y),
 		.object_mode = ObjectMode::Normal,
 		.colour_mode = this->colour_mode,
 		.shape = (u8)(((u8)this->size & 0b1100) >> 2),
-		.x = (u8)(screen_space.x + this->animation.x + 5),
+		.x = (u8)(screen_space.x + this->animation.x + this->centre.x),
 		.horizontal_flip = this->horizontal_flip,
 		.vertical_flip = this->vertical_flip,
 		.size = (u8)((u8)this->size & 0b11),

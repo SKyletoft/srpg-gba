@@ -99,6 +99,7 @@ static constexpr HardwareSprite X64{
 struct HexSprite {
 	CubeCoord pos{};
 	Point<s16> animation{};
+	Point<s16> centre{};
 	SpriteSize size : 4 = SpriteSize::x8;
 	u8 hardware_id : 7 = 0;
 	bool horizontal_flip : 1 = false;

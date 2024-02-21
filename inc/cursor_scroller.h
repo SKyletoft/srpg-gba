@@ -24,6 +24,7 @@ class CursorScroller : public scrolling_map::ScrollingMap {
   protected:
 	HexSprite cursor{
 		.pos = CubeCoord::from_offset_xy({.col = 5, .row = 5}),
+		.centre = Point<s16>{.x = 5, .y = -4},
 		.size = SpriteSize::x16,
 		.hardware_id = 0,
 		.tile_index = 1,
