@@ -1,29 +1,15 @@
 #include "cursor_scroller.h"
 
-#include "debug.h"
 #include "hexes.h"
 #include "input.h"
-#include "state.h"
-#include "tiles.h"
 #include <array>
 #include <cstring>
 #include <tuple>
-
-extern "C" {
-#include "arrow.h"
-}
 
 namespace cursor_scroller {
 
 using hexes::Direction;
 using input::Button;
-
-void CursorScroller::update() {
-	auto const d = this->move_cursor(this->layer0.pos.into<s32>());
-	this->move_in_bounds(d.x, d.y);
-	this->update_layer(this->layer0);
-	this->update_layer(this->layer1);
-}
 
 Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 	auto old_cursor = this->cursor;
@@ -65,26 +51,6 @@ Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 	}
 }
 
-void CursorScroller::vsync_hook() {
-	this->ScrollingMap::vsync_hook();
-	this->cursor.render(this->layer0.pos);
-}
-
-void CursorScroller::restore() {
-	this->ScrollingMap::restore();
-
-	if (state::last_state != 3) {
-		std::memcpy(
-			&tiles::SPRITE_PALETTE_MEMORY[0], arrowPal, sizeof(arrowPal)
-		);
-	}
-	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
-
-	REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
-}
-
-void CursorScroller::suspend() { this->cursor.hide(); }
-
 void CursorScroller::handle_input() {
 	bool const is_odd = this->cursor.pos.is_odd();
 
@@ -107,24 +73,14 @@ void CursorScroller::handle_input() {
 			auto const old_cur_screen = this->cursor.pos.to_pixel_space();
 			this->cursor.pos += dir;
 			auto const new_cur_screen = this->cursor.pos.to_pixel_space();
-			this->directional_cooldowns[index] = COOLDOWN;
+			this->directional_cooldowns[index] = this->cooldown;
 			this->cursor.animation +=
 				(old_cur_screen - new_cur_screen).into<s16>();
 		}
-		if (this->directional_cooldowns[index] > COOLDOWN) {
+		if (this->directional_cooldowns[index] > this->cooldown) {
 			this->directional_cooldowns[index] = 0;
 		}
 		this->directional_cooldowns[index]--;
-	}
-
-	if (input::get_button(Button::R).is_down()
-		&& input::get_button(Button::L).is_down())
-	{
-		state::next_state = 2;
-	}
-
-	if (input::get_button(Button::A) == input::InputState::Pressed) {
-		state::next_state = 3;
 	}
 }
 

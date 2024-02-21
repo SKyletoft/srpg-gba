@@ -103,68 +103,11 @@ void ScrollingMap::update_layer(Layer &layer) {
 	}
 }
 
-void ScrollingMap::update() {
-	this->move_in_bounds(
-		input::horizontal_direction(), input::vertical_direction()
-	);
-	this->update_layer(this->layer0);
-	this->update_layer(this->layer1);
-
-	if (input::get_button(Button::L).is_down()
-		&& input::get_button(Button::R).is_down())
-	{
-		state::next_state = 2;
-	}
-
-	if (input::get_button(Button::A) == input::InputState::Pressed) {
-		state::next_state = 3;
-	}
-}
-
-void ScrollingMap::always_update() {}
-
-void ScrollingMap::restore() {
-	if (state::last_state != 3) {
-		this->load_tilesets(this->layer0);
-		this->load_tilesets(this->layer1);
-		this->load_map(this->layer0);
-		this->load_map(this->layer1);
-		util::wait_for_vsync();
-		this->load_palettes(this->layer0);
-
-		tiles::BG_PALETTE_MEMORY[15] = tiles::Palette{{
-			tiles::TRANSPARENT,
-			tiles::WHITE,
-			// clangd does not consider this a constant expression, gcc does
-			tiles::Colour::from_24bit_colour(198, 164, 89),
-		}};
-	}
-
-	REG_BG0CNT = (u16)(BG_CBB((u16)this->layer0.tile_source)
-					   | BG_SBB((u16)this->layer0.tile_map) | BG_4BPP
-					   | BG_REG_32x32 | BG_PRIO(3));
-	REG_BG1CNT = (u16)(BG_CBB((u16)this->layer1.tile_source)
-					   | BG_SBB((u16)this->layer1.tile_map) | BG_4BPP
-					   | BG_REG_32x32 | BG_PRIO(3));
-	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1;
-
-	this->vsync_hook();
-}
-
-void ScrollingMap::suspend() {}
-
-void ScrollingMap::vsync_hook() {
+void ScrollingMap::update_camera() {
 	REG_BG0HOFS = (u16)this->layer0.pos.x;
 	REG_BG0VOFS = (u16)this->layer0.pos.y;
 	REG_BG1HOFS = (u16)this->layer1.pos.x;
 	REG_BG1VOFS = (u16)this->layer1.pos.y;
-}
-
-bool ScrollingMap::blackout() {
-	return !(
-		(state::current_state == 0 && state::next_state == 3)
-		|| (state::current_state == 3 && state::next_state == 0)
-	);
 }
 
 } // namespace scrolling_map
