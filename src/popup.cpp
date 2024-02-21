@@ -168,10 +168,6 @@ void PopupMenu::set_position(s16 x, s16 y) {
 }
 
 PopupMenu::PopupMenu()
-	: Mode()
-	, entries({})
-	, tile_source(3)
-	, sprite_tile_source(4)
-	, tile_map(28) {}
+	: popup::PopupMenu({}) {}
 
 } // namespace popup
