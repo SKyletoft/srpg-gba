@@ -19,12 +19,18 @@ using hexes::Direction;
 using input::Button;
 
 void CursorScroller::update() {
+	auto const d = this->move_cursor(this->layer0.pos.into<s32>());
+	this->move_in_bounds(d.x, d.y);
+	this->update_layer(this->layer0);
+	this->update_layer(this->layer1);
+}
+
+Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 	auto old_cursor = this->cursor;
 	auto old_offset = this->cursor.animation;
 	this->handle_input();
 
-	Point<s32> const screen_centre =
-		this->layer0.pos.into<s32>() + Point{120, 80};
+	Point<s32> const screen_centre = camera_position + Point{120, 80};
 	Point<s32> const cursor = this->cursor.pos.to_pixel_space();
 
 	Point<s16> d{};
@@ -41,6 +47,11 @@ void CursorScroller::update() {
 		d.y = -this->scroll_speed;
 	}
 
+	this->cursor.animation.x =
+		(s16)((this->cursor.animation.x * (s16)3) / (s16)4);
+	this->cursor.animation.y =
+		(s16)((this->cursor.animation.y * (s16)3) / (s16)4);
+
 	if (screen_centre.x - cursor.x < -120 + 16
 		|| screen_centre.x - cursor.x > 120
 		|| screen_centre.y - cursor.y < -80 + 16
@@ -48,17 +59,10 @@ void CursorScroller::update() {
 	{
 		this->cursor = old_cursor;
 		this->cursor.animation = old_offset;
+		return Point<s16>{0, 0};
 	} else {
-
-		this->move_in_bounds(d.x, d.y);
-		this->update_layer(this->layer0);
-		this->update_layer(this->layer1);
+		return d;
 	}
-
-	this->cursor.animation.x =
-		(s16)((this->cursor.animation.x * (s16)3) / (s16)4);
-	this->cursor.animation.y =
-		(s16)((this->cursor.animation.y * (s16)3) / (s16)4);
 }
 
 void CursorScroller::vsync_hook() {

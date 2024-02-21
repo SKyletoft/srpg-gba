@@ -36,6 +36,7 @@ class CursorScroller : public scrolling_map::ScrollingMap {
 	s16 scroll_speed = 2;
 
 	void handle_input();
+	Point<s16> move_cursor(Point<s32> const);
 
   public:
 	CursorScroller(s16 width, s16 height)
