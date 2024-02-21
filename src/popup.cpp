@@ -30,6 +30,8 @@ using tiles::ScreenEntry;
 using tiles::SPRITE_CHARBLOCK;
 using tiles::SPRITE_PALETTE_MEMORY;
 
+constexpr size_t END_OF_ALPHABET = '~' - ' ' + 3;
+
 bool PopupMenu::blackout() { return false; }
 
 void PopupMenu::update() {
@@ -64,13 +66,7 @@ void PopupMenu::suspend() {
 	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_OBJ | DCNT_OBJ_1D);
 }
 
-void PopupMenu::restore() {
-	this->selection = 0;
-
-	// We don't blackout, but we do disable gui
-	util::wait_for_drawing_complete();
-	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_BG2);
-	constexpr size_t END_OF_ALPHABET = '~' - ' ' + 3;
+void PopupMenu::load_tiles_and_palettes() {
 	CHARBLOCKS[this->tile_source][0] = tiles::EMPTY;
 	CHARBLOCKS[this->tile_source][END_OF_ALPHABET] = tiles::STile{{
 		0x11111111,
@@ -107,7 +103,15 @@ void PopupMenu::restore() {
 		Colour(32, 10, 10),
 		Colour(31, 15, 15),
 	}};
+}
 
+void PopupMenu::restore() {
+	this->selection = 0;
+
+	// We don't blackout, but we do disable gui
+	util::wait_for_drawing_complete();
+	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_BG2);
+	this->load_tiles_and_palettes();
 	util::clear_layer(this->tile_map);
 
 	size_t const menu_width = ([&]() {
