@@ -45,8 +45,6 @@ class PopupMenu : public state::Mode {
 	};
 
   public:
-	bool blackout() override;
-
 	void update() override;
 	void always_update() override;
 	void suspend() override;

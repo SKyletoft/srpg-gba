@@ -32,8 +32,6 @@ using tiles::SPRITE_PALETTE_MEMORY;
 
 constexpr size_t END_OF_ALPHABET = '~' - ' ' + 3;
 
-bool PopupMenu::blackout() { return false; }
-
 void PopupMenu::update() {
 	if (input::get_button(Button::B).is_down()) {
 		state::next_state = 0;
