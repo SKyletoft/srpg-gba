@@ -1,5 +1,6 @@
 #include "map.h"
 #include "input.h"
+#include "state.h"
 #include "tiles.h"
 #include "util.h"
 
@@ -24,11 +25,11 @@ void Map::update() {
 	if (input::get_button(Button::R).is_down()
 		&& input::get_button(Button::L).is_down())
 	{
-		state::next_state = 2;
+		state::next_state = 1;
 	}
 
 	if (input::get_button(Button::A) == InputState::Pressed) {
-		state::next_state = 3;
+		state::next_state = 2;
 	}
 }
 
