@@ -169,27 +169,7 @@ void PopupMenu::set_position(s16 x, s16 y) {
 
 PopupMenu::PopupMenu()
 	: Mode()
-	, entries({
-		  {"Red",
-		   []() {
-			   debug::println("Setting text to red");
-			   BG_PALETTE_MEMORY[15].colours[1] = tiles::RED;
-			   SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::RED;
-		   }},
-		  {"Green",
-		   []() {
-			   debug::println("Setting text to green");
-			   BG_PALETTE_MEMORY[15].colours[1] = tiles::GREEN;
-			   SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::GREEN;
-		   }},
-		  {"Blue",
-		   []() {
-			   debug::println("Setting text to blue");
-			   BG_PALETTE_MEMORY[15].colours[1] = tiles::BLUE;
-			   SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::BLUE;
-		   }},
-		  {"Exit", []() { state::next_state = 0; }},
-	  })
+	, entries({})
 	, tile_source(3)
 	, sprite_tile_source(4)
 	, tile_map(28) {}
