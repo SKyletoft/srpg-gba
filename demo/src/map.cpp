@@ -37,19 +37,27 @@ void Map::always_update() {}
 void Map::suspend() {}
 
 void Map::restore() {
-	this->hexmap.load_tilesets(this->hexmap.layer0);
-	this->hexmap.load_tilesets(this->hexmap.layer1);
-	this->hexmap.load_map(this->hexmap.layer0);
-	this->hexmap.load_map(this->hexmap.layer1);
-	util::wait_for_vsync();
-	this->hexmap.load_palettes(this->hexmap.layer0);
+	if (this->blackout()) {
+		this->hexmap.load_tilesets(this->hexmap.layer0);
+		this->hexmap.load_tilesets(this->hexmap.layer1);
+		this->hexmap.load_map(this->hexmap.layer0);
+		this->hexmap.load_map(this->hexmap.layer1);
+		util::wait_for_vsync();
+		this->hexmap.load_palettes(this->hexmap.layer0);
 
-	tiles::BG_PALETTE_MEMORY[15] = tiles::Palette{{
-		tiles::TRANSPARENT,
-		tiles::WHITE,
-		// clangd does not consider this a constant expression, gcc does
-		tiles::Colour::from_24bit_colour(198, 164, 89),
-	}};
+		tiles::BG_PALETTE_MEMORY[15] = tiles::Palette{{
+			tiles::TRANSPARENT,
+			tiles::WHITE,
+			// clangd does not consider this a constant expression, gcc does
+			tiles::Colour::from_24bit_colour(198, 164, 89),
+		}};
+		std::memcpy(
+			&tiles::SPRITE_PALETTE_MEMORY[0], arrowPal, sizeof(arrowPal)
+		);
+
+		this->hexmap.update_camera();
+	}
+	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
 
 	REG_BG0CNT = (u16)(BG_CBB((u16)this->hexmap.layer0.tile_source)
 					   | BG_SBB((u16)this->hexmap.layer0.tile_map) | BG_4BPP
@@ -57,16 +65,7 @@ void Map::restore() {
 	REG_BG1CNT = (u16)(BG_CBB((u16)this->hexmap.layer1.tile_source)
 					   | BG_SBB((u16)this->hexmap.layer1.tile_map) | BG_4BPP
 					   | BG_REG_32x32 | BG_PRIO(3));
-	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1;
-
-	if (state::last_state != 3) {
-		std::memcpy(
-			&tiles::SPRITE_PALETTE_MEMORY[0], arrowPal, sizeof(arrowPal)
-		);
-	}
-	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
-
-	REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
+	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 }
 
 void Map::vsync_hook() {
