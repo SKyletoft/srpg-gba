@@ -21,6 +21,7 @@ class Map : public state::Mode {
 	void suspend() override;
 	void restore() override;
 	void vsync_hook() override;
+	bool blackout() override;
 };
 
 } // namespace map

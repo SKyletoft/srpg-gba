@@ -74,4 +74,11 @@ void Map::vsync_hook() {
 	this->cursor.cursor.render(this->hexmap.layer0.pos);
 }
 
+bool Map::blackout() {
+	return !(
+		(state::current_state == 0 && state::next_state == 2)
+		|| (state::next_state == 0 && state::current_state == 2)
+	);
+}
+
 } // namespace map
