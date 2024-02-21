@@ -28,6 +28,20 @@ enum class GraphicsMode : u8 {
 	Alpha = 0b01,
 	Mask = 0b10,
 };
+enum class SpriteSize : u8 {
+	x8 = 0b0000,
+	x16 = 0b0001,
+	x32 = 0b0010,
+	x64 = 0b0011,
+	w16h8 = 0b0100,
+	w32h8 = 0b0101,
+	w32h16 = 0b0110,
+	w64h32 = 0b0111,
+	w8h16 = 0b1000,
+	w8h32 = 0b1001,
+	w16h32 = 0b1010,
+	w32h64 = 0b1011
+};
 
 struct alignas(8) __attribute((packed)) HardwareSprite {
 	// attr0
@@ -55,6 +69,12 @@ struct alignas(8) __attribute((packed)) HardwareSprite {
 
 	void write_to_screen(size_t hardware_sprite_id);
 	static void hide(size_t hardware_sprite_id);
+
+	constexpr HardwareSprite &set_size(SpriteSize const new_size) {
+		this->shape = (u8)(((u8)this->size & 0b1100) >> 2);
+		this->size = (u8)((u8)this->size & 0b11);
+		return *this;
+	}
 };
 static_assert(sizeof(HardwareSprite) == sizeof(OBJ_ATTR));
 static_assert(alignof(HardwareSprite) >= alignof(OBJ_ATTR));
@@ -74,21 +94,6 @@ static constexpr HardwareSprite X32{
 static constexpr HardwareSprite X64{
 	.shape = 0b00,
 	.size = 0b11,
-};
-
-enum class SpriteSize : u8 {
-	x8 = 0b0000,
-	x16 = 0b0001,
-	x32 = 0b0010,
-	x64 = 0b0011,
-	w16h8 = 0b0100,
-	w32h8 = 0b0101,
-	w32h16 = 0b0110,
-	w64h32 = 0b0111,
-	w8h16 = 0b1000,
-	w8h32 = 0b1001,
-	w16h32 = 0b1010,
-	w32h64 = 0b1011
 };
 
 struct HexSprite {
