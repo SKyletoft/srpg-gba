@@ -1,7 +1,6 @@
 #pragma once
 
 #include "point.h"
-#include "state.h"
 #include "tiles.h"
 
 extern "C" {
@@ -38,30 +37,30 @@ struct Layer {
 	void move_in_bounds(s16, s16);
 };
 
-class ScrollingMap : public state::Mode {
-  protected:
+class ScrollingMap {
+  public:
 	Layer layer0;
 	Layer layer1;
 
 	void update_tile(ScreenEntry volatile *const, Layer &, s16, s16);
 	void update_layer(Layer &);
 	void load_map(Layer &);
+	void move_in_bounds(s16, s16);
+	void update_camera();
 	ScreenEntry get_tile_from_camera(Layer &, s16, s16);
 
 	virtual void load_tilesets(Layer &) = 0;
 	virtual void load_palettes(Layer &) = 0;
 	virtual ScreenEntry get_tile(Layer &, s16, s16) = 0;
 
-  public:
 	ScrollingMap(s16 width, s16 height)
-		: Mode()
-		, layer0(Layer{
-			  .tile_source = 0,
-			  .tile_map = 30,
-			  .max_x = width,
-			  .max_y = height,
-			  .pos = Point<s16>{.x = 0}
-		  })
+		: layer0(Layer{
+			.tile_source = 0,
+			.tile_map = 30,
+			.max_x = width,
+			.max_y = height,
+			.pos = Point<s16>{.x = 0}
+		})
 		, layer1(Layer{
 			  .tile_source = 1,
 			  .tile_map = 29,
@@ -75,14 +74,13 @@ class ScrollingMap : public state::Mode {
 		s16 width, s16 height, size_t bg0_tile_source, size_t bg0_tile_map,
 		size_t bg1_tile_source, size_t bg1_tile_map
 	)
-		: Mode()
-		, layer0(Layer{
-			  .tile_source = bg0_tile_source,
-			  .tile_map = bg0_tile_map,
-			  .max_x = width,
-			  .max_y = height,
-			  .pos = Point<s16>{.x = 0}
-		  })
+		: layer0(Layer{
+			.tile_source = bg0_tile_source,
+			.tile_map = bg0_tile_map,
+			.max_x = width,
+			.max_y = height,
+			.pos = Point<s16>{.x = 0}
+		})
 		, layer1(Layer{
 			  .tile_source = bg1_tile_source,
 			  .tile_map = bg1_tile_map,
@@ -92,15 +90,7 @@ class ScrollingMap : public state::Mode {
 			  .pos = Point<s16>{.x = 4}
 		  }) {}
 
-	void move_in_bounds(s16, s16);
-
-	bool blackout() override;
-
-	void update() override;
-	void always_update() override;
-	void restore() override;
-	void suspend() override;
-	void vsync_hook() override;
+	virtual ~ScrollingMap(){};
 };
 
 } // namespace scrolling_map

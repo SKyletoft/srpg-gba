@@ -1,30 +1,22 @@
 #include "cursor_scroller.h"
 
-#include "debug.h"
 #include "hexes.h"
 #include "input.h"
-#include "state.h"
-#include "tiles.h"
 #include <array>
 #include <cstring>
 #include <tuple>
-
-extern "C" {
-#include "arrow.h"
-}
 
 namespace cursor_scroller {
 
 using hexes::Direction;
 using input::Button;
 
-void CursorScroller::update() {
+Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 	auto old_cursor = this->cursor;
 	auto old_offset = this->cursor.animation;
 	this->handle_input();
 
-	Point<s32> const screen_centre =
-		this->layer0.pos.into<s32>() + Point{120, 80};
+	Point<s32> const screen_centre = camera_position + Point{120, 80};
 	Point<s32> const cursor = this->cursor.pos.to_pixel_space();
 
 	Point<s16> d{};
@@ -41,6 +33,11 @@ void CursorScroller::update() {
 		d.y = -this->scroll_speed;
 	}
 
+	this->cursor.animation.x =
+		(s16)((this->cursor.animation.x * (s16)3) / (s16)4);
+	this->cursor.animation.y =
+		(s16)((this->cursor.animation.y * (s16)3) / (s16)4);
+
 	if (screen_centre.x - cursor.x < -120 + 16
 		|| screen_centre.x - cursor.x > 120
 		|| screen_centre.y - cursor.y < -80 + 16
@@ -48,38 +45,11 @@ void CursorScroller::update() {
 	{
 		this->cursor = old_cursor;
 		this->cursor.animation = old_offset;
+		return Point<s16>{0, 0};
 	} else {
-
-		this->move_in_bounds(d.x, d.y);
-		this->update_layer(this->layer0);
-		this->update_layer(this->layer1);
+		return d;
 	}
-
-	this->cursor.animation.x =
-		(s16)((this->cursor.animation.x * (s16)3) / (s16)4);
-	this->cursor.animation.y =
-		(s16)((this->cursor.animation.y * (s16)3) / (s16)4);
 }
-
-void CursorScroller::vsync_hook() {
-	this->ScrollingMap::vsync_hook();
-	this->cursor.render(this->layer0.pos);
-}
-
-void CursorScroller::restore() {
-	this->ScrollingMap::restore();
-
-	if (state::last_state != 3) {
-		std::memcpy(
-			&tiles::SPRITE_PALETTE_MEMORY[0], arrowPal, sizeof(arrowPal)
-		);
-	}
-	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
-
-	REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
-}
-
-void CursorScroller::suspend() { this->cursor.hide(); }
 
 void CursorScroller::handle_input() {
 	bool const is_odd = this->cursor.pos.is_odd();
@@ -103,24 +73,14 @@ void CursorScroller::handle_input() {
 			auto const old_cur_screen = this->cursor.pos.to_pixel_space();
 			this->cursor.pos += dir;
 			auto const new_cur_screen = this->cursor.pos.to_pixel_space();
-			this->directional_cooldowns[index] = COOLDOWN;
+			this->directional_cooldowns[index] = this->cooldown;
 			this->cursor.animation +=
 				(old_cur_screen - new_cur_screen).into<s16>();
 		}
-		if (this->directional_cooldowns[index] > COOLDOWN) {
+		if (this->directional_cooldowns[index] > this->cooldown) {
 			this->directional_cooldowns[index] = 0;
 		}
 		this->directional_cooldowns[index]--;
-	}
-
-	if (input::get_button(Button::R).is_down()
-		&& input::get_button(Button::L).is_down())
-	{
-		state::next_state = 2;
-	}
-
-	if (input::get_button(Button::A) == input::InputState::Pressed) {
-		state::next_state = 3;
 	}
 }
 

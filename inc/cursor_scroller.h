@@ -18,10 +18,8 @@ using point::Point;
 using sprite::HexSprite;
 using sprite::SpriteSize;
 
-static constexpr s16 COOLDOWN = 12;
-
-class CursorScroller : public scrolling_map::ScrollingMap {
-  protected:
+class CursorScroller {
+  public:
 	HexSprite cursor{
 		.pos = CubeCoord::from_offset_xy({.col = 5, .row = 5}),
 		.centre = Point<s16>{.x = 5, .y = -4},
@@ -34,26 +32,12 @@ class CursorScroller : public scrolling_map::ScrollingMap {
 	std::array<s16, 4> directional_cooldowns{0, 0, 0, 0};
 	size_t t = 0;
 	s16 scroll_speed = 2;
+	s16 cooldown = 12;
 
 	void handle_input();
+	Point<s16> move_cursor(Point<s32> const);
 
-  public:
-	CursorScroller(s16 width, s16 height)
-		: ScrollingMap(width, height) {}
-
-	CursorScroller(
-		s16 width, s16 height, size_t bg0_tile_source, size_t bg0_tile_map,
-		size_t bg1_tile_source, size_t bg1_tile_map
-	)
-		: ScrollingMap(
-			width, height, bg0_tile_source, bg0_tile_map, bg1_tile_source,
-			bg1_tile_map
-		) {}
-
-	void update() override;
-	void vsync_hook() override;
-	void restore() override;
-	void suspend() override;
+	constexpr CursorScroller() {}
 };
 
 } // namespace cursor_scroller
