@@ -27,11 +27,11 @@ LIBTONC := $(DEVKITPRO)/libtonc
 #---------------------------------------------------------------------------------
 TARGET   := $(notdir $(CURDIR))
 BUILD    := build
-SOURCES  := src
-INCLUDES := inc
+SOURCES  := src demo/src
+INCLUDES := inc demo/inc
 DATA     :=
-MUSIC    := audio
-GRAPHICS := gfx
+MUSIC    := demo/audio
+GRAPHICS := demo/gfx
 
 #---------------------------------------------------------------------------------
 # options for code generation
