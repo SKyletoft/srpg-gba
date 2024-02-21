@@ -59,6 +59,8 @@ void Map::restore() {
 		this->hexmap.update_camera();
 	}
 	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
+	this->cursor.cursor.animation = {0, 0};
+	this->cursor.cursor.render(this->hexmap.layer0.pos);
 
 	REG_BG0CNT = (u16)(BG_CBB((u16)this->hexmap.layer0.tile_source)
 					   | BG_SBB((u16)this->hexmap.layer0.tile_map) | BG_4BPP
