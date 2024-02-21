@@ -2,6 +2,7 @@ file out/gba-dev.elf
 target extended-remote localhost:2345
 load
 b main
+b _exit
 layout split
 
 define hook-step
