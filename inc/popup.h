@@ -2,12 +2,9 @@
 
 #include "sprite.h"
 #include "state.h"
-#include <algorithm>
 #include <cstring>
 #include <functional>
 #include <initializer_list>
-#include <ranges>
-#include <string>
 #include <tuple>
 #include <vector>
 
@@ -16,8 +13,6 @@ extern "C" {
 }
 
 namespace popup {
-
-namespace r = std::ranges;
 
 using sprite::HardwareSprite;
 
