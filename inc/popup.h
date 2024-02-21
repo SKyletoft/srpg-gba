@@ -17,7 +17,7 @@ namespace popup {
 using sprite::HardwareSprite;
 
 class PopupMenu : public state::Mode {
-
+  protected:
 	// TODO: Replace std::vector with something more platform appropriate
 	std::vector<std::tuple<std::span<const char>, std::function<void()>>>
 		entries;
@@ -55,9 +55,9 @@ class PopupMenu : public state::Mode {
 		std::initializer_list<std::tuple<char const *, std::function<void()>>> l
 	)
 		: Mode()
-		, tile_source(27)
+		, tile_source(3)
 		, sprite_tile_source(4)
-		, tile_map(3) {
+		, tile_map(28) {
 
 		this->entries.reserve(l.size() - this->entries.capacity());
 		for (auto &[s, f] : l) {
