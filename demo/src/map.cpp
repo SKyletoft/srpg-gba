@@ -52,11 +52,11 @@ void Map::restore() {
 			// clangd does not consider this a constant expression, gcc does
 			tiles::Colour::from_24bit_colour(198, 164, 89),
 		}};
-		std::memcpy(
-			&tiles::SPRITE_PALETTE_MEMORY[0], arrowPal, sizeof(arrowPal)
-		);
 
 		this->hexmap.update_camera();
+	}
+	if (state::last_state != 2) {
+		tiles::SPRITE_PALETTE_MEMORY[0] = *(tiles::Palette *)arrowPal;
 	}
 	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
 	this->cursor.cursor.animation = {0, 0};
