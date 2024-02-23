@@ -2,9 +2,12 @@
 
 #include "cursor_scroller.h"
 #include "hexmap.h"
+#include "point.h"
 #include "state.h"
 
 namespace map {
+
+using point::Point;
 
 class Map : public state::Mode {
   public:
@@ -22,6 +25,8 @@ class Map : public state::Mode {
 	void restore() override;
 	void vsync_hook() override;
 	bool blackout() override;
+
+	constexpr Point<s16> pos() const { return this->hexmap.layer0.pos; }
 };
 
 } // namespace map
