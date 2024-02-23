@@ -16,6 +16,7 @@ class ContextMenu : public popup::PopupMenu {
 		: PopupMenu(l) {}
 
 	bool blackout() override;
+	void restore() override;
 	void suspend() override;
 };
 
