@@ -43,8 +43,31 @@ std::array<Unit, 12> user_army{
 			},
 		.animation_frames = 3,
 	},
+	Unit{
+		.sprite =
+			sprite::HexSprite{
+				.pos = hexes::OffsetXYCoord(4, 5).to_cube_coord(),
+				.centre = {4, 0},
+				.size = sprite::SpriteSize::x16,
+				.hardware_id = 2,
+				.horizontal_flip = true,
+				.tile_index = 5,
+				.palette = 1,
+			},
+		.stats =
+			Stats{
+				.health = 20,
+				.attack = 10,
+				.defence = 8,
+				.magic = 3,
+				.resistance = 3,
+				.speed = 9,
+				.luck = 2,
+			},
+		.animation_frames = 3,
+	},
 };
-size_t user_soldier_count = 1;
+size_t user_soldier_count = 2;
 
 map::Map map{test_map::map};
 context_menu::ContextMenu popup{
