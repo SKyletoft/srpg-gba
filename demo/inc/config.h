@@ -24,7 +24,7 @@ extern std::array<Unit, 12> user_army;
 extern size_t user_soldier_count;
 extern map::Map map;
 extern context_menu::ContextMenu popup;
-extern std::array<state::Mode *, 3> const modes_data;
+extern std::array<state::Mode *, 7> const modes_data;
 extern u32 startup_song;
 
 } // namespace config

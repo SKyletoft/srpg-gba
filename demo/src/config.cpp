@@ -69,10 +69,14 @@ context_menu::ContextMenu popup{
 	{"Exit", []() { state::next_state = 0; }},
 };
 
-std::array<state::Mode *, 3> const modes_data{
+std::array<state::Mode *, 7> const modes_data{
 	&map,
 	&debug::tty_mode,
 	&popup,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
 };
 
 u32 startup_song = MOD_BAD_APPLE;
