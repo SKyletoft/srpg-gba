@@ -73,7 +73,14 @@ void Map::restore() {
 
 void Map::vsync_hook() {
 	this->hexmap.update_camera();
-	this->cursor.cursor.render(this->hexmap.layer0.pos);
+	this->cursor.cursor.render(this->pos());
+
+	std::span<unit::Unit> const units{
+		config::user_army.data(), config::user_soldier_count
+	};
+	for (auto &unit : units) {
+		unit.render(this->pos());
+	}
 }
 
 bool Map::blackout() {

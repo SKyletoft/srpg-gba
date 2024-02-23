@@ -1,9 +1,12 @@
 #pragma once
 
 #include "hexes.h"
+#include "point.h"
 #include "sprite.h"
 
 namespace unit {
+
+using point::Point;
 
 struct Stats {
 	s8 health = 0;
@@ -22,6 +25,7 @@ struct Unit {
 	sprite::HexSprite sprite{};
 	Stats stats{};
 	constexpr hexes::CubeCoord &pos() { return this->sprite.pos; }
+	void render(Point<s16>);
 };
 
 } // namespace unit
