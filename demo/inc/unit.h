@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hexes.h"
 #include "sprite.h"
 
 namespace unit {
@@ -20,6 +21,7 @@ struct Stats {
 struct Unit {
 	sprite::HexSprite sprite{};
 	Stats stats{};
+	constexpr hexes::CubeCoord &pos() { return this->sprite.pos; }
 };
 
 } // namespace unit
