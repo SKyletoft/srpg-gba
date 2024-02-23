@@ -8,6 +8,7 @@
 
 extern "C" {
 #include "arrow.h"
+#include "lyn.h"
 }
 
 namespace map {
@@ -54,6 +55,11 @@ void Map::restore() {
 		}};
 
 		this->hexmap.update_camera();
+
+		std::memcpy(
+			&tiles::SPRITE_CHARBLOCK[0][5], lynTiles, sizeof(tiles::STile) * 4
+		);
+		tiles::SPRITE_PALETTE_MEMORY[1] = *(tiles::Palette *)lynPal;
 	}
 	if (state::last_state != 2) {
 		tiles::SPRITE_PALETTE_MEMORY[0] = *(tiles::Palette *)arrowPal;
