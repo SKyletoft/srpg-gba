@@ -5,21 +5,21 @@
 namespace unit {
 
 struct Stats {
-	s8 health;
+	s8 health = 0;
 
-	s8 attack;
-	s8 defence;
+	s8 attack = 0;
+	s8 defence = 0;
 
-	s8 magic;
-	s8 resistance;
+	s8 magic = 0;
+	s8 resistance = 0;
 
-	s8 speed;
-	s8 luck;
+	s8 speed = 0;
+	s8 luck = 0;
 };
 
 struct Unit {
 	sprite::HexSprite sprite{};
-	Stats stats;
+	Stats stats{};
 };
 
 } // namespace unit
