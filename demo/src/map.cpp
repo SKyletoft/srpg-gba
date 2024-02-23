@@ -1,8 +1,12 @@
 #include "map.h"
+
 #include "input.h"
 #include "state.h"
 #include "tiles.h"
 #include "util.h"
+
+#include "config.h"
+#include "unit.h"
 
 #include <cstring>
 
@@ -17,6 +21,8 @@ using input::Button;
 using input::InputState;
 
 void Map::update() {
+	this->animation_cycle = (u8)((this->animation_cycle + 1) % 500);
+
 	auto const d =
 		this->cursor.move_cursor(this->hexmap.layer0.pos.into<s32>());
 	this->hexmap.move_in_bounds(d.x, d.y);
@@ -57,7 +63,9 @@ void Map::restore() {
 		this->hexmap.update_camera();
 
 		std::memcpy(
-			&tiles::SPRITE_CHARBLOCK[0][5], lynTiles, sizeof(tiles::STile) * 4
+			&tiles::SPRITE_CHARBLOCK[0][5],
+			lynTiles,
+			sizeof(tiles::STile) * 4 * 3
 		);
 		tiles::SPRITE_PALETTE_MEMORY[1] = *(tiles::Palette *)lynPal;
 	}
@@ -81,11 +89,13 @@ void Map::vsync_hook() {
 	this->hexmap.update_camera();
 	this->cursor.cursor.render(this->pos());
 
+	u8 animation_cycle = (u8)(this->animation_cycle / 20);
+
 	std::span<unit::Unit> const units{
 		config::user_army.data(), config::user_soldier_count
 	};
 	for (auto &unit : units) {
-		unit.render(this->pos());
+		unit.render(this->pos(), animation_cycle);
 	}
 }
 

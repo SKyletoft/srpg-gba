@@ -24,8 +24,11 @@ struct Stats {
 struct Unit {
 	sprite::HexSprite sprite{};
 	Stats stats{};
+
+	u8 animation_frames = 1;
+
 	constexpr hexes::CubeCoord &pos() { return this->sprite.pos; }
-	void render(Point<s16>);
+	void render(Point<s16>, u8) const;
 };
 
 } // namespace unit

@@ -13,6 +13,7 @@ class Map : public state::Mode {
   public:
 	cursor_scroller::CursorScroller cursor{};
 	hexmap::Hexmap hexmap;
+	u8 animation_cycle = 0;
 
 	template <size_t WIDTH, size_t HEIGHT>
 	Map(std::array<std::array<u8, WIDTH>, HEIGHT> const &map)
