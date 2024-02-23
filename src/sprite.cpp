@@ -9,8 +9,9 @@ void HardwareSprite::write_to_screen(size_t hardware_sprite_id) {
 }
 
 void HardwareSprite::hide(size_t hardware_sprite_id) {
-	HardwareSprite{.object_mode = ObjectMode::Hidden}.write_to_screen((size_t
-	)hardware_sprite_id);
+	HardwareSprite{.object_mode = ObjectMode::Hidden}.write_to_screen(
+		hardware_sprite_id
+	);
 }
 
 void HexSprite::hide() const {
