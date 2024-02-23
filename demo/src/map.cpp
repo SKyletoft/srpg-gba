@@ -103,6 +103,7 @@ bool Map::blackout() {
 	return !(
 		(state::current_state == 0 && state::next_state == 2)
 		|| (state::next_state == 0 && state::current_state == 2)
+		|| (state::current_state == 0 && state::last_state == 2)
 	);
 }
 
