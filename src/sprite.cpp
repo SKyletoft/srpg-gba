@@ -21,12 +21,20 @@ void HexSprite::render(Point<s16> const camera_offset) const {
 	auto const pixel_space = this->pos.to_pixel_space().into<s16>();
 	auto const screen_space = pixel_space - camera_offset;
 
+	s32 x = screen_space.x + this->animation.x + this->centre.x;
+	s32 y = screen_space.y + this->animation.y + this->centre.y;
+
+	if (x < -16 || x > 240 || y < -16 || y > 160) {
+		HardwareSprite::hide(this->hardware_id);
+		return;
+	}
+
 	HardwareSprite{
-		.y = (u8)(screen_space.y + this->animation.y + this->centre.y),
+		.y = (u8)y,
 		.object_mode = ObjectMode::Normal,
 		.colour_mode = this->colour_mode,
 		.shape = (u8)(((u8)this->size & 0b1100) >> 2),
-		.x = (u8)(screen_space.x + this->animation.x + this->centre.x),
+		.x = (u16)(x & 0b111'111'111),
 		.horizontal_flip = this->horizontal_flip,
 		.vertical_flip = this->vertical_flip,
 		.size = (u8)((u8)this->size & 0b11),
@@ -34,7 +42,7 @@ void HexSprite::render(Point<s16> const camera_offset) const {
 		.prio = this->prio,
 		.palette = this->palette,
 	}
-		.write_to_screen((size_t)this->hardware_id);
+		.write_to_screen(this->hardware_id);
 }
 
 } // namespace sprite
