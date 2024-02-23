@@ -5,6 +5,7 @@
 #include <cstring>
 #include <functional>
 #include <initializer_list>
+#include <string_view>
 #include <tuple>
 #include <vector>
 
@@ -19,8 +20,7 @@ using sprite::HardwareSprite;
 class PopupMenu : public state::Mode {
   protected:
 	// TODO: Replace std::vector with something more platform appropriate
-	std::vector<std::tuple<std::span<const char>, std::function<void()>>>
-		entries;
+	std::vector<std::pair<std::string_view, std::function<void()>>> entries{};
 
 	size_t const tile_source;
 	size_t const sprite_tile_source;
@@ -49,10 +49,11 @@ class PopupMenu : public state::Mode {
 	void set_position(s16, s16);
 	void load_tiles_and_palettes();
 
-	PopupMenu();
+	PopupMenu()
+		: PopupMenu({}) {}
 
 	PopupMenu(
-		std::initializer_list<std::tuple<char const *, std::function<void()>>> l
+		std::initializer_list<std::pair<char const *, std::function<void()>>> l
 	)
 		: Mode()
 		, tile_source(3)
@@ -61,13 +62,12 @@ class PopupMenu : public state::Mode {
 
 		this->entries.reserve(l.size() - this->entries.capacity());
 		for (auto &[s, f] : l) {
-			this->entries.push_back({std::span{s, std::strlen(s)}, f});
+			this->entries.push_back({std::string_view{s}, f});
 		}
 	}
 
 	PopupMenu(
-		std::initializer_list<std::tuple<char const *, std::function<void()>>>
-			l,
+		std::initializer_list<std::pair<char const *, std::function<void()>>> l,
 		size_t tile_source, size_t sprite_tile_source, size_t tile_map
 	)
 		: Mode()

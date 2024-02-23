@@ -11,7 +11,7 @@ class ContextMenu : public popup::PopupMenu {
 		: PopupMenu() {}
 
 	ContextMenu(
-		std::initializer_list<std::tuple<char const *, std::function<void()>>> l
+		std::initializer_list<std::pair<char const *, std::function<void()>>> l
 	)
 		: PopupMenu(l) {}
 

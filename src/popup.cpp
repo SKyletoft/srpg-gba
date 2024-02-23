@@ -167,7 +167,4 @@ void PopupMenu::set_position(s16 x, s16 y) {
 	this->y = y;
 }
 
-PopupMenu::PopupMenu()
-	: popup::PopupMenu({}) {}
-
 } // namespace popup
