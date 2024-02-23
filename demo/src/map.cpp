@@ -76,11 +76,11 @@ void Map::restore() {
 	this->cursor.cursor.animation = {0, 0};
 	this->cursor.cursor.render(this->hexmap.layer0.pos);
 
-	REG_BG0CNT = (u16)(BG_CBB((u16)this->hexmap.layer0.tile_source)
-					   | BG_SBB((u16)this->hexmap.layer0.tile_map) | BG_4BPP
+	REG_BG0CNT = (u16)(BG_CBB(this->hexmap.layer0.tile_source)
+					   | BG_SBB(this->hexmap.layer0.tile_map) | BG_4BPP
 					   | BG_REG_32x32 | BG_PRIO(3));
-	REG_BG1CNT = (u16)(BG_CBB((u16)this->hexmap.layer1.tile_source)
-					   | BG_SBB((u16)this->hexmap.layer1.tile_map) | BG_4BPP
+	REG_BG1CNT = (u16)(BG_CBB(this->hexmap.layer1.tile_source)
+					   | BG_SBB(this->hexmap.layer1.tile_map) | BG_4BPP
 					   | BG_REG_32x32 | BG_PRIO(3));
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 }
