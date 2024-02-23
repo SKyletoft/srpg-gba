@@ -59,6 +59,9 @@ int main() {
 		input::poll();
 		config::modes[state::current_state]->update();
 		for (auto mode : config::modes) {
+			if (mode == nullptr) {
+				continue;
+			}
 			mode->always_update();
 		}
 
