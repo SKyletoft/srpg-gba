@@ -12,8 +12,6 @@ class Map : public state::Mode {
 	u8 animation_cycle = 0;
 
 	void update() override;
-	void always_update() override;
-	void suspend() override;
 	void restore() override;
 	void vsync_hook() override;
 	bool blackout() override;

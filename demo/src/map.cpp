@@ -40,10 +40,6 @@ void Map::update() {
 	}
 }
 
-void Map::always_update() {}
-
-void Map::suspend() {}
-
 void Map::restore() {
 	if (this->blackout()) {
 		loading::load_map_graphics();
