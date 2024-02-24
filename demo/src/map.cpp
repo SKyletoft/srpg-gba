@@ -6,6 +6,7 @@
 #include "util.h"
 
 #include "config.h"
+#include "loading.h"
 #include "unit.h"
 
 #include <cstring>
