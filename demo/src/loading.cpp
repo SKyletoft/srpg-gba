@@ -1,8 +1,8 @@
 #include "loading.h"
 
 #include "config.h"
-#include "util.h"
 #include "tiles.h"
+#include "util.h"
 #include <cstring>
 
 extern "C" {
