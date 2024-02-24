@@ -14,6 +14,7 @@
 #include "soundbank.h"
 #include "test_map.h"
 #include "unit.h"
+#include "hl-map.h"
 
 namespace config {
 
@@ -23,7 +24,7 @@ using unit::Stats;
 using unit::Unit;
 
 extern cursor_scroller::CursorScroller cursor;
-extern hexmap::Hexmap hexmap;
+extern hl_map::HighlightMap hexmap;
 extern std::array<Unit, 12> user_army;
 extern size_t user_soldier_count;
 extern map::Map map;

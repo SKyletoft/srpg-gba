@@ -23,7 +23,7 @@ extern tty::TtyMode tty_mode;
 namespace config {
 
 cursor_scroller::CursorScroller cursor{};
-hexmap::Hexmap hexmap{test_map::map};
+hl_map::HighlightMap hexmap{test_map::map};
 
 std::array<Unit, 12> user_army{
 	Unit{
