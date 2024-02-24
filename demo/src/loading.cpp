@@ -10,9 +10,12 @@ extern "C" {
 
 #include "arrow.h"
 #include "lyn.h"
+#include "movement-hl.h"
 }
 
 namespace loading {
+
+using tiles::Colour;
 
 void load_map_graphics() {
 	config::hexmap.load_tilesets(config::hexmap.layer0);
@@ -26,8 +29,9 @@ void load_map_graphics() {
 		tiles::TRANSPARENT,
 		tiles::WHITE,
 		// clangd does not consider this a constant expression, gcc does
-		tiles::Colour::from_24bit_colour(198, 164, 89),
+		Colour::from_24bit_colour(198, 164, 89),
 	}};
+	tiles::BG_PALETTE_MEMORY[1] = *(tiles::Palette *)movement_hlPal;
 
 	config::hexmap.update_camera();
 
