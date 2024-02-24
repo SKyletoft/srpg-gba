@@ -6,7 +6,6 @@
 -Iinc
 -Wall
 -Wexta
--Wpedantic
 -Wno-unused-parameter
 -Wno-unused-const
 -Wfloat-equal

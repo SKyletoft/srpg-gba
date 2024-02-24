@@ -45,17 +45,21 @@ CFLAGS := -g -Og -flto \
 
 CFLAGS += $(INCLUDE) -D_GLIBCXX_DEBUG
 
-CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions \
-	-Wall -Wextra -Wpedantic \
+CXXFLAGS := $(CFLAGS) \
+	-fno-rtti -fno-exceptions -fno-strict-aliasing \
+	\
+	-Wall -Wextra \
 	-Wfloat-equal -Wnon-virtual-dtor -Wunused-result \
 	-Wzero-as-null-pointer-constant -Wunused -Woverloaded-virtual \
 	-Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches \
 	-Wlogical-op -Wtype-limits -Wnull-dereference \
+	\
 	-Werror=format-security -Werror=cast-align \
 	-Werror=missing-field-initializers -Werror=return-type \
 	-Werror=conversion -Werror=sign-conversion -Werror=float-conversion \
+	\
 	-Wno-unused-parameter -Wno-unused-const-variable \
-	-fno-strict-aliasing \
+	\
 	-std=gnu++23
 
 ASFLAGS := -g $(ARCH)
