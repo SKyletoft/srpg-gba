@@ -19,6 +19,8 @@ struct Stats {
 
 	s8 speed = 0;
 	s8 luck = 0;
+
+	s8 movement = 5;
 };
 
 struct Unit {
