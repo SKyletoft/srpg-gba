@@ -1,7 +1,9 @@
 #pragma once
 
+#include "cursor_scroller.h"
 #include "debug.h"
 #include "export.h"
+#include "hexmap.h"
 #include "sprite.h"
 #include "tiles.h"
 #include "tty.h"
@@ -20,6 +22,8 @@ using tiles::SPRITE_PALETTE_MEMORY;
 using unit::Stats;
 using unit::Unit;
 
+extern cursor_scroller::CursorScroller cursor;
+extern hexmap::Hexmap hexmap;
 extern std::array<Unit, 12> user_army;
 extern size_t user_soldier_count;
 extern map::Map map;

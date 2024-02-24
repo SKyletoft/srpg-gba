@@ -1,8 +1,10 @@
 #include "config.h"
 
+#include "cursor_scroller.h"
 #include "debug.h"
 #include "export.h"
 #include "hexes.h"
+#include "hexmap.h"
 #include "sprite.h"
 #include "tiles.h"
 #include "tty.h"
@@ -19,6 +21,9 @@ extern tty::TtyMode tty_mode;
 }
 
 namespace config {
+
+cursor_scroller::CursorScroller cursor{};
+hexmap::Hexmap hexmap{test_map::map};
 
 std::array<Unit, 12> user_army{
 	Unit{
@@ -69,7 +74,7 @@ std::array<Unit, 12> user_army{
 };
 size_t user_soldier_count = 2;
 
-map::Map map{test_map::map};
+map::Map map{};
 context_menu::ContextMenu popup{
 	{"Red",
 	 []() {
