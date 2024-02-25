@@ -50,6 +50,8 @@ void Map::restore() {
 	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
 	config::cursor.cursor.animation = {0, 0};
 	config::cursor.cursor.render(config::hexmap.layer0.pos);
+
+	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 }
 
 void Map::vsync_hook() {
