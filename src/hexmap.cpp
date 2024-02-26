@@ -28,7 +28,7 @@ void Hexmap::load_tilesets(Layer &layer) {
 }
 
 void Hexmap::load_palettes(Layer &) {
-	BG_PALETTE_MEMORY[0] = Palette::from_raw(completePal);
+	BG_PALETTE_MEMORY[0] = *(Palette *)completePal;
 }
 
 std::pair<hexes::OffsetXYCoord, Point<s16>>
