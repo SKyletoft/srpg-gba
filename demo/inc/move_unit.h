@@ -20,6 +20,8 @@ class MoveUnit : public map::Map {
 	std::vector<hexes::CubeCoord> highlights{};
 
   public:
+	void restore() override;
+	void suspend() override;
 	void update() override;
 };
 

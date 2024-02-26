@@ -41,6 +41,15 @@ void update_palettes_of(
 	}
 }
 
+void MoveUnit::restore() {
+	// this->Map::restore();
+	this->highlights =
+		config::selected_unit->accessible_tiles(config::hexmap.map);
+	update_palettes_of(this->highlights, 1);
+}
+
+void MoveUnit::suspend() { update_palettes_of(this->highlights, 0); }
+
 void MoveUnit::update() {
 	this->Map::update();
 
