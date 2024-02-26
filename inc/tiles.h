@@ -139,6 +139,8 @@ union ScreenEntry {
 	}
 	constexpr ScreenEntry(const ScreenEntry &rhs)
 		: raw(rhs.raw) {}
+	constexpr ScreenEntry(volatile ScreenEntry &rhs)
+		: raw(rhs.raw) {}
 	constexpr ScreenEntry(const u16 &rhs)
 		: raw(rhs) {}
 
