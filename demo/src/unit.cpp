@@ -2,6 +2,7 @@
 
 #include "debug.h"
 #include "hexes.h"
+#include "perf.h"
 #include "sprite.h"
 #include "util.h"
 
@@ -30,6 +31,10 @@ void Unit::render(Point<s16> camera_offset, u8 animation_cycle) const {
 
 std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 ) const {
+	util::wait_for_drawing_start();
+	u16 start = REG_VCOUNT;
+	size_t start_frame_id = perf::get_frame();
+
 	using CC_Depth = std::pair<CubeCoord, u8>;
 	struct CompareDepth {
 		bool operator()(const CC_Depth &a, const CC_Depth &b) const {
@@ -42,31 +47,24 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 	};
 
 	// Should be π(mov + 0.5)², but close enough
-	// size_t const max_len =
-	//	(size_t)((this->stats.movement + 1) * (this->stats.movement + 1) * 3);
-	static std::vector<CubeCoord> vec{};
-	vec.clear();
+	size_t const max_len =
+		(size_t)((this->stats.movement + 1) * (this->stats.movement + 1) * 3);
+	std::vector<CubeCoord> vec{};
+	vec.reserve(max_len);
 
-	static std::priority_queue<CC_Depth, std::vector<CC_Depth>, CompareDepth>
-		queue{};
-	while (!queue.empty()) {
-		queue.pop();
-	}
+	std::priority_queue<CC_Depth, std::deque<CC_Depth>, CompareDepth> queue{};
 
-	// std::vector<CC_Depth> queue{};
-	// queue.reserve(max_len);
-	static std::vector<bool> visited(map.width * map.height, false);
-	for (size_t i = 0; i < visited.size(); ++i) {
-		visited[i] = false;
-	}
+	std::vector<bool> visited(map.width * map.height, false);
 
 	queue.push({this->sprite.pos, 0});
-	// queue.push_back({this->sprite.pos, 0});
 	visited[hex_to_idx(this->sprite.pos)] = true;
 
+	u16 at_loop = REG_VCOUNT;
+	size_t at_loop_frame_id = perf::get_frame();
+
+	int loops = 0;
 	while (!queue.empty()) {
-		// auto [curr, depth] = *queue.begin();
-		// queue.erase(queue.begin());
+		loops++;
 		auto [curr, depth] = queue.top();
 		queue.pop();
 
@@ -79,23 +77,36 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
 			auto neighbour_ = neighbour + curr;
 			auto xy = neighbour_.to_offset_xy();
-			if (xy.col < 0 || map.width <= xy.col || xy.row < 0
-				|| map.height <= xy.row)
+			if (xy.col < 0 || (s16)map.width <= xy.col || xy.row < 0
+				|| (s16)map.height <= xy.row)
 			{
 				continue;
 			}
 
 			size_t idx = hex_to_idx(neighbour_);
 			if (!visited[idx]) {
-				// queue.push_back({neighbour_, depth + 1});
 				queue.push({neighbour_, depth + 1});
 				visited[idx] = true;
 			}
 		}
 	}
 
+	u16 end = REG_VCOUNT;
+	size_t end_frame_id = perf::get_frame();
+
 	debug::print("Checked tiles: ");
 	debug::println((int)visited.size());
+	debug::println("");
+	debug::println(loops);
+	debug::println("");
+	debug::println(start);
+	debug::println((int)start_frame_id);
+	debug::println("");
+	debug::println(at_loop);
+	debug::println((int)at_loop_frame_id);
+	debug::println("");
+	debug::println(end);
+	debug::println((int)end_frame_id);
 
 	return vec;
 }
