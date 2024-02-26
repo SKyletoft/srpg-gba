@@ -12,6 +12,7 @@ extern "C" {
 
 namespace move_unit {
 
+void update_palette_of_tile(hexes::CubeCoord const tile, u8 new_palette);
 void update_palettes_of(
 	std::span<hexes::CubeCoord const> highlights, u8 new_palette
 );
