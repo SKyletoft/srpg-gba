@@ -11,11 +11,10 @@ using hexes::CubeCoord;
 
 ScreenEntry HighlightMap::get_tile(Layer &layer, s16 x, s16 y) {
 	ScreenEntry original_tile = hexmap::Hexmap::get_tile(layer, x, y);
+
 	CubeCoord cc = this->grid_coord(layer, x, y).first.to_cube_coord();
-
-	auto &unit = config::user_army[0];
-
-	if (unit.pos().distance(cc) < unit.stats.movement) {
+	unit::Unit *unit = config::selected_unit;
+	if (unit != nullptr && unit->pos().distance(cc) < unit->stats.movement) {
 		original_tile.palette = 1;
 	}
 
