@@ -139,11 +139,19 @@ union ScreenEntry {
 	}
 	constexpr ScreenEntry(const ScreenEntry &rhs)
 		: raw(rhs.raw) {}
+	constexpr ScreenEntry(const u16 &rhs)
+		: raw(rhs) {}
 
 	constexpr operator u16() const { return this->raw; }
 	constexpr operator u16() { return this->raw; }
 
 	constexpr void operator=(const ScreenEntry &rhs) volatile {
+		this->raw = rhs.raw;
+	}
+	constexpr void operator=(const ScreenEntry &rhs) {
+		this->raw = rhs.raw;
+	}
+	constexpr void operator=(volatile ScreenEntry &rhs) {
 		this->raw = rhs.raw;
 	}
 };
