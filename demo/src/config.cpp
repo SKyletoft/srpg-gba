@@ -1,20 +1,22 @@
 #include "config.h"
 
+#include "browse.h"
 #include "cursor_scroller.h"
 #include "debug.h"
 #include "export.h"
 #include "hexes.h"
-#include "hexmap.h"
 #include "sprite.h"
 #include "tiles.h"
 #include "tty.h"
-#include <array>
 
 #include "context_menu.h"
 #include "map.h"
 #include "soundbank.h"
 #include "test_map.h"
 #include "unit.h"
+#include "move_unit.h"
+
+#include <array>
 
 namespace debug {
 extern tty::TtyMode tty_mode;
@@ -25,6 +27,7 @@ namespace config {
 cursor_scroller::CursorScroller cursor{};
 hl_map::HighlightMap hexmap{test_map::map};
 
+Unit *selected_unit = nullptr;
 std::array<Unit, 12> user_army{
 	Unit{
 		.sprite =
@@ -76,7 +79,7 @@ std::array<Unit, 12> user_army{
 };
 size_t user_soldier_count = 2;
 
-map::Map map{};
+browse::DefaultMap map{};
 context_menu::ContextMenu popup{
 	{"Red",
 	 []() {
@@ -98,12 +101,13 @@ context_menu::ContextMenu popup{
 	 }},
 	{"Exit", []() { state::next_state = 0; }},
 };
+move_unit::MoveUnit move{};
 
 std::array<state::Mode *, 7> const modes_data{
 	&map,
 	&debug::tty_mode,
 	&popup,
-	nullptr,
+	&move,
 	nullptr,
 	nullptr,
 	nullptr,
