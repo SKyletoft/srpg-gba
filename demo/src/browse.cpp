@@ -17,13 +17,7 @@ using input::InputState;
 using unit::Unit;
 
 void DefaultMap::update() {
-	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
-
-	auto const d =
-		config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
-	config::hexmap.move_in_bounds(d.x, d.y);
-	config::hexmap.update_layer(config::hexmap.layer0);
-	config::hexmap.update_layer(config::hexmap.layer1);
+	this->Map::update();
 
 	// Terminal on both shoulders
 	if (input::get_button(Button::R).is_down()

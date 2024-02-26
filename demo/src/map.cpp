@@ -17,11 +17,19 @@ namespace map {
 
 using unit::Unit;
 
-void Map::update() {}
+void Map::update() {
+	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
+
+	auto const d =
+		config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
+	config::hexmap.move_in_bounds(d.x, d.y);
+	config::hexmap.update_layer(config::hexmap.layer0);
+	config::hexmap.update_layer(config::hexmap.layer1);
+}
 
 void Map::restore() {
-	config::hexmap.load_map(config::hexmap.layer0);
-	config::hexmap.load_map(config::hexmap.layer1);
+	// config::hexmap.load_map(config::hexmap.layer0);
+	// config::hexmap.load_map(config::hexmap.layer1);
 
 	if (state::blacked_out) {
 		loading::load_map_graphics();
