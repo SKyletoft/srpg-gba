@@ -1,11 +1,13 @@
 #pragma once
 
 #include "hexmap.h"
+#include "point.h"
 
 namespace hl_map {
 
 using scrolling_map::Layer;
 using tiles::ScreenEntry;
+using point::Point;
 
 class HighlightMap : public hexmap::Hexmap {
   public:

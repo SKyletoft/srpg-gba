@@ -1,8 +1,11 @@
 #pragma once
 
 #include "hexes.h"
+#include "mdspan.h"
 #include "point.h"
 #include "sprite.h"
+
+#include <vector>
 
 namespace unit {
 
@@ -31,6 +34,9 @@ struct Unit {
 
 	constexpr hexes::CubeCoord &pos() { return this->sprite.pos; }
 	void render(Point<s16>, u8) const;
+
+	std::vector<hexes::CubeCoord>
+	accessible_tiles(mdspan::Span2d<u8> const &) const;
 };
 
 } // namespace unit

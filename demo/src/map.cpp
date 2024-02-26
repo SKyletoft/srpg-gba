@@ -29,6 +29,7 @@ void Map::restore() {
 	if (state::last_state != 2) {
 		tiles::SPRITE_PALETTE_MEMORY[0] = *(tiles::Palette *)arrowPal;
 	}
+
 	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
 	config::cursor.cursor.animation = {0, 0};
 	config::cursor.cursor.render(config::hexmap.layer0.pos);
