@@ -1,9 +1,7 @@
 #include "map.h"
 
-#include "input.h"
 #include "state.h"
 #include "tiles.h"
-#include "util.h"
 
 #include "config.h"
 #include "loading.h"
@@ -17,28 +15,8 @@ extern "C" {
 
 namespace map {
 
-using input::Button;
-using input::InputState;
 
-void Map::update() {
-	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
-
-	auto const d =
-		config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
-	config::hexmap.move_in_bounds(d.x, d.y);
-	config::hexmap.update_layer(config::hexmap.layer0);
-	config::hexmap.update_layer(config::hexmap.layer1);
-
-	if (input::get_button(Button::R).is_down()
-		&& input::get_button(Button::L).is_down())
-	{
-		state::next_state = 1;
-	}
-
-	if (input::get_button(Button::A) == InputState::Pressed) {
-		state::next_state = 2;
-	}
-}
+void Map::update() {}
 
 void Map::restore() {
 	if (this->blackout()) {
