@@ -2,6 +2,7 @@
 
 #include "debug.h"
 #include "hexes.h"
+#include "move_unit.h"
 #include "perf.h"
 #include "sprite.h"
 #include "util.h"
@@ -35,6 +36,9 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 	u16 start = REG_VCOUNT;
 	size_t start_frame_id = perf::get_frame();
 
+	const s16 height = (s16)map.height;
+	const s16 width = (s16)map.width;
+
 	using CC_Depth = std::pair<CubeCoord, u8>;
 	struct CompareDepth {
 		bool operator()(const CC_Depth &a, const CC_Depth &b) const {
@@ -52,7 +56,9 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 	std::vector<CubeCoord> vec{};
 	vec.reserve(max_len);
 
-	std::priority_queue<CC_Depth, std::deque<CC_Depth>, CompareDepth> queue{};
+	// std::priority_queue<CC_Depth, std::deque<CC_Depth>, CompareDepth>
+	// queue{};
+	std::queue<CC_Depth> queue{};
 
 	std::vector<bool> visited(map.width * map.height, false);
 
@@ -65,27 +71,25 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 	int loops = 0;
 	while (!queue.empty()) {
 		loops++;
-		auto [curr, depth] = queue.top();
+		// auto [curr, depth] = queue.top();
+		auto [curr, depth] = queue.front();
 		queue.pop();
 
-		if (depth > this->stats.movement) {
-			break;
-		}
-
 		vec.push_back(curr);
+		// move_unit::update_palette_of_tile(curr, 1);
 
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
 			auto neighbour_ = neighbour + curr;
 			auto xy = neighbour_.to_offset_xy();
-			if (xy.col < 0 || (s16)map.width <= xy.col || xy.row < 0
-				|| (s16)map.height <= xy.row)
+			if (xy.col < 0 || width <= xy.col || xy.row < 0 || height <= xy.row)
 			{
 				continue;
 			}
 
+			u8 depth_ = depth + 1;
 			size_t idx = hex_to_idx(neighbour_);
-			if (!visited[idx]) {
-				queue.push({neighbour_, depth + 1});
+			if (!visited[idx] && depth_ <= this->stats.movement) {
+				queue.push({neighbour_, depth_});
 				visited[idx] = true;
 			}
 		}
