@@ -123,6 +123,10 @@ struct OffsetXYCoord {
 
 	constexpr AxialCoord to_axial_coord() const;
 	static constexpr OffsetXYCoord from_axial_coord(AxialCoord);
+
+	constexpr point::Point<s32> to_point() const {
+		return {.x = this->col, .y = this->row};
+	};
 };
 
 struct AxialCoord {
