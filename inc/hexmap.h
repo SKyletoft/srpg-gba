@@ -19,10 +19,9 @@ static constexpr s16 WIDTH = (s16)40;
 static constexpr s16 HEIGHT = (s16)29;
 
 class Hexmap : public scrolling_map::ScrollingMap {
-  private:
+  public:
 	mdspan::Span2d<const u8> const map;
 
-  public:
 	std::pair<hexes::OffsetXYCoord, Point<s16>>
 	grid_coord(Layer &layer, s16 x, s16 y);
 
