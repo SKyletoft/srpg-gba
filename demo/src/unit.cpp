@@ -20,10 +20,11 @@ void Unit::render(Point<s16> camera_offset, u8 animation_cycle) const {
 	sprite.render(camera_offset);
 }
 
-std::vector<CubeCoord> Unit::accessible_tiles(Span2d<u8> const &map) const {
 	std::vector<CubeCoord> vec{};
 	// Todo: Replace this with a min-heap
 	std::vector<std::pair<CubeCoord, u8>> queue{{this->sprite.pos, 0}};
+std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
+) const {
 
 	while (!queue.empty()) {
 		auto const [curr, depth] = queue.back();

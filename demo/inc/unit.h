@@ -36,7 +36,7 @@ struct Unit {
 	void render(Point<s16>, u8) const;
 
 	std::vector<hexes::CubeCoord>
-	accessible_tiles(mdspan::Span2d<u8> const &) const;
+	accessible_tiles(mdspan::Span2d<const u8> const &) const;
 };
 
 } // namespace unit
