@@ -11,10 +11,10 @@
 
 #include "context_menu.h"
 #include "map.h"
+#include "move_unit.h"
 #include "soundbank.h"
 #include "test_map.h"
 #include "unit.h"
-#include "move_unit.h"
 
 #include <array>
 

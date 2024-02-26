@@ -1,9 +1,11 @@
 #include "move_unit.h"
 
+#include "hexes.h"
 #include "input.h"
 #include "state.h"
 
 #include "config.h"
+#include "tiles.h"
 
 namespace move_unit {
 
