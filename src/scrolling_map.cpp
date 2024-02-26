@@ -57,15 +57,19 @@ void ScrollingMap::update_tile(
 	base[idx] = tile;
 };
 
-void ScrollingMap::load_map(Layer &layer) {
+void ScrollingMap::recolour(Point<s32> from, Point<s32> to, Layer &layer) {
 	ScreenEntry volatile *const base = tiles::SCREENBLOCKS[layer.tile_map];
 
-	// Yes, load one row too many
-	for (s16 x = 0; x <= 30 * 8; x += 8) {
-		for (s16 y = 0; y <= 20 * 8; y += 8) {
+	for (s16 x = (s16)from.x; x <= to.x; x += 8) {
+		for (s16 y = (s16)from.y; y <= to.y; y += 8) {
 			this->update_tile(base, layer, layer.pos.x + x, layer.pos.y + y);
 		}
 	}
+}
+
+void ScrollingMap::load_map(Layer &layer) {
+	// Yes, load one row too many
+	this->recolour({0,0}, {30*8, 20*8}, layer);
 }
 
 void ScrollingMap::update_layer(Layer &layer) {

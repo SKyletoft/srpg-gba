@@ -44,6 +44,7 @@ class ScrollingMap {
 
 	void update_tile(ScreenEntry volatile *const, Layer &, s16, s16);
 	void update_layer(Layer &);
+	void recolour(Point<s32>, Point<s32>, Layer &);
 	void load_map(Layer &);
 	void move_in_bounds(s16, s16);
 	void update_camera();
