@@ -150,12 +150,8 @@ union ScreenEntry {
 	constexpr void operator=(const ScreenEntry &rhs) volatile {
 		this->raw = rhs.raw;
 	}
-	constexpr void operator=(const ScreenEntry &rhs) {
-		this->raw = rhs.raw;
-	}
-	constexpr void operator=(volatile ScreenEntry &rhs) {
-		this->raw = rhs.raw;
-	}
+	constexpr void operator=(const ScreenEntry &rhs) { this->raw = rhs.raw; }
+	constexpr void operator=(volatile ScreenEntry &rhs) { this->raw = rhs.raw; }
 };
 static_assert(sizeof(ScreenEntry) == sizeof(u16));
 static_assert(alignof(ScreenEntry) == alignof(u16));
