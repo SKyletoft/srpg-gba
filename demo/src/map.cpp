@@ -19,7 +19,10 @@ namespace map {
 void Map::update() {}
 
 void Map::restore() {
-	if (this->blackout()) {
+	config::hexmap.load_map(config::hexmap.layer0);
+	config::hexmap.load_map(config::hexmap.layer1);
+
+	if (state::blacked_out) {
 		loading::load_map_graphics();
 	}
 	if (state::last_state != 2) {
@@ -47,11 +50,7 @@ void Map::vsync_hook() {
 }
 
 bool Map::blackout() {
-	return !(
-		(state::current_state == 0 && state::next_state == 2)
-		|| (state::next_state == 0 && state::current_state == 2)
-		|| (state::current_state == 0 && state::last_state == 2)
-	);
+	return state::current_state == 1 || state::last_state == 1;
 }
 
 } // namespace map
