@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hexes.h"
 #include "map.h"
 
 #include <span>
@@ -16,6 +17,8 @@ void update_palettes_of(
 );
 
 class MoveUnit : public map::Map {
+	std::vector<hexes::CubeCoord> highlights{};
+
   public:
 	void update() override;
 };
