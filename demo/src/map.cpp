@@ -15,6 +15,7 @@ extern "C" {
 
 namespace map {
 
+using unit::Unit;
 
 void Map::update() {}
 
@@ -45,6 +46,7 @@ void Map::vsync_hook() {
 		config::user_army.data(), config::user_soldier_count
 	};
 	for (auto &unit : units) {
+		unit.sprite.move();
 		unit.render(config::hexmap.layer0.pos, animation_cycle);
 	}
 }
