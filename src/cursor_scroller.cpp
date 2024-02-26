@@ -11,6 +11,8 @@ namespace cursor_scroller {
 using hexes::Direction;
 using input::Button;
 
+CubeCoord &CursorScroller::pos() { return this->cursor.pos; }
+
 Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 	auto old_cursor = this->cursor;
 	auto old_offset = this->cursor.animation;
