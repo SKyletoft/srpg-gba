@@ -121,6 +121,7 @@ struct HexSprite {
 	}
 
 	void hide() const;
+	void move();
 	void render(Point<s16> const camera_offset) const;
 };
 
