@@ -11,6 +11,7 @@ namespace state {
 extern size_t current_state;
 extern size_t next_state;
 extern size_t last_state;
+extern bool blacked_out;
 
 /// The mode baseclass is an abstraction to handle switching between game
 /// states.

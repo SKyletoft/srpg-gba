@@ -44,9 +44,11 @@ int main() {
 	for (;;) {
 		if (state::current_state != state::next_state) {
 			util::wait_for_vsync();
+			state::blacked_out = false;
 			if (config::modes[state::current_state]->blackout()
 				|| config::modes[state::next_state]->blackout())
 			{
+				state::blacked_out = true;
 				util::set_screen_to_black();
 			}
 			config::modes[state::current_state]->suspend();
