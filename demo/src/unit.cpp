@@ -56,9 +56,8 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 	std::vector<CubeCoord> vec{};
 	vec.reserve(max_len);
 
-	// std::priority_queue<CC_Depth, std::deque<CC_Depth>, CompareDepth>
-	// queue{};
-	std::queue<CC_Depth> queue{};
+	std::priority_queue<CC_Depth, std::vector<CC_Depth>, CompareDepth> queue{};
+	// std::queue<CC_Depth> queue{};
 
 	std::vector<bool> visited(map.width * map.height, false);
 
@@ -71,12 +70,12 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 	int loops = 0;
 	while (!queue.empty()) {
 		loops++;
-		// auto [curr, depth] = queue.top();
-		auto [curr, depth] = queue.front();
+		auto [curr, depth] = queue.top();
+		// auto [curr, depth] = queue.front();
 		queue.pop();
 
 		vec.push_back(curr);
-		// move_unit::update_palette_of_tile(curr, 1);
+		move_unit::update_palette_of_tile(curr, 1);
 
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
 			auto neighbour_ = neighbour + curr;
