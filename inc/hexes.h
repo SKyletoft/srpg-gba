@@ -39,9 +39,7 @@ struct CubeCoord {
 
 	CubeCoord &operator=(CubeCoord vec);
 
-	constexpr bool operator==(CubeCoord const &vec) const {
-		return this->q == vec.q && this->r == vec.r && this->s == vec.s;
-	}
+	constexpr std::strong_ordering operator<=>(CubeCoord const &) const = default;
 
 	constexpr CubeCoord operator+(CubeCoord vec) const {
 		return this->add(vec);
