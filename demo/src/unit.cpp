@@ -22,6 +22,25 @@ namespace r = std::ranges;
 using hexes::CubeCoord;
 using mdspan::Span2d;
 
+u8 cost(u8 terrain) {
+	switch (terrain) {
+	case 3:
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+	case 14:
+		return 100;
+	case 18:
+	case 19:
+	case 15:
+	case 21:
+		return 1;
+	default:
+		return 3;
+	}
+}
+
 void Unit::render(Point<s16> camera_offset, u8 animation_cycle) const {
 	sprite::HexSprite sprite{this->sprite};
 
