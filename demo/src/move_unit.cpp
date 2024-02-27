@@ -12,25 +12,46 @@ namespace move_unit {
 using input::Button;
 using input::InputState;
 
-	auto tile_coord =
-		(tile.to_pixel_space() - config::hexmap.layer0.pos.into<s32>()) / 8;
 void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
+	auto px = tile.to_pixel_space() - config::hexmap.layer0.pos.into<s32>();
+	if (px.x < -24 || 240 < px.x || px.y < -24 || 160 < px.y) {
+		return;
+	}
+
+	size_t end = 12;
+	size_t start = 0;
+	// Only draw 2/3 columns for the partially visible tile
+	if (px.x == 240) {
+		end = 8;
+	}
+	if (px.x < -16) {
+		start = 4;
+	}
+
+	auto tile_coord = tile.to_pixel_space() / 8;
+	// Stored by column so we can skip the last column when it goes off-screen
 	constexpr std::array<size_t, 12> tiles_offsets_in_hex = {
-		0, 1, 2, 32, 33, 34, 64, 65, 66, 96, 97, 98
+		0, 32, 64, 96, 1, 33, 65, 97, 2, 34, 66, 98
 	};
 
 	tiles::ScreenEntry volatile *base;
 	if (!tile.is_odd()) {
 		base = &tiles::SCREENBLOCKS[config::hexmap.layer0.tile_map]
-								   [tile_coord.y * 32 + tile_coord.x];
+								   [tile_coord.y * 32];
 	} else {
 		tile_coord.x += 1;
 		base = &tiles::SCREENBLOCKS[config::hexmap.layer1.tile_map]
-								   [tile_coord.y * 32 + tile_coord.x];
+								   [tile_coord.y * 32];
 	}
 
-	for (size_t offset : tiles_offsets_in_hex) {
-		tiles::ScreenEntry volatile &se = base[offset];
+	for (size_t i = start; i < end; ++i) {
+		size_t idx = tiles_offsets_in_hex[i] + (size_t)tile_coord.x;
+		// This only runs *once*, so not a (% 32) or else only
+		// the top line of the hex gets highlighted
+		if (idx >= 32) {
+			idx -= 32;
+		}
+		tiles::ScreenEntry volatile &se = base[idx];
 		tiles::ScreenEntry copy = se;
 		copy.palette = new_palette & 0b1111;
 		se = copy;
