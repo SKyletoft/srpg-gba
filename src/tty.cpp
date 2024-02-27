@@ -168,20 +168,23 @@ void TtyMode::pad_to_newline() {
 	this->len = len;
 }
 
+void TtyMode::println() {
+	this->print("\n");
+}
+
 void TtyMode::println(s32 i) {
-	char buf[12];
-	itoa(i, buf, 10);
-	this->println(buf);
+	this->print(i);
+	this->println();
 }
 
 void TtyMode::println(const char *s) {
 	this->print(s);
-	this->print("\n");
+	this->println();
 }
 
 void TtyMode::println(const char *s, const size_t len) {
 	this->print(s);
-	this->print("\n");
+	this->println();
 }
 
 void TtyMode::printf(const char *format, ...) {
@@ -191,6 +194,12 @@ void TtyMode::printf(const char *format, ...) {
 	vsnprintf(buf, sizeof(buf), format, args);
 	va_end(args);
 
+	this->print(buf);
+}
+
+void TtyMode::print(s32 i) {
+	char buf[12];
+	itoa(i, buf, 10);
 	this->print(buf);
 }
 
