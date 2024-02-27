@@ -12,9 +12,9 @@ namespace move_unit {
 using input::Button;
 using input::InputState;
 
-void update_palette_of_tile(hexes::CubeCoord const tile, u8 new_palette) {
 	auto tile_coord =
 		(tile.to_pixel_space() - config::hexmap.layer0.pos.into<s32>()) / 8;
+void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 	constexpr std::array<size_t, 12> tiles_offsets_in_hex = {
 		0, 1, 2, 32, 33, 34, 64, 65, 66, 96, 97, 98
 	};
@@ -37,9 +37,7 @@ void update_palette_of_tile(hexes::CubeCoord const tile, u8 new_palette) {
 	}
 }
 
-void update_palettes_of(
-	std::span<hexes::CubeCoord const> highlights, u8 new_palette
-) {
+void update_palettes_of(std::span<CubeCoord const> highlights, u8 new_palette) {
 	for (auto const &tile : highlights) {
 		update_palette_of_tile(tile, new_palette);
 	}

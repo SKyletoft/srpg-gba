@@ -12,13 +12,13 @@ extern "C" {
 
 namespace move_unit {
 
-void update_palette_of_tile(hexes::CubeCoord const tile, u8 new_palette);
-void update_palettes_of(
-	std::span<hexes::CubeCoord const> highlights, u8 new_palette
-);
+using hexes::CubeCoord;
+
+void update_palette_of_tile(CubeCoord const, u8);
+void update_palettes_of(std::span<CubeCoord const>, u8);
 
 class MoveUnit : public map::Map {
-	std::vector<hexes::CubeCoord> highlights{};
+	std::vector<CubeCoord> highlights{};
 
   public:
 	void restore() override;
