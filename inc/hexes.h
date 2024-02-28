@@ -1,7 +1,9 @@
 #pragma once
 
 #include "point.h"
+
 #include <array>
+#include <compare>
 #include <cstddef>
 #include <cstdlib>
 #include <optional>
@@ -39,7 +41,8 @@ struct CubeCoord {
 
 	CubeCoord &operator=(CubeCoord vec);
 
-	constexpr std::strong_ordering operator<=>(CubeCoord const &) const = default;
+	constexpr std::strong_ordering
+	operator<=>(CubeCoord const &) const = default;
 
 	constexpr CubeCoord operator+(CubeCoord vec) const {
 		return this->add(vec);
