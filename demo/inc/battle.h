@@ -29,6 +29,8 @@ class Battle : public state::Mode {
 		.palette = 1,
 	};
 
+	static constexpr decltype(time) speed = 5;
+
   public:
 	void update() override;
 	void restore() override;
