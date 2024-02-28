@@ -1,9 +1,14 @@
 #include "battle.h"
 
+#include "loading.h"
 #include "sprite.h"
+#include "state.h"
 #include "tiles.h"
 
+#include <array>
 #include <cstring>
+#include <ranges>
+#include <tuple>
 
 extern "C" {
 #include <tonc.h>
