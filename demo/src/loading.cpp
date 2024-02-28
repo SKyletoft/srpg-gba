@@ -9,6 +9,7 @@ extern "C" {
 #include <tonc.h>
 
 #include "arrow.h"
+#include "enemy.h"
 #include "lyn.h"
 #include "movement-hl.h"
 }
@@ -36,9 +37,15 @@ void load_map_graphics() {
 	config::hexmap.update_camera();
 
 	std::memcpy(
-		&tiles::SPRITE_CHARBLOCK[0][5], lynTiles, sizeof(tiles::STile) * 4 * 3
+		&tiles::SPRITE_CHARBLOCK[0][5], lynTiles, sizeof(tiles::STile) * 4 * 7
+	);
+	std::memcpy(
+		&tiles::SPRITE_CHARBLOCK[0][5 + 4 * 7],
+		enemyTiles,
+		sizeof(tiles::STile) * 4 * 7
 	);
 	tiles::SPRITE_PALETTE_MEMORY[1] = *(tiles::Palette *)lynPal;
+	tiles::SPRITE_PALETTE_MEMORY[2] = *(tiles::Palette *)enemyPal;
 
 	REG_BG0CNT = (u16)(BG_CBB(config::hexmap.layer0.tile_source)
 					   | BG_SBB(config::hexmap.layer0.tile_map) | BG_4BPP
