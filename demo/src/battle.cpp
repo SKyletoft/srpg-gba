@@ -99,4 +99,6 @@ void Battle::vsync_hook() {
 	this->right.write_to_screen(2);
 }
 
+bool Battle::blackout() { return false; }
+
 } // namespace battle

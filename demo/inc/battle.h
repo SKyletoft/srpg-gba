@@ -35,6 +35,7 @@ class Battle : public state::Mode {
 	void update() override;
 	void restore() override;
 	void vsync_hook() override;
+	bool blackout() override;
 };
 
 } // namespace battle
