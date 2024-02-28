@@ -32,7 +32,8 @@ void Map::restore() {
 	// config::hexmap.load_map(config::hexmap.layer0);
 	// config::hexmap.load_map(config::hexmap.layer1);
 
-	if (state::blacked_out) {
+	if (state::last_state == 1 || state::last_state == 4 || state::blacked_out)
+	{
 		loading::load_map_graphics();
 	}
 	if (state::last_state != 2) {
@@ -40,6 +41,7 @@ void Map::restore() {
 	}
 
 	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
+
 	config::cursor.cursor.animation = {0, 0};
 	config::cursor.cursor.render(config::hexmap.layer0.pos);
 
