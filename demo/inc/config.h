@@ -9,6 +9,7 @@
 #include "move_unit.h"
 #include "soundbank.h"
 #include "unit.h"
+#include "battle.h"
 
 #include "set.h"
 #include <array>
@@ -27,6 +28,7 @@ extern hl_map::HighlightMap hexmap;
 extern std::array<Unit, 12> user_army;
 extern size_t user_soldier_count;
 
+extern battle::Battle battle_ani;
 extern browse::DefaultMap map;
 extern move_unit::MoveUnit move;
 extern context_menu::ContextMenu popup;

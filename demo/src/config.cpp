@@ -81,6 +81,7 @@ std::array<Unit, 12> user_army{
 };
 size_t user_soldier_count = 2;
 
+battle::Battle battle_ani{};
 browse::DefaultMap map{};
 context_menu::ContextMenu popup{
 	{"Red",
@@ -110,7 +111,7 @@ std::array<state::Mode *, 7> const modes_data{
 	&debug::tty_mode,
 	&popup,
 	&move,
-	nullptr,
+	&battle_ani,
 	nullptr,
 	nullptr,
 };
