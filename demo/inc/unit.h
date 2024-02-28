@@ -5,7 +5,7 @@
 #include "point.h"
 #include "sprite.h"
 
-#include <vector>
+#include "set.h"
 
 namespace unit {
 
@@ -35,7 +35,7 @@ struct Unit {
 	constexpr hexes::CubeCoord &pos() { return this->sprite.pos; }
 	void render(Point<s16>, u8) const;
 
-	std::vector<hexes::CubeCoord>
+	Set<hexes::CubeCoord>
 	accessible_tiles(mdspan::Span2d<const u8> const &) const;
 };
 

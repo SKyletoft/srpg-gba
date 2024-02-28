@@ -7,6 +7,8 @@
 #include "config.h"
 #include "tiles.h"
 
+#include "set.h"
+
 namespace move_unit {
 
 using input::Button;
@@ -58,20 +60,23 @@ void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 	}
 }
 
-void update_palettes_of(std::span<CubeCoord const> highlights, u8 new_palette) {
+void update_palettes_of(Set<CubeCoord> const &highlights, u8 new_palette) {
 	for (auto const &tile : highlights) {
 		update_palette_of_tile(tile, new_palette);
 	}
 }
 
 void MoveUnit::restore() {
-	// this->Map::restore();
-	this->highlights =
+	this->Map::restore();
+	config::highlights =
 		config::selected_unit->accessible_tiles(config::hexmap.map);
-	update_palettes_of(this->highlights, 1);
+	update_palettes_of(config::highlights, 1);
 }
 
-void MoveUnit::suspend() { update_palettes_of(this->highlights, 0); }
+void MoveUnit::suspend() {
+	update_palettes_of(config::highlights, 0);
+	config::highlights.clear();
+}
 
 void MoveUnit::update() {
 	this->Map::update();

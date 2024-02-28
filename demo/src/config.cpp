@@ -16,6 +16,7 @@
 #include "test_map.h"
 #include "unit.h"
 
+#include "set.h"
 #include <array>
 
 namespace debug {
@@ -28,6 +29,7 @@ cursor_scroller::CursorScroller cursor{};
 hl_map::HighlightMap hexmap{test_map::map};
 
 Unit *selected_unit = nullptr;
+Set<hexes::CubeCoord> highlights{};
 std::array<Unit, 12> user_army{
 	Unit{
 		.sprite =

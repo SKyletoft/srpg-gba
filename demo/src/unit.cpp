@@ -7,9 +7,9 @@
 #include "sprite.h"
 #include "util.h"
 
+#include "set.h"
 #include <algorithm>
 #include <queue>
-#include <unordered_set>
 
 extern "C" {
 #include <tonc_memmap.h>
@@ -49,8 +49,7 @@ void Unit::render(Point<s16> camera_offset, u8 animation_cycle) const {
 	sprite.render(camera_offset);
 }
 
-std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
-) const {
+Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 	util::wait_for_drawing_start();
 	u16 start = REG_VCOUNT;
 	size_t start_frame_id = perf::get_frame();
@@ -72,8 +71,8 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 	// Should be π(mov + 0.5)², but close enough
 	size_t const max_len =
 		(size_t)((this->stats.movement + 1) * (this->stats.movement + 1) * 3);
-	std::vector<CubeCoord> vec{};
-	vec.reserve(max_len);
+	Set<CubeCoord> out{};
+	// out.reserve(max_len);
 
 	std::priority_queue<CC_Depth, std::vector<CC_Depth>, CompareDepth> queue{};
 	// std::queue<CC_Depth> queue{};
@@ -93,7 +92,7 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 		// auto [curr, depth] = queue.front();
 		queue.pop();
 
-		vec.push_back(curr);
+		out.insert(curr);
 		move_unit::update_palette_of_tile(curr, 1);
 
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
@@ -130,7 +129,7 @@ std::vector<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map
 	debug::println(end);
 	debug::println((int)end_frame_id);
 
-	return vec;
+	return out;
 }
 
 } // namespace unit

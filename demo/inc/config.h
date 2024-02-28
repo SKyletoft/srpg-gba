@@ -1,15 +1,17 @@
 #pragma once
 
-#include "browse.h"
 #include "cursor_scroller.h"
-#include "move_unit.h"
 #include "tiles.h"
-#include <array>
 
+#include "browse.h"
 #include "context_menu.h"
+#include "hl-map.h"
+#include "move_unit.h"
 #include "soundbank.h"
 #include "unit.h"
-#include "hl-map.h"
+
+#include "set.h"
+#include <array>
 
 namespace config {
 
@@ -19,6 +21,7 @@ using unit::Stats;
 using unit::Unit;
 
 extern Unit *selected_unit;
+extern Set<hexes::CubeCoord> highlights;
 extern cursor_scroller::CursorScroller cursor;
 extern hl_map::HighlightMap hexmap;
 extern std::array<Unit, 12> user_army;
