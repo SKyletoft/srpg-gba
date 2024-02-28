@@ -17,8 +17,6 @@ extern "C" {
 
 namespace scrolling_map {
 
-using input::Button;
-
 size_t get_screenblock_offset_from_tiles(s16 x, s16 y) {
 	while (x < 0) {
 		x += 32;
