@@ -6,10 +6,12 @@
 #include "export.h"
 #include "hexes.h"
 #include "sprite.h"
+#include "state.h"
 #include "tiles.h"
 #include "tty.h"
 
 #include "context_menu.h"
+#include "loading.h"
 #include "map.h"
 #include "move_unit.h"
 #include "soundbank.h"
@@ -142,6 +144,10 @@ context_menu::ContextMenu popup{
 	 }},
 	{"Exit", []() { state::next_state = 0; }},
 };
+context_menu::ContextMenu movement_popup{
+	{"Attack", []() { state::next_state = 4; }},
+	{"Wait", []() { state::next_state = 0; }},
+};
 move_unit::MoveUnit move{};
 
 std::array<state::Mode *, 7> const modes_data{
@@ -150,7 +156,7 @@ std::array<state::Mode *, 7> const modes_data{
 	&popup,
 	&move,
 	&battle_ani,
-	nullptr,
+	&movement_popup,
 	nullptr,
 };
 
