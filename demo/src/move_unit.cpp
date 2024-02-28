@@ -95,8 +95,7 @@ void MoveUnit::update() {
 	}
 
 	if (input::get_button(Button::A) == InputState::Pressed
-		&& config::selected_unit->pos().distance(config::cursor.cursor.pos)
-			   <= config::selected_unit->stats.movement)
+		&& config::highlights.contains(config::cursor.pos()))
 	{
 		state::next_state = 0;
 		auto diff = config::selected_unit->pos() - config::cursor.cursor.pos;
