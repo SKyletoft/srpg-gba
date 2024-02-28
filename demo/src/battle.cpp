@@ -28,15 +28,17 @@ void Battle::restore() {
 	);
 	tiles::SPRITE_PALETTE_MEMORY[0] = tiles::Palette{{
 		tiles::TRANSPARENT,
-		Colour(15, 15, 15),
+		tiles::BLACK,
 		Colour(15, 0, 0),
+		Colour(15, 15, 15),
 		Colour(31, 0, 0),
 		Colour(25, 25, 25),
 	}};
 	tiles::SPRITE_PALETTE_MEMORY[1] = tiles::Palette{{
 		tiles::TRANSPARENT,
-		Colour(15, 15, 15),
+		tiles::BLACK,
 		Colour(0, 0, 15),
+		Colour(15, 15, 15),
 		Colour(0, 0, 31),
 		Colour(25, 25, 25),
 	}};
