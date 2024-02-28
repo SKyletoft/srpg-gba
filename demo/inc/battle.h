@@ -12,6 +12,7 @@ class Battle : public state::Mode {
 	u32 time = 0;
 
 	HardwareSprite left{
+		.y = 50,
 		.object_mode = sprite::ObjectMode::Normal,
 		.x = 20,
 		.size = 0b011,
@@ -19,6 +20,7 @@ class Battle : public state::Mode {
 		.palette = 0,
 	};
 	HardwareSprite right{
+		.y = 50,
 		.object_mode = sprite::ObjectMode::Normal,
 		.x = 150,
 		.horizontal_flip = true,
