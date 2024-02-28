@@ -24,6 +24,7 @@ extern tty::TtyMode tty_mode;
 }
 
 namespace config {
+using sprite::HexSprite;
 
 cursor_scroller::CursorScroller cursor{};
 hl_map::HighlightMap hexmap{test_map::map};
@@ -33,7 +34,7 @@ Set<hexes::CubeCoord> highlights{};
 std::array<Unit, 12> user_army{
 	Unit{
 		.sprite =
-			sprite::HexSprite{
+			HexSprite{
 				.pos = hexes::OffsetXYCoord(4, 4).to_cube_coord(),
 				.centre = {4, 0},
 				.size = sprite::SpriteSize::x16,
@@ -56,7 +57,7 @@ std::array<Unit, 12> user_army{
 	},
 	Unit{
 		.sprite =
-			sprite::HexSprite{
+			HexSprite{
 				.pos = hexes::OffsetXYCoord(4, 5).to_cube_coord(),
 				.centre = {4, 0},
 				.size = sprite::SpriteSize::x16,
