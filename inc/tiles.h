@@ -126,20 +126,23 @@ constexpr Palette BLACK_ON_BLACK = Palette{{
 
 union ScreenEntry {
 	u16 raw;
-	struct __attribute((packed)) bitflags {
+	struct __attribute((packed)) {
 		u16 index : 10;
 		u8 flips : 2;
 		u8 palette : 4;
-	} bitflags;
+	};
 
-	constexpr ScreenEntry(u16 index, u8 flips, u8 palette)
-		: bitflags({
-			.index = (u16)(index & 0b1111111111),
-			.flips = (u8)(flips & 0b11),
-			.palette = (u8)(palette & 0b1111),
-		}) {}
+	constexpr ScreenEntry(u16 index, u8 flips, u8 palette) {
+		this->index = (u16)(index & 0b1111111111);
+		this->flips = (u8)(flips & 0b11);
+		this->palette = (u8)(palette & 0b1111);
+	}
 	constexpr ScreenEntry(const ScreenEntry &rhs)
 		: raw(rhs.raw) {}
+	constexpr ScreenEntry(volatile ScreenEntry &rhs)
+		: raw(rhs.raw) {}
+	constexpr ScreenEntry(const u16 &rhs)
+		: raw(rhs) {}
 
 	constexpr operator u16() const { return this->raw; }
 	constexpr operator u16() { return this->raw; }
@@ -147,6 +150,8 @@ union ScreenEntry {
 	constexpr void operator=(const ScreenEntry &rhs) volatile {
 		this->raw = rhs.raw;
 	}
+	constexpr void operator=(const ScreenEntry &rhs) { this->raw = rhs.raw; }
+	constexpr void operator=(volatile ScreenEntry &rhs) { this->raw = rhs.raw; }
 };
 static_assert(sizeof(ScreenEntry) == sizeof(u16));
 static_assert(alignof(ScreenEntry) == alignof(u16));

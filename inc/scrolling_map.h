@@ -30,6 +30,8 @@ struct Layer {
 	s16 last_load_at_y = -100;
 	bool updated_x = false;
 	bool updated_y = false;
+	size_t update_top = 0;
+	size_t update_left = 0;
 
 	bool operator==(Layer const &) const = default;
 	bool operator!=(Layer const &) const = default;
@@ -43,7 +45,10 @@ class ScrollingMap {
 	Layer layer1;
 
 	void update_tile(ScreenEntry volatile *const, Layer &, s16, s16);
+	void update_tile_from_camera(ScreenEntry volatile *const, Layer &, s16, s16);
 	void update_layer(Layer &);
+	void update_layer_partial(Layer &);
+	void recolour(Point<s32>, Point<s32>, Layer &);
 	void load_map(Layer &);
 	void move_in_bounds(s16, s16);
 	void update_camera();

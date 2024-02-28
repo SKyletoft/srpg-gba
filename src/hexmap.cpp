@@ -1,6 +1,7 @@
 #include "hexmap.h"
 
 #include "debug.h"
+#include "hexes.h"
 #include "tiles.h"
 #include <cstddef>
 #include <cstdlib>
@@ -27,10 +28,11 @@ void Hexmap::load_tilesets(Layer &layer) {
 }
 
 void Hexmap::load_palettes(Layer &) {
-	BG_PALETTE_MEMORY[0] = Palette::from_raw(completePal);
+	BG_PALETTE_MEMORY[0] = *(Palette *)completePal;
 }
 
-ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
+std::pair<hexes::OffsetXYCoord, Point<s16>>
+Hexmap::grid_coord(Layer &layer, s16 x, s16 y) {
 	size_t tile_x;
 	size_t tile_y;
 
@@ -44,11 +46,18 @@ ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
 		tile_x = (size_t)x / 3;
 		tile_y = (size_t)(y / 4) * 2;
 	}
+	return {hexes::OffsetXYCoord{(s16)tile_x, (s16)tile_y}, {x, y}};
+}
+
+ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
+	auto [offset, x_y] = this->grid_coord(layer, x, y);
+	x = x_y.x;
+	y = x_y.y;
 
 	u16 index = 0;
 	u8 palette = 0;
-	if (tile_x < WIDTH - (tile_y & 1) && tile_y < HEIGHT) {
-		u8 tile_type = this->map[tile_y, tile_x];
+	if (offset.col < WIDTH - (offset.row & 1) && offset.row < HEIGHT) {
+		u8 tile_type = this->map[(size_t)offset.row, (size_t)offset.col];
 		u16 tile_index = (u16)((y % 4) * 3 + (x % 3));
 		u16 hex_index = tile_type * TILE_SIZE;
 		index = (u16)(tile_index + hex_index + 1);

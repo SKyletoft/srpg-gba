@@ -135,7 +135,7 @@ void PopupMenu::restore() {
 	}
 	for (auto const [y, t] : this->entries | v::enumerate) {
 		auto [s, l] = t;
-		for (auto const [x, c] : s | v::enumerate | v::take(s.size() - 1)) {
+		for (auto const [x, c] : s | v::enumerate | v::take(s.size())) {
 			auto const y_ = y + this->y;
 			auto const x_ = x + 34 + this->x;
 			// Indent by one for the cursor to fit
@@ -166,8 +166,5 @@ void PopupMenu::set_position(s16 x, s16 y) {
 	this->x = x;
 	this->y = y;
 }
-
-PopupMenu::PopupMenu()
-	: popup::PopupMenu({}) {}
 
 } // namespace popup

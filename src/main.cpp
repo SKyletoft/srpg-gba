@@ -31,12 +31,12 @@ void initialise() {
 }
 
 int main() {
-
 	debug::println("Initialising...");
+
 	initialise();
 	audio::play_song(config::the_startup_song);
-	state::next_state = 0;
 
+	state::next_state = 0;
 	state::current_state = state::next_state;
 
 	config::modes[state::current_state]->restore();
@@ -44,9 +44,11 @@ int main() {
 	for (;;) {
 		if (state::current_state != state::next_state) {
 			util::wait_for_vsync();
+			state::blacked_out = false;
 			if (config::modes[state::current_state]->blackout()
 				|| config::modes[state::next_state]->blackout())
 			{
+				state::blacked_out = true;
 				util::set_screen_to_black();
 			}
 			config::modes[state::current_state]->suspend();
@@ -59,6 +61,9 @@ int main() {
 		input::poll();
 		config::modes[state::current_state]->update();
 		for (auto mode : config::modes) {
+			if (mode == nullptr) {
+				continue;
+			}
 			mode->always_update();
 		}
 

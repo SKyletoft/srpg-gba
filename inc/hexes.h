@@ -1,7 +1,9 @@
 #pragma once
 
 #include "point.h"
+
 #include <array>
+#include <compare>
 #include <cstddef>
 #include <cstdlib>
 #include <optional>
@@ -38,6 +40,9 @@ struct CubeCoord {
 	// Operators
 
 	CubeCoord &operator=(CubeCoord vec);
+
+	constexpr std::strong_ordering
+	operator<=>(CubeCoord const &) const = default;
 
 	constexpr CubeCoord operator+(CubeCoord vec) const {
 		return this->add(vec);
@@ -119,6 +124,10 @@ struct OffsetXYCoord {
 
 	constexpr AxialCoord to_axial_coord() const;
 	static constexpr OffsetXYCoord from_axial_coord(AxialCoord);
+
+	constexpr point::Point<s32> to_point() const {
+		return {.x = this->col, .y = this->row};
+	};
 };
 
 struct AxialCoord {
@@ -224,3 +233,22 @@ constexpr CubeCoord CubeCoord::operator+(Direction dir) const {
 }
 
 } // namespace hexes
+
+// Hash impl by ChatGPT
+namespace std {
+template <> struct hash<hexes::CubeCoord> {
+	size_t operator()(const hexes::CubeCoord &obj) const {
+		size_t hashValue = 0;
+		// Use std::hash_combine for combining hash values
+		hash_combine(hashValue, obj.q);
+		hash_combine(hashValue, obj.r);
+		hash_combine(hashValue, obj.s);
+		return hashValue;
+	}
+
+	// Hash combining function
+	template <typename T> void hash_combine(size_t &seed, const T &v) const {
+		seed ^= std::hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+	}
+};
+} // namespace std

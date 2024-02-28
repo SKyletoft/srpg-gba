@@ -11,6 +11,8 @@ namespace cursor_scroller {
 using hexes::Direction;
 using input::Button;
 
+CubeCoord &CursorScroller::pos() { return this->cursor.pos; }
+
 Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 	auto old_cursor = this->cursor;
 	auto old_offset = this->cursor.animation;
@@ -37,6 +39,7 @@ Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 		(s16)((this->cursor.animation.x * (s16)3) / (s16)4);
 	this->cursor.animation.y =
 		(s16)((this->cursor.animation.y * (s16)3) / (s16)4);
+	this->cursor.horizontal_flip = this->cursor.pos.is_odd();
 
 	if (screen_centre.x - cursor.x < -120 + 16
 		|| screen_centre.x - cursor.x > 120
