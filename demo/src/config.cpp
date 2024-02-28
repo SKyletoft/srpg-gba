@@ -31,7 +31,7 @@ hl_map::HighlightMap hexmap{test_map::map};
 
 Unit *selected_unit = nullptr;
 Set<hexes::CubeCoord> highlights{};
-std::array<Unit, 12> user_army{
+std::array<Unit, 8> user_army{
 	Unit{
 		.sprite =
 			HexSprite{
@@ -81,6 +81,43 @@ std::array<Unit, 12> user_army{
 	},
 };
 size_t user_soldier_count = 2;
+
+std::array<Unit, 20> enemy_army{
+	Unit{
+		.sprite =
+			HexSprite{
+				.pos = hexes::OffsetXYCoord(6, 5).to_cube_coord(),
+				.centre = {4, 0},
+				.size = sprite::SpriteSize::x16,
+				.hardware_id = 9,
+				.tile_index = 33,
+				.palette = 2,
+			},
+		.stats = Stats{},
+		.animation_frames = 3,
+	},
+	Unit{
+		.sprite =
+			HexSprite{
+				.pos = hexes::OffsetXYCoord(7, 3).to_cube_coord(),
+				.centre = {4, 0},
+				.size = sprite::SpriteSize::x16,
+				.hardware_id = 3,
+				.tile_index = 33,
+				.palette = 2,
+			},
+		.stats = Stats{},
+		.animation_frames = 3,
+	}
+};
+size_t enemy_soldier_count = 2;
+
+std::span<Unit> user_units() {
+	return std::span<Unit>{user_army.data(), user_soldier_count};
+}
+std::span<Unit> enemy_units() {
+	return std::span<Unit>{enemy_army.data(), enemy_soldier_count};
+}
 
 battle::Battle battle_ani{};
 browse::DefaultMap map{};
