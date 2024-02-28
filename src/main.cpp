@@ -36,7 +36,7 @@ int main() {
 	initialise();
 	audio::play_song(config::the_startup_song);
 
-	state::next_state = 0;
+	state::next_state = 4;
 	state::current_state = state::next_state;
 
 	config::modes[state::current_state]->restore();
