@@ -8,12 +8,15 @@
 #include "unit.h"
 
 #include <cstring>
+#include <ranges>
 
 extern "C" {
 #include "arrow.h"
 }
 
 namespace map {
+
+namespace rv = std::ranges::views;
 
 using unit::Unit;
 
@@ -54,10 +57,9 @@ void Map::vsync_hook() {
 
 	u8 animation_cycle = (u8)(this->animation_cycle / 20);
 
-	std::span<unit::Unit> const units{
-		config::user_army.data(), config::user_soldier_count
-	};
-	for (auto &unit : units) {
+	for (auto &unit :
+		 std::array{config::user_units(), config::enemy_units()} | rv::join)
+	{
 		unit.sprite.move();
 		unit.render(config::hexmap.layer0.pos, animation_cycle);
 	}
