@@ -103,7 +103,7 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 				continue;
 			}
 
-			u8 depth_ = depth + 1;
+			u8 depth_ = depth + cost(map[(size_t)xy.row, (size_t)xy.col]);
 			size_t idx = hex_to_idx(neighbour_);
 			if (!visited[idx] && depth_ <= this->stats.movement) {
 				queue.push({neighbour_, depth_});
