@@ -1,5 +1,6 @@
 #include "unit.h"
 
+#include "config.h"
 #include "debug.h"
 #include "hexes.h"
 #include "move_unit.h"
@@ -10,6 +11,7 @@
 #include "set.h"
 #include <algorithm>
 #include <queue>
+#include <ranges>
 
 extern "C" {
 #include <tonc_memmap.h>
@@ -18,6 +20,7 @@ extern "C" {
 namespace unit {
 
 namespace r = std::ranges;
+namespace rv = std::ranges::views;
 
 using hexes::CubeCoord;
 using mdspan::Span2d;
