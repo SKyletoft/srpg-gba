@@ -62,6 +62,20 @@ void Battle::update() {
 			state::next_state = 0;
 		}
 	}
+
+	auto [x_l_from, frame_l, x_r_from, frame_r] =
+		animation_sequence[this->frame];
+	auto [x_l_to, _, x_r_to, __] =
+		animation_sequence[(this->frame + 1) % animation_sequence.size()];
+
+	s32 progress = (s32)(this->time * (255 / Battle::speed));
+	u8 x_l = lerp(x_l_to, x_l_from, progress);
+	u8 x_r = lerp(x_r_to, x_r_from, progress);
+
+	this->left.x = x_l;
+	this->left.tile_index = frame_l * 64;
+	this->right.x = x_r;
+	this->right.tile_index = frame_r * 64;
 }
 
 void Battle::restore() {
@@ -97,22 +111,7 @@ void Battle::restore() {
 
 void Battle::vsync_hook() {
 	END_EARLY();
-
-	auto [x_l_from, frame_l, x_r_from, frame_r] =
-		animation_sequence[this->frame];
-	auto [x_l_to, _, x_r_to, __] =
-		animation_sequence[(this->frame + 1) % animation_sequence.size()];
-
-	s32 progress = (s32)(this->time * (255 / Battle::speed));
-	u8 x_l = lerp(x_l_to, x_l_from, progress);
-	u8 x_r = lerp(x_r_to, x_r_from, progress);
-
-	this->left.x = x_l;
-	this->left.tile_index = frame_l * 64;
 	this->left.write_to_screen(1);
-
-	this->right.x = x_r;
-	this->right.tile_index = frame_r * 64;
 	this->right.write_to_screen(2);
 }
 
