@@ -18,8 +18,6 @@ namespace map {
 
 namespace rv = std::ranges::views;
 
-using unit::Unit;
-
 void Map::update() {
 	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
 
