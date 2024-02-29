@@ -20,7 +20,7 @@ class Battle : public state::Mode {
 		.y = 50,
 		.object_mode = sprite::ObjectMode::Normal,
 		.x = 20,
-		.size = 0b011,
+		.size = 0b0011,
 		.tile_index = 1,
 		.palette = 0,
 	};
@@ -29,7 +29,7 @@ class Battle : public state::Mode {
 		.object_mode = sprite::ObjectMode::Normal,
 		.x = 150,
 		.horizontal_flip = true,
-		.size = 0b011,
+		.size = 0b0011,
 		.tile_index = 1,
 		.palette = 1,
 	};
