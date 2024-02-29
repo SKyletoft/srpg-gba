@@ -4,12 +4,16 @@
 #include "state.h"
 #include "unit.h"
 
+#include <random>
+
 namespace battle {
 
 using sprite::HardwareSprite;
 using unit::Unit;
 
 class Battle : public state::Mode {
+	std::default_random_engine rng;
+
 	Unit *left_unit = nullptr;
 	Unit *right_unit = nullptr;
 
@@ -37,6 +41,8 @@ class Battle : public state::Mode {
 	static constexpr decltype(time) speed = 5;
 
   public:
+	Battle() : rng() {}
+
 	void update() override;
 	void restore() override;
 	void vsync_hook() override;
