@@ -32,6 +32,7 @@ struct Unit {
 
 	u8 animation_frames = 1;
 
+	constexpr hexes::CubeCoord const &pos() const { return this->sprite.pos; }
 	constexpr hexes::CubeCoord &pos() { return this->sprite.pos; }
 	void render(Point<s16>, u8) const;
 
