@@ -141,7 +141,7 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 }
 
 bool Unit::is_user() const {
-	return util::contains(std::span<const Unit>(config::user_army), *this);
+	return config::user_army.begin() <= this && this < config::user_army.end();
 }
 
 } // namespace unit
