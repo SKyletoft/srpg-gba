@@ -16,6 +16,12 @@ extern "C" {
 #include "battle-ani.h"
 }
 
+#define END_EARLY()                                                            \
+	if (this->left_unit == nullptr || this->right_unit == nullptr) {           \
+		state::next_state = 0;                                                 \
+		return;                                                                \
+	}
+
 namespace battle {
 
 namespace rv = std::ranges::views;
@@ -43,6 +49,8 @@ constexpr std::array<std::tuple<u8, u8, u8, u8>, 10> animation_sequence{
 };
 
 void Battle::update() {
+	END_EARLY();
+
 	this->time++;
 	if (this->time > Battle::speed) {
 		this->time = 0;
@@ -57,6 +65,8 @@ void Battle::update() {
 }
 
 void Battle::restore() {
+	END_EARLY();
+
 	std::memcpy(
 		tiles::SPRITE_CHARBLOCK[0], battle_aniTiles, sizeof(battle_aniTiles)
 	);
@@ -86,6 +96,8 @@ void Battle::restore() {
 }
 
 void Battle::vsync_hook() {
+	END_EARLY();
+
 	auto [x_l_from, frame_l, x_r_from, frame_r] =
 		animation_sequence[this->frame];
 	auto [x_l_to, _, x_r_to, __] =
