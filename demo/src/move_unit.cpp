@@ -109,6 +109,7 @@ void MoveUnit::update() {
 			});
 		if (targetted_enemy != config::enemy_units().end()) {
 			state::next_state = 5;
+			config::battle_ani.set_combatants(*config::selected_unit, *targetted_enemy);
 		} else {
 			state::next_state = 0;
 			auto diff =

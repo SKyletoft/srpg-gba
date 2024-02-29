@@ -1,6 +1,6 @@
 #include "battle.h"
 
-#include "loading.h"
+#include "config.h"
 #include "sprite.h"
 #include "state.h"
 #include "tiles.h"
