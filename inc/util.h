@@ -17,6 +17,10 @@ extern vu32 x;
 void set_screen_to_black();
 void clear_layer(size_t);
 
+template <typename T> bool contains(std::span<const T> container, T const &elem) {
+	return container.begin() <= &elem && &elem < container.end();
+}
+
 void wait_for_drawing_start();
 void wait_for_drawing_complete();
 void wait_for_vsync();

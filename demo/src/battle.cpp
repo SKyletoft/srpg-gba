@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "state.h"
 #include "tiles.h"
+#include "util.h"
 
 #include <array>
 #include <cstring>
@@ -28,6 +29,7 @@ namespace battle {
 namespace rv = std::ranges::views;
 
 using tiles::Colour;
+using tiles::Palette;
 
 // Progress in the range 0-255
 u8 lerp(u8 from, u8 to, s32 progress) {
@@ -99,22 +101,39 @@ void Battle::restore() {
 	std::memcpy(
 		tiles::SPRITE_CHARBLOCK[0], battle_aniTiles, sizeof(battle_aniTiles)
 	);
-	tiles::SPRITE_PALETTE_MEMORY[0] = tiles::Palette{{
+
+	constexpr Palette RED{
 		tiles::TRANSPARENT,
-		tiles::BLACK,
+		Colour(5, 0, 0),
 		Colour(15, 0, 0),
 		Colour(15, 15, 15),
 		Colour(31, 0, 0),
 		Colour(25, 25, 25),
-	}};
-	tiles::SPRITE_PALETTE_MEMORY[1] = tiles::Palette{{
+	};
+	constexpr Palette BLUE{
 		tiles::TRANSPARENT,
 		Colour::from_24bit_colour(0x18, 0x34, 0x97),
 		Colour::from_24bit_colour(0x1C, 0x71, 0xD8),
 		Colour(15, 15, 15),
 		Colour::from_24bit_colour(0x00, 0xBD, 0xEA),
 		Colour(25, 25, 25),
-	}};
+	};
+
+	if (config::user_army.begin() <= this->left_unit
+		&& this->left_unit < config::user_army.end())
+	{
+		tiles::SPRITE_PALETTE_MEMORY[0] = BLUE;
+	} else {
+		tiles::SPRITE_PALETTE_MEMORY[0] = RED;
+	}
+
+	if (config::user_army.begin() <= this->right_unit
+		&& this->right_unit < config::user_army.end())
+	{
+		tiles::SPRITE_PALETTE_MEMORY[1] = BLUE;
+	} else {
+		tiles::SPRITE_PALETTE_MEMORY[1] = RED;
+	}
 
 	for (auto i : rv::iota(0uz, 128uz)) {
 		HardwareSprite::hide(i);
