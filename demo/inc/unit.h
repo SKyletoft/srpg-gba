@@ -13,6 +13,7 @@ using point::Point;
 
 struct Stats {
 	s8 health = 0;
+	s8 max_health = 0;
 
 	s8 attack = 0;
 	s8 defence = 0;
