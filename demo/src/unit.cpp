@@ -1,9 +1,9 @@
 #include "unit.h"
 
+#include "browse.h"
 #include "config.h"
 #include "debug.h"
 #include "hexes.h"
-#include "browse.h"
 #include "perf.h"
 #include "sprite.h"
 #include "util.h"
@@ -138,6 +138,10 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 	debug::println((int)end_frame_id);
 
 	return out;
+}
+
+bool Unit::is_user() const {
+	return util::contains(std::span<const Unit>(config::user_army), *this);
 }
 
 } // namespace unit

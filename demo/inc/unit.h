@@ -39,6 +39,8 @@ struct Unit {
 
 	Set<hexes::CubeCoord>
 	accessible_tiles(mdspan::Span2d<const u8> const &) const;
+
+	bool is_user() const;
 };
 
 } // namespace unit
