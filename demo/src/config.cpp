@@ -13,7 +13,6 @@
 #include "context_menu.h"
 #include "loading.h"
 #include "map.h"
-#include "move_unit.h"
 #include "soundbank.h"
 #include "test_map.h"
 #include "unit.h"
@@ -148,13 +147,12 @@ context_menu::ContextMenu movement_popup{
 	{"Attack", []() { state::next_state = 4; }},
 	{"Wait", []() { state::next_state = 0; }},
 };
-move_unit::MoveUnit move{};
 
 std::array<state::Mode *, 7> const modes_data{
 	&map,
 	&debug::tty_mode,
 	&popup,
-	&move,
+	nullptr,
 	&battle_ani,
 	&movement_popup,
 	nullptr,

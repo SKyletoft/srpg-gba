@@ -3,7 +3,7 @@
 #include "config.h"
 #include "debug.h"
 #include "hexes.h"
-#include "move_unit.h"
+#include "browse.h"
 #include "perf.h"
 #include "sprite.h"
 #include "util.h"
@@ -101,7 +101,7 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 		queue.pop();
 
 		out.insert(curr);
-		move_unit::update_palette_of_tile(curr, 1);
+		browse::update_palette_of_tile(curr, 1);
 
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
 			auto neighbour_ = neighbour + curr;
