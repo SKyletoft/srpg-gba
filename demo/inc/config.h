@@ -3,6 +3,7 @@
 #include "cursor_scroller.h"
 #include "tiles.h"
 
+#include "battle.h"
 #include "browse.h"
 #include "context_menu.h"
 #include "hl-map.h"
@@ -12,6 +13,7 @@
 
 #include "set.h"
 #include <array>
+#include <span>
 
 namespace config {
 
@@ -24,13 +26,20 @@ extern Unit *selected_unit;
 extern Set<hexes::CubeCoord> highlights;
 extern cursor_scroller::CursorScroller cursor;
 extern hl_map::HighlightMap hexmap;
-extern std::array<Unit, 12> user_army;
+extern std::array<Unit, 8> user_army;
 extern size_t user_soldier_count;
 
+extern std::array<Unit, 20> enemy_army;
+extern size_t enemy_soldier_count;
+
+extern battle::Battle battle_ani;
 extern browse::DefaultMap map;
 extern move_unit::MoveUnit move;
 extern context_menu::ContextMenu popup;
 extern std::array<state::Mode *, 7> const modes_data;
 extern u32 startup_song;
+
+std::span<Unit> user_units();
+std::span<Unit> enemy_units();
 
 } // namespace config

@@ -6,10 +6,12 @@
 #include "export.h"
 #include "hexes.h"
 #include "sprite.h"
+#include "state.h"
 #include "tiles.h"
 #include "tty.h"
 
 #include "context_menu.h"
+#include "loading.h"
 #include "map.h"
 #include "move_unit.h"
 #include "soundbank.h"
@@ -24,21 +26,22 @@ extern tty::TtyMode tty_mode;
 }
 
 namespace config {
+using sprite::HexSprite;
 
 cursor_scroller::CursorScroller cursor{};
 hl_map::HighlightMap hexmap{test_map::map};
 
 Unit *selected_unit = nullptr;
 Set<hexes::CubeCoord> highlights{};
-std::array<Unit, 12> user_army{
+std::array<Unit, 8> user_army{
 	Unit{
 		.sprite =
-			sprite::HexSprite{
+			HexSprite{
 				.pos = hexes::OffsetXYCoord(4, 4).to_cube_coord(),
 				.centre = {4, 0},
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 1,
-				.tile_index = 5,
+				.tile_index = 33,
 				.palette = 1,
 			},
 		.stats =
@@ -56,13 +59,13 @@ std::array<Unit, 12> user_army{
 	},
 	Unit{
 		.sprite =
-			sprite::HexSprite{
+			HexSprite{
 				.pos = hexes::OffsetXYCoord(4, 5).to_cube_coord(),
 				.centre = {4, 0},
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 2,
 				.horizontal_flip = true,
-				.tile_index = 5,
+				.tile_index = 33,
 				.palette = 1,
 			},
 		.stats =
@@ -81,6 +84,44 @@ std::array<Unit, 12> user_army{
 };
 size_t user_soldier_count = 2;
 
+std::array<Unit, 20> enemy_army{
+	Unit{
+		.sprite =
+			HexSprite{
+				.pos = hexes::OffsetXYCoord(6, 5).to_cube_coord(),
+				.centre = {4, 0},
+				.size = sprite::SpriteSize::x16,
+				.hardware_id = 9,
+				.tile_index = 33,
+				.palette = 2,
+			},
+		.stats = Stats{},
+		.animation_frames = 3,
+	},
+	Unit{
+		.sprite =
+			HexSprite{
+				.pos = hexes::OffsetXYCoord(7, 3).to_cube_coord(),
+				.centre = {4, 0},
+				.size = sprite::SpriteSize::x16,
+				.hardware_id = 3,
+				.tile_index = 33,
+				.palette = 2,
+			},
+		.stats = Stats{},
+		.animation_frames = 3,
+	}
+};
+size_t enemy_soldier_count = 2;
+
+std::span<Unit> user_units() {
+	return std::span<Unit>{user_army.data(), user_soldier_count};
+}
+std::span<Unit> enemy_units() {
+	return std::span<Unit>{enemy_army.data(), enemy_soldier_count};
+}
+
+battle::Battle battle_ani{};
 browse::DefaultMap map{};
 context_menu::ContextMenu popup{
 	{"Red",
@@ -103,6 +144,10 @@ context_menu::ContextMenu popup{
 	 }},
 	{"Exit", []() { state::next_state = 0; }},
 };
+context_menu::ContextMenu movement_popup{
+	{"Attack", []() { state::next_state = 4; }},
+	{"Wait", []() { state::next_state = 0; }},
+};
 move_unit::MoveUnit move{};
 
 std::array<state::Mode *, 7> const modes_data{
@@ -110,8 +155,8 @@ std::array<state::Mode *, 7> const modes_data{
 	&debug::tty_mode,
 	&popup,
 	&move,
-	nullptr,
-	nullptr,
+	&battle_ani,
+	&movement_popup,
 	nullptr,
 };
 

@@ -71,8 +71,8 @@ struct alignas(8) __attribute((packed)) HardwareSprite {
 	static void hide(size_t hardware_sprite_id);
 
 	constexpr HardwareSprite &set_size(SpriteSize const new_size) {
-		this->shape = (u8)(((u8)this->size & 0b1100) >> 2);
-		this->size = (u8)((u8)this->size & 0b11);
+		this->shape = (u8)(((u8)new_size & 0b1100) >> 2);
+		this->size = (u8)((u8)new_size & 0b11);
 		return *this;
 	}
 };

@@ -6,13 +6,19 @@
 
 #include "config.h"
 #include "tiles.h"
+#include "unit.h"
 
 #include "set.h"
+#include <ranges>
 
 namespace move_unit {
 
+namespace r = std::ranges;
+namespace rv = std::ranges::views;
+
 using input::Button;
 using input::InputState;
+using unit::Unit;
 
 void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 	auto px = tile.to_pixel_space() - config::hexmap.layer0.pos.into<s32>();
@@ -97,12 +103,21 @@ void MoveUnit::update() {
 	if (input::get_button(Button::A) == InputState::Pressed
 		&& config::highlights.contains(config::cursor.pos()))
 	{
-		state::next_state = 0;
-		auto diff = config::selected_unit->pos() - config::cursor.cursor.pos;
-		config::selected_unit->pos() = config::cursor.cursor.pos;
-		config::selected_unit->sprite.animation =
-			diff.to_pixel_space().into<s16>();
-		config::selected_unit = nullptr;
+		auto const targetted_enemy =
+			r::find_if(config::enemy_units(), [&](Unit const &unit) {
+				return unit.pos() == config::cursor.pos();
+			});
+		if (targetted_enemy != config::enemy_units().end()) {
+			state::next_state = 5;
+		} else {
+			state::next_state = 0;
+			auto diff =
+				config::selected_unit->pos() - config::cursor.cursor.pos;
+			config::selected_unit->pos() = config::cursor.cursor.pos;
+			config::selected_unit->sprite.animation =
+				diff.to_pixel_space().into<s16>();
+			config::selected_unit = nullptr;
+		}
 	}
 }
 

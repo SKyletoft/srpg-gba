@@ -8,12 +8,15 @@
 #include "unit.h"
 
 #include <cstring>
+#include <ranges>
 
 extern "C" {
 #include "arrow.h"
 }
 
 namespace map {
+
+namespace rv = std::ranges::views;
 
 using unit::Unit;
 
@@ -32,7 +35,8 @@ void Map::restore() {
 	// config::hexmap.load_map(config::hexmap.layer0);
 	// config::hexmap.load_map(config::hexmap.layer1);
 
-	if (state::blacked_out) {
+	if (state::last_state == 1 || state::last_state == 4 || state::blacked_out)
+	{
 		loading::load_map_graphics();
 	}
 	if (state::last_state != 2) {
@@ -40,6 +44,7 @@ void Map::restore() {
 	}
 
 	std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
+
 	config::cursor.cursor.animation = {0, 0};
 	config::cursor.cursor.render(config::hexmap.layer0.pos);
 
@@ -52,10 +57,9 @@ void Map::vsync_hook() {
 
 	u8 animation_cycle = (u8)(this->animation_cycle / 20);
 
-	std::span<unit::Unit> const units{
-		config::user_army.data(), config::user_soldier_count
-	};
-	for (auto &unit : units) {
+	for (auto &unit :
+		 std::array{config::user_units(), config::enemy_units()} | rv::join)
+	{
 		unit.sprite.move();
 		unit.render(config::hexmap.layer0.pos, animation_cycle);
 	}
