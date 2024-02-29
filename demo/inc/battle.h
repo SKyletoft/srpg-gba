@@ -49,6 +49,8 @@ class Battle : public state::Mode {
 	bool blackout() override;
 
 	void set_combatants(Unit &, Unit &);
+	void animation_update();
+	void fight();
 };
 
 } // namespace battle

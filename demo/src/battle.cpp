@@ -7,6 +7,7 @@
 
 #include <array>
 #include <cstring>
+#include <functional>
 #include <ranges>
 #include <tuple>
 
@@ -48,9 +49,7 @@ constexpr std::array<std::tuple<u8, u8, u8, u8>, 10> animation_sequence{
 	{50, 0, 128, 0},
 };
 
-void Battle::update() {
-	END_EARLY();
-
+void Battle::animation_update() {
 	this->time++;
 	if (this->time > Battle::speed) {
 		this->time = 0;
@@ -76,6 +75,22 @@ void Battle::update() {
 	this->left.tile_index = frame_l * 64;
 	this->right.x = x_r;
 	this->right.tile_index = frame_r * 64;
+}
+
+void Battle::fight() {
+	std::function attack = [&](Unit &attacker, Unit &defender) {
+		s8 damage =
+			(s8)std::max(0, attacker.stats.attack - defender.stats.defence);
+		defender.stats.health -= damage;
+	};
+	attack(*this->left_unit, *this->right_unit);
+	attack(*this->right_unit, *this->left_unit);
+}
+
+void Battle::update() {
+	END_EARLY();
+	this->animation_update();
+	this->fight();
 }
 
 void Battle::restore() {
