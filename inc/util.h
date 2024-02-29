@@ -1,10 +1,12 @@
 #pragma once
 
+#include <exception>
+#include <span>
+
 extern "C" {
 #include <tonc_types.h>
 }
 
-#include <exception>
 #define assert(x)                                                              \
 	if (!(x))                                                                  \
 		std::terminate();
