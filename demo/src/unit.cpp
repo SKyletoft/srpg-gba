@@ -78,6 +78,11 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 	// std::queue<CC_Depth> queue{};
 
 	std::vector<bool> visited(map.width * map.height, false);
+	for (Unit const &unit :
+		 std::array{config::user_units(), config::enemy_units()} | rv::join)
+	{
+		visited[hex_to_idx(unit.pos())] = true;
+	}
 
 	queue.push({this->sprite.pos, 0});
 	visited[hex_to_idx(this->sprite.pos)] = true;
