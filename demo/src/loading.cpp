@@ -3,7 +3,9 @@
 #include "config.h"
 #include "tiles.h"
 #include "util.h"
+
 #include <cstring>
+#include <ranges>
 
 extern "C" {
 #include <tonc.h>
@@ -16,9 +18,15 @@ extern "C" {
 
 namespace loading {
 
+namespace rv = std::ranges::views;
+
 using tiles::Colour;
 
 void load_map_graphics() {
+	for (auto i : rv::iota(0uz, 128uz)) {
+		sprite::HardwareSprite::hide(i);
+	}
+
 	config::hexmap.load_tilesets(config::hexmap.layer0);
 	config::hexmap.load_tilesets(config::hexmap.layer1);
 	config::hexmap.load_map(config::hexmap.layer0);
