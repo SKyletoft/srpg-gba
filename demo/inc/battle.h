@@ -2,12 +2,17 @@
 
 #include "sprite.h"
 #include "state.h"
+#include "unit.h"
 
 namespace battle {
 
 using sprite::HardwareSprite;
+using unit::Unit;
 
 class Battle : public state::Mode {
+	Unit *left_unit = nullptr;
+	Unit *right_unit = nullptr;
+
 	u8 frame = 0;
 	u32 time = 0;
 
@@ -36,6 +41,8 @@ class Battle : public state::Mode {
 	void restore() override;
 	void vsync_hook() override;
 	bool blackout() override;
+
+	void set_combatants(Unit &, Unit &);
 };
 
 } // namespace battle

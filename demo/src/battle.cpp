@@ -106,4 +106,9 @@ void Battle::vsync_hook() {
 
 bool Battle::blackout() { return false; }
 
+void Battle::set_combatants(Unit &left, Unit &right) {
+	this->left_unit = &left;
+	this->right_unit = &right;
+}
+
 } // namespace battle
