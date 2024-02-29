@@ -70,10 +70,10 @@ void Battle::restore() {
 	}};
 	tiles::SPRITE_PALETTE_MEMORY[1] = tiles::Palette{{
 		tiles::TRANSPARENT,
-		tiles::BLACK,
-		Colour(0, 0, 15),
+		Colour::from_24bit_colour(0x18, 0x34, 0x97),
+		Colour::from_24bit_colour(0x1C, 0x71, 0xD8),
 		Colour(15, 15, 15),
-		Colour(0, 0, 31),
+		Colour::from_24bit_colour(0x00, 0xBD, 0xEA),
 		Colour(25, 25, 25),
 	}};
 

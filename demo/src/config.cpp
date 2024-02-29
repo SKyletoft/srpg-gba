@@ -41,7 +41,7 @@ std::array<Unit, 8> user_army{
 				.centre = {4, 0},
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 1,
-				.tile_index = 5,
+				.tile_index = 33,
 				.palette = 1,
 			},
 		.stats =
@@ -65,7 +65,7 @@ std::array<Unit, 8> user_army{
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 2,
 				.horizontal_flip = true,
-				.tile_index = 5,
+				.tile_index = 33,
 				.palette = 1,
 			},
 		.stats =
