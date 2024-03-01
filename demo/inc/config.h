@@ -27,6 +27,7 @@ extern Unit *selected_unit;
 extern Set<hexes::CubeCoord> highlights;
 extern CubeCoord original_pos;
 extern std::vector<Unit *> neighbouring_enemies;
+extern Set<Unit *> used;
 extern cursor_scroller::CursorScroller cursor;
 extern hl_map::HighlightMap hexmap;
 extern std::array<Unit, 8> user_army;

@@ -31,6 +31,7 @@ Unit *selected_unit = nullptr;
 CubeCoord original_pos{};
 Set<CubeCoord> highlights{};
 std::vector<Unit *> neighbouring_enemies{};
+Set<Unit *> used{};
 std::array<Unit, 8> user_army{
 	Unit{
 		.sprite =
