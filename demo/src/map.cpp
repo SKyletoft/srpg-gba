@@ -39,6 +39,11 @@ void Map::vsync_hook() {
 	config::hexmap.update_camera();
 	config::cursor.cursor.render(config::hexmap.layer0.pos);
 
+	config::cursor.cursor.animation.x =
+		(s16)((config::cursor.cursor.animation.x * (s16)3) / (s16)4);
+	config::cursor.cursor.animation.y =
+		(s16)((config::cursor.cursor.animation.y * (s16)3) / (s16)4);
+
 	u8 animation_cycle = (u8)(this->animation_cycle / 20);
 
 	for (auto &unit :
