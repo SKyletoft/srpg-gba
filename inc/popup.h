@@ -59,7 +59,7 @@ class PopupMenu : public state::Mode {
 	PopupMenu(
 		std::initializer_list<std::pair<char const *, std::function<void()>>> l
 	)
-		: PopupMenu(l, 3, 4, 28) {}
+		: PopupMenu(l, 2, 4, 3) {}
 
 	PopupMenu(
 		std::initializer_list<std::pair<char const *, std::function<void()>>> l,
