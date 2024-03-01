@@ -51,10 +51,18 @@ void PopupMenu::update() {
 		state::next_state = 0;
 	}
 
+	size_t const entry_count = (size_t)r::count_if(this->visible, id);
+
 	if (input::get_button(Button::A) == input::InputState::Pressed) {
 		this->cursor.x = (u8)((this->x * 8) % 240) + 8;
-		auto &[_, f] = this->entries[this->selection];
-		f();
+
+		size_t i = 0;
+		for (; i < this->selection; ++i) {
+			if (!this->visible[i]) {
+				i++;
+			}
+		}
+		this->entries[i].second();
 	}
 	if (input::get_button(Button::A) == input::InputState::Released) {
 		this->cursor.x = (u8)((this->x * 8) % 240) + 5;
@@ -62,13 +70,13 @@ void PopupMenu::update() {
 
 	if (input::get_button(Button::Up) == input::InputState::Pressed) {
 		if (this->selection == 0) {
-			this->selection = (u16)this->entries.size();
+			this->selection = (u16)entry_count;
 		}
 		this->selection--;
 	}
 
 	if (input::get_button(Button::Down) == input::InputState::Pressed) {
-		this->selection = (u16)((this->selection + 1) % this->entries.size());
+		this->selection = (u16)((this->selection + 1) % entry_count);
 	}
 }
 
