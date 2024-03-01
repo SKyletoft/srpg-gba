@@ -16,6 +16,7 @@ namespace r = std::ranges;
 using input::Button;
 using input::InputState;
 using point::Point;
+using tiles::ScreenEntry;
 using unit::Unit;
 
 void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
@@ -40,7 +41,7 @@ void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 		0, 32, 64, 96, 1, 33, 65, 97, 2, 34, 66, 98
 	};
 
-	tiles::ScreenEntry volatile *base;
+	ScreenEntry volatile *base;
 	if (!tile.is_odd()) {
 		base = &tiles::SCREENBLOCKS[config::hexmap.layer0.tile_map]
 								   [tile_coord.y * 32];
@@ -57,8 +58,8 @@ void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 		if (idx >= 32) {
 			idx -= 32;
 		}
-		tiles::ScreenEntry volatile &se = base[idx];
-		tiles::ScreenEntry copy = se;
+		ScreenEntry volatile &se = base[idx];
+		ScreenEntry copy = se;
 		copy.palette = new_palette & 0b1111;
 		se = copy;
 	}
