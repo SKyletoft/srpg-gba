@@ -73,12 +73,8 @@ void CursorScroller::handle_input() {
 		if (input::get_button(button).is_down()
 			&& this->directional_cooldowns[index] <= 0)
 		{
-			auto const old_cur_screen = this->cursor.pos.to_pixel_space();
-			this->cursor.pos += dir;
-			auto const new_cur_screen = this->cursor.pos.to_pixel_space();
+			this->cursor.move_to(dir);
 			this->directional_cooldowns[index] = this->cooldown;
-			this->cursor.animation +=
-				(old_cur_screen - new_cur_screen).into<s16>();
 		}
 		if (this->directional_cooldowns[index] > this->cooldown) {
 			this->directional_cooldowns[index] = 0;
