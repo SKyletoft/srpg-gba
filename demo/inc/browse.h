@@ -11,6 +11,7 @@ using hexes::CubeCoord;
 
 void update_palette_of_tile(CubeCoord const, u8);
 void update_palettes_of(Set<CubeCoord> const &, u8);
+void deselect();
 
 class DefaultMap : public map::Map {
   public:

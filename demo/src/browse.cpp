@@ -1,5 +1,6 @@
 #include "browse.h"
 
+#include "hexes.h"
 #include "input.h"
 #include "state.h"
 
@@ -70,22 +71,31 @@ void update_palettes_of(Set<CubeCoord> const &highlights, u8 new_palette) {
 
 void unselected_input() {
 	if (input::get_button(Button::A) == InputState::Pressed) {
-		std::span<Unit> my_units{
-			config::user_army.data(), config::user_soldier_count
-		};
-		auto selected_unit = r::find_if(my_units, [&](auto &unit) {
+		auto selected_unit = r::find_if(config::user_units(), [&](auto &unit) {
 			return unit.sprite.pos == config::cursor.cursor.pos;
 		});
 
 		config::selected_unit = nullptr;
-		if (selected_unit != my_units.end()) {
+		if (selected_unit != config::user_units().end()) {
 			config::selected_unit = &*selected_unit;
 			config::highlights =
 				config::selected_unit->accessible_tiles(config::hexmap.map);
 			update_palettes_of(config::highlights, 1);
-		} else {
-			state::next_state = 2;
+			return;
 		}
+		selected_unit = r::find_if(config::enemy_units(), [&](auto &unit) {
+			return unit.sprite.pos == config::cursor.cursor.pos;
+		});
+
+		if (selected_unit != config::enemy_units().end()) {
+			config::selected_unit = &*selected_unit;
+			config::highlights =
+				config::selected_unit->accessible_tiles(config::hexmap.map);
+			update_palettes_of(config::highlights, 1);
+			return;
+		}
+
+		state::next_state = 2;
 	}
 }
 
@@ -103,23 +113,21 @@ void selected_input() {
 	if (input::get_button(Button::A) == InputState::Pressed
 		&& config::highlights.contains(config::cursor.pos()))
 	{
-		auto const targetted_enemy =
-			r::find_if(config::enemy_units(), [&](Unit const &unit) {
-				return unit.pos() == config::cursor.pos();
-			});
-		if (targetted_enemy != config::enemy_units().end()) {
-			state::next_state = 5;
-			config::battle_ani.set_combatants(
-				*config::selected_unit, *targetted_enemy
-			);
-		} else {
-			auto diff =
-				config::selected_unit->pos() - config::cursor.cursor.pos;
-			config::selected_unit->pos() = config::cursor.cursor.pos;
-			config::selected_unit->sprite.animation =
-				diff.to_pixel_space().into<s16>();
-			deselect();
+
+		std::vector<Unit *> neighbouring_enemies{};
+		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
+			auto const neighbour_ = config::cursor.pos() + neighbour;
+			auto const enemy =
+				r::find_if(config::enemy_units(), [&](Unit const &enemy) {
+					return enemy.pos() == neighbour_;
+				});
+			if (enemy != config::enemy_units().end()) {
+				neighbouring_enemies.push_back(&*enemy);
+			}
 		}
+
+		state::next_state = 5;
+
 	}
 }
 
@@ -133,8 +141,13 @@ void DefaultMap::update() {
 		state::next_state = 1;
 	}
 
-	if (config::selected_unit != nullptr && config::selected_unit->is_user()) {
-		selected_input();
+	if (config::selected_unit != nullptr) {
+		if (config::selected_unit->is_user()) {
+			selected_input();
+		} else if (input::get_button(Button::A) == InputState::Pressed || input::get_button(Button::B) == InputState::Pressed)
+		{
+			deselect();
+		}
 	} else {
 		unselected_input();
 	}

@@ -145,7 +145,15 @@ context_menu::ContextMenu popup{
 };
 context_menu::ContextMenu movement_popup{
 	{"Attack", []() { state::next_state = 4; }},
-	{"Wait", []() { state::next_state = 0; }},
+	{"Wait",
+	 []() {
+		 auto diff = config::selected_unit->pos() - config::cursor.cursor.pos;
+		 config::selected_unit->pos() = config::cursor.cursor.pos;
+		 config::selected_unit->sprite.animation =
+			 diff.to_pixel_space().into<s16>();
+		 browse::deselect();
+		 state::next_state = 0;
+	 }},
 };
 
 std::array<state::Mode *, 7> const modes_data{
