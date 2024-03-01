@@ -163,11 +163,11 @@ context_menu::ContextMenu movement_popup{
 	 }},
 	{"Wait",
 	 []() {
-		 auto diff = config::selected_unit->pos() - config::cursor.cursor.pos;
-		 config::selected_unit->pos() = config::cursor.cursor.pos;
-		 config::selected_unit->sprite.animation =
-			 diff.to_pixel_space().into<s16>();
-		 browse::deselect();
+		 map.state = browse::MapState::Animating;
+		 neighbouring_enemies.clear();
+		 config::selected_unit->sprite.move_to(config::cursor.pos());
+		 browse::update_palettes_of(config::highlights, 0);
+		 config::highlights.clear();
 		 state::next_state = 0;
 	 }},
 };

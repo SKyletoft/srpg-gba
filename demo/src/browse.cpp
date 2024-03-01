@@ -151,7 +151,6 @@ void DefaultMap::update() {
 			if (config::neighbouring_enemies.empty()) {
 				this->state = MapState::WaitingForInput;
 				config::selected_unit = nullptr;
-				state::next_state = 4;
 			} else {
 				this->state = MapState::SelectingEnemy;
 				config::cursor.cursor.move_to(
