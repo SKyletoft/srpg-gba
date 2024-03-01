@@ -147,11 +147,8 @@ context_menu::ContextMenu movement_popup{
 	 []() {
 		 map.state = browse::MapState::Animating;
 		 state::next_state = 0;
-		 auto diff = config::selected_unit->pos() - config::cursor.cursor.pos;
 		 config::original_pos = config::selected_unit->pos();
-		 config::selected_unit->pos() = config::cursor.cursor.pos;
-		 config::selected_unit->sprite.animation =
-			 diff.to_pixel_space().into<s16>();
+		 config::selected_unit->sprite.move_to(config::cursor.pos());
 		 browse::update_palettes_of(config::highlights, 0);
 
 		 highlights.clear();
