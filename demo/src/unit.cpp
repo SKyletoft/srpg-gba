@@ -80,11 +80,13 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 	std::priority_queue<CC_Depth, std::vector<CC_Depth>, CompareDepth> queue{};
 	// std::queue<CC_Depth> queue{};
 
-	std::vector<bool> visited(map.width * map.height, false);
-	for (Unit const &unit :
-		 std::array{config::user_units(), config::enemy_units()} | rv::join)
-	{
-		visited[hex_to_idx(unit.pos())] = true;
+	// 0 = unvisited, 1 = visited, 2 = visited but occupied by ally
+	std::vector<u8> visited(map.width * map.height, false);
+	for (Unit const &unit : config::enemy_units()) {
+		visited[hex_to_idx(unit.pos())] = 1;
+	}
+	for (Unit const &unit : config::user_units()) {
+		visited[hex_to_idx(unit.pos())] = 2;
 	}
 
 	queue.push({this->sprite.pos, 0});
@@ -100,8 +102,10 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 		// auto [curr, depth] = queue.front();
 		queue.pop();
 
-		out.insert(curr);
-		browse::update_palette_of_tile(curr, 1);
+		if (visited[hex_to_idx(curr)] == 1) {
+			out.insert(curr);
+			browse::update_palette_of_tile(curr, 1);
+		}
 
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
 			auto neighbour_ = neighbour + curr;
@@ -113,9 +117,11 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 
 			u8 depth_ = depth + cost(map[(size_t)xy.row, (size_t)xy.col]);
 			size_t idx = hex_to_idx(neighbour_);
-			if (!visited[idx] && depth_ <= this->stats.movement) {
+			if (0 == visited[idx] && depth_ <= this->stats.movement) {
 				queue.push({neighbour_, depth_});
-				visited[idx] = true;
+				visited[idx] = 1;
+			} else if (2 == visited[idx] && depth_ <= this->stats.movement) {
+				queue.push({neighbour_, depth_});
 			}
 		}
 	}
