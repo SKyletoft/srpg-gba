@@ -20,11 +20,13 @@ enum class MapState {
 	WaitingForInput,
 	Animating,
 	SelectingEnemy,
+	EnemyTurn,
 };
 
 class DefaultMap : public map::Map {
   private:
 	void selected_input();
+	void end_turn();
 
   public:
 	MapState state = MapState::WaitingForInput;

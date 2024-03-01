@@ -76,7 +76,9 @@ void unselected_input() {
 		});
 
 		config::selected_unit = nullptr;
-		if (selected_unit != config::user_units().end()) {
+		if (selected_unit != config::user_units().end()
+			&& !config::used.contains(&*selected_unit))
+		{
 			config::selected_unit = &*selected_unit;
 			config::highlights =
 				config::selected_unit->accessible_tiles(config::hexmap.map);
@@ -135,6 +137,15 @@ void DefaultMap::selected_input() {
 	}
 }
 
+void DefaultMap::end_turn() {
+	for (auto &unit : config::user_units()) {
+		unit.sprite.palette = 1;
+	}
+	config::used.clear();
+	this->state = MapState::EnemyTurn;
+	// state::next_state = _;
+}
+
 void DefaultMap::update() {
 	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
 
@@ -150,6 +161,8 @@ void DefaultMap::update() {
 		if (config::selected_unit->sprite.animation == Point<s16>{0, 0}) {
 			if (config::neighbouring_enemies.empty()) {
 				this->state = MapState::WaitingForInput;
+				config::selected_unit->sprite.palette = 3;
+				config::used.insert(config::selected_unit);
 				config::selected_unit = nullptr;
 			} else {
 				this->state = MapState::SelectingEnemy;
@@ -160,6 +173,11 @@ void DefaultMap::update() {
 		}
 	} break;
 	case MapState::WaitingForInput: {
+		if (config::used.size() == config::user_soldier_count) {
+			this->end_turn();
+			break;
+		}
+
 		auto const d =
 			config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
 		config::hexmap.move_in_bounds(d.x, d.y);
@@ -196,6 +214,8 @@ void DefaultMap::update() {
 			);
 			config::cursor.cursor.move_to(config::selected_unit->pos());
 			state::next_state = 4;
+			config::selected_unit->sprite.palette = 3;
+			config::used.insert(config::selected_unit);
 			this->state = MapState::WaitingForInput;
 			deselect();
 			break;
@@ -217,6 +237,9 @@ void DefaultMap::update() {
 		config::cursor.cursor.move_to(
 			config::neighbouring_enemies[this->enemy_selection]->pos()
 		);
+	} break;
+	case MapState::EnemyTurn: {
+
 	} break;
 	}
 }
