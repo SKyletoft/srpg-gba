@@ -107,7 +107,7 @@ void deselect() {
 	config::highlights.clear();
 }
 
-void selected_input() {
+void DefaultMap::selected_input() {
 	if (input::get_button(Button::B) == InputState::Pressed) {
 		deselect();
 	}

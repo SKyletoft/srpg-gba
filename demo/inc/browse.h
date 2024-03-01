@@ -19,6 +19,9 @@ enum class MapState {
 };
 
 class DefaultMap : public map::Map {
+  private:
+	void selected_input();
+
   public:
 	MapState state = MapState::WaitingForInput;
 
