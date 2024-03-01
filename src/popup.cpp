@@ -18,7 +18,9 @@ extern "C" {
 
 namespace popup {
 
+namespace r = std::ranges;
 namespace v = std::views;
+namespace rv = std::ranges::views;
 
 using input::Button;
 using tiles::BG_PALETTE_MEMORY;
@@ -103,7 +105,11 @@ void PopupMenu::load_tiles_and_palettes() {
 	}};
 }
 
+static constexpr bool id(bool b) { return b; }
+
 void PopupMenu::restore() {
+	assert(this->entries.size() == this->visible.size());
+
 	this->selection = 0;
 
 	// We don't blackout, but we do disable gui
@@ -114,14 +120,14 @@ void PopupMenu::restore() {
 
 	size_t const menu_width = ([&]() {
 		size_t longest = 0;
-		for (auto const &[s, _] : this->entries) {
-			if (s.size() > longest) {
-				longest = s.size();
+		for (auto const &[t, b] : rv::zip(this->entries, this->visible)) {
+			if (b && t.first.size() > longest) {
+				longest = t.first.size();
 			}
 		}
 		return longest;
 	})();
-	size_t const menu_height = this->entries.size();
+	size_t const menu_height = (size_t)r::count_if(this->visible, id);
 
 	// TODO: Merge these loops
 	for (auto const [y, x] : v::cartesian_product(
@@ -133,8 +139,13 @@ void PopupMenu::restore() {
 		SCREENBLOCKS[this->tile_map][y_ * 32 + x_] =
 			ScreenEntry((u16)END_OF_ALPHABET, 0, 15);
 	}
-	for (auto const [y, t] : this->entries | v::enumerate) {
-		auto [s, l] = t;
+
+	for (auto [y, t] : rv::zip(this->entries, this->visible)
+						   | rv::filter([](auto x) { return x.second; })
+						   | rv::transform([](auto x) { return x.first; })
+						   | v::enumerate)
+	{
+		auto [s, _] = t;
 		for (auto const [x, c] : s | v::enumerate | v::take(s.size())) {
 			auto const y_ = y + this->y;
 			auto const x_ = x + 34 + this->x;

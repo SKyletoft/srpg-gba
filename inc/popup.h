@@ -21,6 +21,7 @@ class PopupMenu : public state::Mode {
   protected:
 	// TODO: Replace std::vector with something more platform appropriate
 	std::vector<std::pair<std::string_view, std::function<void()>>> entries{};
+	std::vector<bool> visible{};
 
 	size_t const tile_source;
 	size_t const sprite_tile_source;
@@ -55,25 +56,22 @@ class PopupMenu : public state::Mode {
 	PopupMenu(
 		std::initializer_list<std::pair<char const *, std::function<void()>>> l
 	)
-		: Mode()
-		, tile_source(3)
-		, sprite_tile_source(4)
-		, tile_map(28) {
-
-		this->entries.reserve(l.size() - this->entries.capacity());
-		for (auto &[s, f] : l) {
-			this->entries.push_back({std::string_view{s}, f});
-		}
-	}
+		: PopupMenu(l, 3, 4, 28) {}
 
 	PopupMenu(
 		std::initializer_list<std::pair<char const *, std::function<void()>>> l,
 		size_t tile_source, size_t sprite_tile_source, size_t tile_map
 	)
 		: Mode()
+		, visible(std::vector<bool>(l.size(), true))
 		, tile_source(tile_source)
 		, sprite_tile_source(sprite_tile_source)
-		, tile_map(tile_map) {}
+		, tile_map(tile_map) {
+		this->entries.reserve(l.size() - this->entries.capacity());
+		for (auto &[s, f] : l) {
+			this->entries.push_back({std::string_view{s}, f});
+		}
+	}
 };
 
 } // namespace popup
