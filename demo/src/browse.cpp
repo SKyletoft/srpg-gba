@@ -15,6 +15,7 @@ namespace r = std::ranges;
 
 using input::Button;
 using input::InputState;
+using point::Point;
 using unit::Unit;
 
 void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
@@ -127,29 +128,47 @@ void selected_input() {
 		}
 
 		state::next_state = 5;
-
 	}
 }
 
 void DefaultMap::update() {
-	this->Map::update();
+	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
 
-	// Terminal on both shoulders
-	if (input::get_button(Button::R).is_down()
-		&& input::get_button(Button::L).is_down())
-	{
-		state::next_state = 1;
-	}
-
-	if (config::selected_unit != nullptr) {
-		if (config::selected_unit->is_user()) {
-			selected_input();
-		} else if (input::get_button(Button::A) == InputState::Pressed || input::get_button(Button::B) == InputState::Pressed)
-		{
-			deselect();
+	switch (this->state) {
+	case MapState::Animating: {
+		if (config::selected_unit->sprite.animation == Point<s16>{0, 0}) {
+			this->state = MapState::WaitingForInput;
+			config::selected_unit = nullptr;
+			state::next_state = 4;
 		}
-	} else {
-		unselected_input();
+
+	} break;
+	case MapState::WaitingForInput: {
+		auto const d =
+			config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
+		config::hexmap.move_in_bounds(d.x, d.y);
+
+		config::hexmap.update_layer_partial(config::hexmap.layer0);
+		config::hexmap.update_layer_partial(config::hexmap.layer1);
+
+		// Terminal on both shoulders
+		if (input::get_button(Button::R).is_down()
+			&& input::get_button(Button::L).is_down())
+		{
+			state::next_state = 1;
+		}
+
+		if (config::selected_unit != nullptr) {
+			if (config::selected_unit->is_user()) {
+				selected_input();
+			} else if (input::get_button(Button::A) == InputState::Pressed || input::get_button(Button::B) == InputState::Pressed)
+			{
+				deselect();
+			}
+		} else {
+			unselected_input();
+		}
+	} break;
 	}
 }
 

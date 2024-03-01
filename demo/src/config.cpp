@@ -144,7 +144,17 @@ context_menu::ContextMenu popup{
 	{"Exit", []() { state::next_state = 0; }},
 };
 context_menu::ContextMenu movement_popup{
-	{"Attack", []() { state::next_state = 4; }},
+	{"Attack",
+	 []() {
+		 map.state = browse::MapState::Animating;
+		 state::next_state = 0;
+		 auto diff = config::selected_unit->pos() - config::cursor.cursor.pos;
+		 config::selected_unit->pos() = config::cursor.cursor.pos;
+		 config::selected_unit->sprite.animation =
+			 diff.to_pixel_space().into<s16>();
+		 browse::update_palettes_of(config::highlights, 0);
+		 config::highlights.clear();
+	 }},
 	{"Wait",
 	 []() {
 		 auto diff = config::selected_unit->pos() - config::cursor.cursor.pos;

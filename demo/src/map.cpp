@@ -18,17 +18,6 @@ namespace map {
 
 namespace rv = std::ranges::views;
 
-void Map::update() {
-	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
-
-	auto const d =
-		config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
-	config::hexmap.move_in_bounds(d.x, d.y);
-
-	config::hexmap.update_layer_partial(config::hexmap.layer0);
-	config::hexmap.update_layer_partial(config::hexmap.layer1);
-}
-
 void Map::restore() {
 	if (state::last_state == 1 || state::last_state == 4 || state::blacked_out)
 	{
