@@ -35,6 +35,7 @@ extern size_t enemy_soldier_count;
 extern battle::Battle battle_ani;
 extern browse::DefaultMap map;
 extern context_menu::ContextMenu popup;
+extern context_menu::ContextMenu movement_popup;
 extern std::array<state::Mode *, 7> const modes_data;
 extern u32 startup_song;
 
