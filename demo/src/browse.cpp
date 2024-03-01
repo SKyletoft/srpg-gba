@@ -126,6 +126,11 @@ void DefaultMap::selected_input() {
 			}
 		}
 
+		config::movement_popup.show(0);
+		if (config::neighbouring_enemies.size() == 0) {
+			config::movement_popup.hide(0);
+		}
+
 		state::next_state = 5;
 	}
 }
