@@ -30,9 +30,6 @@ void Map::update() {
 }
 
 void Map::restore() {
-	// config::hexmap.load_map(config::hexmap.layer0);
-	// config::hexmap.load_map(config::hexmap.layer1);
-
 	if (state::last_state == 1 || state::last_state == 4 || state::blacked_out)
 	{
 		loading::load_map_graphics();
