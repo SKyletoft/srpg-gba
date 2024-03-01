@@ -22,6 +22,30 @@ namespace rv = std::ranges::views;
 
 using tiles::Colour;
 
+constexpr tiles::Palette BLUE_ACTIVE{
+	tiles::TRANSPARENT,
+	Colour::from_24bit_colour(0x1C, 0x71, 0xD8),
+	Colour::from_24bit_colour(0x30, 0x30, 0x30),
+	Colour::from_24bit_colour(0x00, 0xBD, 0xEA),
+	Colour::from_24bit_colour(0x18, 0x34, 0x97),
+};
+
+constexpr tiles::Palette BLUE_USED{
+	tiles::TRANSPARENT,
+	Colour::from_24bit_colour(0x66, 0x66, 0xC8),
+	Colour::from_24bit_colour(0x30, 0x30, 0x30),
+	Colour::from_24bit_colour(0x7D, 0x7D, 0xDA),
+	Colour::from_24bit_colour(0x3B, 0x3B, 0x87),
+};
+
+constexpr tiles::Palette RED_ACTIVE{
+	tiles::TRANSPARENT,
+	Colour::from_24bit_colour(0xC0, 0x1C, 0x28),
+	Colour::from_24bit_colour(0x30, 0x30, 0x30),
+	Colour(31, 0, 0),
+	Colour(5, 0, 0),
+};
+
 void load_map_graphics() {
 	for (auto i : rv::iota(0uz, 128uz)) {
 		sprite::HardwareSprite::hide(i);
@@ -52,20 +76,9 @@ void load_map_graphics() {
 		enemyTiles,
 		sizeof(tiles::STile) * 4 * 7
 	);
-	tiles::SPRITE_PALETTE_MEMORY[1] = tiles::Palette{
-		tiles::TRANSPARENT,
-		Colour::from_24bit_colour(0x1C, 0x71, 0xD8),
-		Colour::from_24bit_colour(0x30, 0x30, 0x30),
-		Colour::from_24bit_colour(0x00, 0xBD, 0xEA),
-		Colour::from_24bit_colour(0x18, 0x34, 0x97),
-	};
-	tiles::SPRITE_PALETTE_MEMORY[2] = tiles::Palette{
-		tiles::TRANSPARENT,
-		Colour::from_24bit_colour(0xC0, 0x1C, 0x28),
-		Colour::from_24bit_colour(0x30, 0x30, 0x30),
-		Colour(31, 0, 0),
-		Colour(5, 0, 0),
-	};
+	tiles::SPRITE_PALETTE_MEMORY[1] = BLUE_ACTIVE;
+	tiles::SPRITE_PALETTE_MEMORY[2] = RED_ACTIVE;
+	tiles::SPRITE_PALETTE_MEMORY[3] = BLUE_USED;
 
 	REG_BG0CNT = (u16)(BG_CBB(config::hexmap.layer0.tile_source)
 					   | BG_SBB(config::hexmap.layer0.tile_map) | BG_4BPP
