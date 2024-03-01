@@ -135,6 +135,13 @@ void selected_input() {
 void DefaultMap::update() {
 	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
 
+	// Terminal on both shoulders
+	if (input::get_button(Button::R).is_down()
+		&& input::get_button(Button::L).is_down())
+	{
+		state::next_state = 1;
+	}
+
 	switch (this->state) {
 	case MapState::Animating: {
 		if (config::selected_unit->sprite.animation == Point<s16>{0, 0}) {
@@ -151,13 +158,6 @@ void DefaultMap::update() {
 
 		config::hexmap.update_layer_partial(config::hexmap.layer0);
 		config::hexmap.update_layer_partial(config::hexmap.layer1);
-
-		// Terminal on both shoulders
-		if (input::get_button(Button::R).is_down()
-			&& input::get_button(Button::L).is_down())
-		{
-			state::next_state = 1;
-		}
 
 		if (config::selected_unit != nullptr) {
 			if (config::selected_unit->is_user()) {
