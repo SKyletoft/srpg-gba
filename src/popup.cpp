@@ -34,6 +34,8 @@ using tiles::SPRITE_PALETTE_MEMORY;
 
 constexpr size_t END_OF_ALPHABET = '~' - ' ' + 3;
 
+static constexpr bool id(bool b) { return b; }
+
 PopupMenu &PopupMenu::show(size_t i) {
 	this->visible[i] = true;
 	return *this;
@@ -114,8 +116,6 @@ void PopupMenu::load_tiles_and_palettes() {
 		Colour(31, 15, 15),
 	}};
 }
-
-static constexpr bool id(bool b) { return b; }
 
 void PopupMenu::restore() {
 	assert(this->entries.size() == this->visible.size());
