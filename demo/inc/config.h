@@ -16,6 +16,8 @@
 
 namespace config {
 
+using browse::CubeCoord;
+using sprite::HexSprite;
 using tiles::BG_PALETTE_MEMORY;
 using tiles::SPRITE_PALETTE_MEMORY;
 using unit::Stats;
@@ -23,6 +25,7 @@ using unit::Unit;
 
 extern Unit *selected_unit;
 extern Set<hexes::CubeCoord> highlights;
+extern CubeCoord original_pos;
 extern std::vector<Unit *> neighbouring_enemies;
 extern cursor_scroller::CursorScroller cursor;
 extern hl_map::HighlightMap hexmap;

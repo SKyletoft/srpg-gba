@@ -184,6 +184,7 @@ void DefaultMap::update() {
 	case MapState::SelectingEnemy: {
 		if (input::get_button(Button::B) == InputState::Pressed) {
 			this->state = MapState::WaitingForInput;
+			config::selected_unit->sprite.move_to(config::original_pos);
 			config::cursor.cursor.move_to(config::selected_unit->pos());
 			deselect();
 			break;

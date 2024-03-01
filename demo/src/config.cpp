@@ -11,11 +11,8 @@
 #include "tty.h"
 
 #include "context_menu.h"
-#include "loading.h"
-#include "map.h"
 #include "soundbank.h"
 #include "test_map.h"
-#include "unit.h"
 
 #include "set.h"
 #include <array>
@@ -25,13 +22,14 @@ extern tty::TtyMode tty_mode;
 }
 
 namespace config {
-using sprite::HexSprite;
+using hexes::CubeCoord;
 
 cursor_scroller::CursorScroller cursor{};
 hl_map::HighlightMap hexmap{test_map::map};
 
 Unit *selected_unit = nullptr;
-Set<hexes::CubeCoord> highlights{};
+CubeCoord original_pos{};
+Set<CubeCoord> highlights{};
 std::vector<Unit *> neighbouring_enemies{};
 std::array<Unit, 8> user_army{
 	Unit{
@@ -150,6 +148,7 @@ context_menu::ContextMenu movement_popup{
 		 map.state = browse::MapState::Animating;
 		 state::next_state = 0;
 		 auto diff = config::selected_unit->pos() - config::cursor.cursor.pos;
+		 config::original_pos = config::selected_unit->pos();
 		 config::selected_unit->pos() = config::cursor.cursor.pos;
 		 config::selected_unit->sprite.animation =
 			 diff.to_pixel_space().into<s16>();
