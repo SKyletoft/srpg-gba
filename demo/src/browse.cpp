@@ -133,10 +133,10 @@ void DefaultMap::update() {
 		state::next_state = 1;
 	}
 
-	if (config::selected_unit == nullptr) {
-		unselected_input();
-	} else {
+	if (config::selected_unit != nullptr && config::selected_unit->is_user()) {
 		selected_input();
+	} else {
+		unselected_input();
 	}
 }
 
