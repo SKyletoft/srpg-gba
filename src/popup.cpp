@@ -34,6 +34,16 @@ using tiles::SPRITE_PALETTE_MEMORY;
 
 constexpr size_t END_OF_ALPHABET = '~' - ' ' + 3;
 
+PopupMenu &PopupMenu::show(size_t i) {
+	this->visible[i] = true;
+	return *this;
+}
+
+PopupMenu &PopupMenu::hide(size_t i) {
+	this->visible[i] = false;
+	return *this;
+}
+
 void PopupMenu::update() {
 	if (input::get_button(Button::B).is_down()) {
 		state::next_state = 0;
