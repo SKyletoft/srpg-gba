@@ -32,6 +32,7 @@ hl_map::HighlightMap hexmap{test_map::map};
 
 Unit *selected_unit = nullptr;
 Set<hexes::CubeCoord> highlights{};
+std::vector<Unit *> neighbouring_enemies{};
 std::array<Unit, 8> user_army{
 	Unit{
 		.sprite =
@@ -153,7 +154,12 @@ context_menu::ContextMenu movement_popup{
 		 config::selected_unit->sprite.animation =
 			 diff.to_pixel_space().into<s16>();
 		 browse::update_palettes_of(config::highlights, 0);
-		 config::highlights.clear();
+
+		 highlights.clear();
+		 for (Unit *enemy : neighbouring_enemies) {
+			 highlights.insert(enemy->pos());
+		 }
+		 browse::update_palettes_of(highlights, 1);
 	 }},
 	{"Wait",
 	 []() {

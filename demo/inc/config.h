@@ -23,6 +23,7 @@ using unit::Unit;
 
 extern Unit *selected_unit;
 extern Set<hexes::CubeCoord> highlights;
+extern std::vector<Unit *> neighbouring_enemies;
 extern cursor_scroller::CursorScroller cursor;
 extern hl_map::HighlightMap hexmap;
 extern std::array<Unit, 8> user_army;

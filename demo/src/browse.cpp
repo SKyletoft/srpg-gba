@@ -5,7 +5,6 @@
 #include "state.h"
 
 #include "config.h"
-#include "unit.h"
 
 #include <algorithm>
 
@@ -17,7 +16,6 @@ using input::Button;
 using input::InputState;
 using point::Point;
 using tiles::ScreenEntry;
-using unit::Unit;
 
 void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 	auto px = tile.to_pixel_space() - config::hexmap.layer0.pos.into<s32>();
@@ -109,14 +107,14 @@ void deselect() {
 
 void DefaultMap::selected_input() {
 	if (input::get_button(Button::B) == InputState::Pressed) {
+		config::cursor.cursor.move_to(config::selected_unit->pos());
 		deselect();
 	}
 
 	if (input::get_button(Button::A) == InputState::Pressed
 		&& config::highlights.contains(config::cursor.pos()))
 	{
-
-		std::vector<Unit *> neighbouring_enemies{};
+		config::neighbouring_enemies.clear();
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
 			auto const neighbour_ = config::cursor.pos() + neighbour;
 			auto const enemy =
@@ -124,7 +122,7 @@ void DefaultMap::selected_input() {
 					return enemy.pos() == neighbour_;
 				});
 			if (enemy != config::enemy_units().end()) {
-				neighbouring_enemies.push_back(&*enemy);
+				config::neighbouring_enemies.push_back(&*enemy);
 			}
 		}
 
@@ -145,11 +143,17 @@ void DefaultMap::update() {
 	switch (this->state) {
 	case MapState::Animating: {
 		if (config::selected_unit->sprite.animation == Point<s16>{0, 0}) {
-			this->state = MapState::WaitingForInput;
-			config::selected_unit = nullptr;
-			state::next_state = 4;
+			if (config::neighbouring_enemies.empty()) {
+				this->state = MapState::WaitingForInput;
+				config::selected_unit = nullptr;
+				state::next_state = 4;
+			} else {
+				this->state = MapState::SelectingEnemy;
+				config::cursor.cursor.move_to(
+					config::neighbouring_enemies[0]->pos()
+				);
+			}
 		}
-
 	} break;
 	case MapState::WaitingForInput: {
 		auto const d =
@@ -162,13 +166,52 @@ void DefaultMap::update() {
 		if (config::selected_unit != nullptr) {
 			if (config::selected_unit->is_user()) {
 				selected_input();
-			} else if (input::get_button(Button::A) == InputState::Pressed || input::get_button(Button::B) == InputState::Pressed)
+				break;
+			}
+			if (input::get_button(Button::A) == InputState::Pressed
+				|| input::get_button(Button::B) == InputState::Pressed)
 			{
 				deselect();
+				break;
 			}
-		} else {
-			unselected_input();
 		}
+		unselected_input();
+	} break;
+	case MapState::SelectingEnemy: {
+		if (input::get_button(Button::B) == InputState::Pressed) {
+			this->state = MapState::WaitingForInput;
+			config::cursor.cursor.move_to(config::selected_unit->pos());
+			deselect();
+			break;
+		}
+		if (input::get_button(Button::A) == InputState::Pressed) {
+			config::battle_ani.set_combatants(
+				*config::selected_unit,
+				config::enemy_units()[this->enemy_selection]
+			);
+			config::cursor.cursor.move_to(config::selected_unit->pos());
+			state::next_state = 4;
+			this->state = MapState::WaitingForInput;
+			deselect();
+			break;
+		}
+		if (input::get_button(Button::Up) == InputState::Pressed
+			|| input::get_button(Button::Left) == InputState::Pressed)
+		{
+			if (this->enemy_selection == 0) {
+				this->enemy_selection = config::neighbouring_enemies.size();
+			}
+			this->enemy_selection--;
+		}
+		if (input::get_button(Button::Down) == InputState::Pressed
+			|| input::get_button(Button::Right) == InputState::Pressed)
+		{
+			this->enemy_selection = (this->enemy_selection + 1)
+									% config::neighbouring_enemies.size();
+		}
+		config::cursor.cursor.move_to(
+			config::neighbouring_enemies[this->enemy_selection]->pos()
+		);
 	} break;
 	}
 }
