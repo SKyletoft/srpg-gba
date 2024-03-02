@@ -25,6 +25,18 @@ using input::InputState;
 using point::Point;
 using tiles::ScreenEntry;
 
+Unit *get_hovered_unit() {
+	auto const range =
+		std::array{config::user_units(), config::enemy_units()} | rv::join;
+	auto const selected_unit = r::find_if(range, [&](auto &unit) {
+		return unit.sprite.pos == config::cursor.cursor.pos;
+	});
+	if (selected_unit == range.end()) {
+		return nullptr;
+	}
+	return &*selected_unit;
+}
+
 void Map::suspend() { config::cursor.cursor.hide(); }
 
 void Map::restore() {
@@ -121,25 +133,7 @@ void update_palettes_of(Set<CubeCoord> const &highlights, u8 new_palette) {
 
 void unselected_input() {
 	if (input::get_button(Button::A) == InputState::Pressed) {
-		auto selected_unit = r::find_if(config::user_units(), [&](auto &unit) {
-			return unit.sprite.pos == config::cursor.cursor.pos;
-		});
-
-		config::selected_unit = nullptr;
-		if (selected_unit != config::user_units().end()
-			&& !config::used.contains(&*selected_unit))
-		{
-			config::selected_unit = &*selected_unit;
-			config::highlights =
-				config::selected_unit->accessible_tiles(config::hexmap.map);
-			update_palettes_of(config::highlights, 1);
-			return;
-		}
-		selected_unit = r::find_if(config::enemy_units(), [&](auto &unit) {
-			return unit.sprite.pos == config::cursor.cursor.pos;
-		});
-
-		if (selected_unit != config::enemy_units().end()) {
+		if (Unit *selected_unit = get_hovered_unit()) {
 			config::selected_unit = &*selected_unit;
 			config::highlights =
 				config::selected_unit->accessible_tiles(config::hexmap.map);
