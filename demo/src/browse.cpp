@@ -208,7 +208,7 @@ void DefaultMap::selecting_enemy_handler() {
 		config::selected_unit->sprite.move_to(config::original_pos);
 		config::cursor.cursor.move_to(config::selected_unit->pos());
 		deselect();
-		break;
+		return;
 	}
 	if (input::get_button(Button::A) == InputState::Pressed) {
 		config::battle_ani.set_combatants(
@@ -220,7 +220,7 @@ void DefaultMap::selecting_enemy_handler() {
 		config::used.insert(config::selected_unit);
 		this->state = MapState::WaitingForInput;
 		deselect();
-		break;
+		return;
 	}
 	if (input::get_button(Button::Up) == InputState::Pressed
 		|| input::get_button(Button::Left) == InputState::Pressed)
@@ -245,19 +245,21 @@ void DefaultMap::enemy_turn_handler() {
 	if (config::used.size() == config::enemy_soldier_count) {
 		this->end_enemy_turn();
 	}
-	for (Unit &enemy : config::enemy_units() | rv::filter([&](auto e) {
-						   return !config::used.contains(&e);
-					   }))
-	{
+
+	for (Unit &enemy : config::enemy_units()) {
+		if (config::used.contains(&enemy)) {
+			continue;
+		}
+
 		Set<CubeCoord> const accessible =
 			enemy.accessible_tiles(config::hexmap.map);
 
 		std::vector<Unit *> vec{};
-		for (auto &u : config::user_units() | rv::filter([&](auto const &unit) {
-						   return accessible.contains(unit.pos());
-					   }))
-		{
-			vec.push_back(&u);
+		for (auto &unit : config::user_units()) {
+			if (!accessible.contains(unit.pos())) {
+				continue;
+			}
+			vec.push_back(&unit);
 		}
 
 		switch (vec.size()) {
@@ -266,18 +268,20 @@ void DefaultMap::enemy_turn_handler() {
 			update_palettes_of(accessible, 0);
 			continue;
 		case 1:
+			config::used.insert(&enemy);
 			enemy.sprite.move_to(vec[0]->pos());
 			this->state = MapState::AnimatingEnemy;
 			update_palettes_of(accessible, 0);
-			break;
+			return;
 		default:
+			config::used.insert(&enemy);
 			auto target = *r::min_element(vec, [&](Unit *l, Unit *r) {
 				return l->stats.health < r->stats.health;
 			});
 			enemy.sprite.move_to(target->pos());
 			this->state = MapState::AnimatingEnemy;
 			update_palettes_of(accessible, 0);
-			break;
+			return;
 		}
 	}
 }
