@@ -1,13 +1,13 @@
 #pragma once
 
 #include "hexes.h"
-#include "map.h"
 #include "point.h"
 #include "state.h"
 #include "unit.h"
 
 #include "set.h"
-#include <vector>
+#include <string>
+#include <string_view>
 
 namespace map {
 
@@ -27,10 +27,24 @@ enum class MapState {
 	AnimatingEnemy,
 };
 
-class Map : public state::Mode {
-  public:
-	u8 animation_cycle = 0;
+struct DrawStatus {
+	std::string_view name;
+	std::string hp_text;
+	size_t actual_width;
+	u16 portrait;
 
+	bool rendered = false;
+	bool visible = true;
+
+	DrawStatus();
+	DrawStatus(Unit const &unit);
+
+	bool operator==(DrawStatus const &) const ;
+
+	void render(size_t ui_layer_map);
+};
+
+class Map : public state::Mode {
   private:
 	void selected_input();
 	void end_player_turn();
@@ -48,8 +62,12 @@ class Map : public state::Mode {
 	bool blackout() override;
 
   public:
+	u8 animation_cycle = 0;
+	size_t const ui_layer_map = 3;
+	size_t const ui_layer_source = 2;
 	MapState state = MapState::WaitingForInput;
 	size_t enemy_selection = 0;
+	DrawStatus draw_status{};
 
 	void update() override;
 };

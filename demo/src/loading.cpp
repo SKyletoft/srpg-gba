@@ -6,14 +6,16 @@
 
 #include <cstring>
 #include <ranges>
+#include <tonc_memdef.h>
 
 extern "C" {
 #include <tonc.h>
 
-#include "arrow.h"
 #include "enemy.h"
+#include "font.h"
 #include "lyn.h"
 #include "movement-hl.h"
+#include "portraits.h"
 }
 
 namespace loading {
@@ -26,7 +28,7 @@ void load_map_graphics() {
 	}
 
 	config::hexmap.load_tilesets(config::hexmap.layer0);
-	config::hexmap.load_tilesets(config::hexmap.layer1);
+	// config::hexmap.load_tilesets(config::hexmap.layer1);
 	config::hexmap.load_map(config::hexmap.layer0);
 	config::hexmap.load_map(config::hexmap.layer1);
 	util::wait_for_vsync();
@@ -34,6 +36,18 @@ void load_map_graphics() {
 
 	tiles::BG_PALETTE_MEMORY[1] = *(tiles::Palette *)movement_hlPal;
 	tiles::BG_PALETTE_MEMORY[15] = UI_PALETTE;
+	tiles::BG_PALETTE_MEMORY[14] = *(tiles::Palette *)portraitsPal;
+
+	std::memcpy(
+		tiles::CHARBLOCKS[config::map.ui_layer_source] + 1,
+		fontTiles,
+		sizeof(fontTiles)
+	);
+	std::memcpy(
+		tiles::CHARBLOCKS[config::map.ui_layer_source] + 96,
+		portraitsTiles,
+		sizeof(portraitsTiles)
+	);
 
 	config::hexmap.update_camera();
 
@@ -56,7 +70,9 @@ void load_map_graphics() {
 	REG_BG1CNT = (u16)(BG_CBB(config::hexmap.layer1.tile_source)
 					   | BG_SBB(config::hexmap.layer1.tile_map) | BG_4BPP
 					   | BG_REG_32x32 | BG_PRIO(3));
-	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
+	REG_BG2CNT = (u16)(BG_CBB(config::map.ui_layer_source)
+					   | BG_SBB(config::map.ui_layer_map) | BG_4BPP
+					   | BG_REG_32x32 | BG_PRIO(0));
 }
 
 } // namespace loading

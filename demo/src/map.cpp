@@ -7,8 +7,10 @@
 #include "config.h"
 #include "loading.h"
 #include "unit.h"
+#include "util.h"
 
 #include <cstring>
+#include <format>
 #include <ranges>
 
 extern "C" {
@@ -37,6 +39,59 @@ Unit *get_hovered_unit() {
 	return &*selected_unit;
 }
 
+DrawStatus::DrawStatus() {}
+
+DrawStatus::DrawStatus(Unit const &unit)
+	: name(unit.name)
+	, hp_text(std::format("{}/{}", unit.stats.health, unit.stats.max_health))
+	, actual_width(
+		  std::min(std::max(unit.name.size(), hp_text.size()) + 6, 30uz)
+	  )
+	, portrait(unit.portrait) {}
+
+bool DrawStatus::operator==(DrawStatus const &rhs) const {
+	// Explicitly don't check rendered or visible
+	return this->name == rhs.name && hp_text == rhs.hp_text
+		   && this->actual_width == rhs.actual_width
+		   && this->portrait == rhs.portrait;
+}
+
+void DrawStatus::render(size_t ui_layer_map) {
+	auto const idx = [](size_t x, size_t y) { return y * 32 + x; };
+
+	for (size_t x = 0; x < this->actual_width; ++x) {
+		for (size_t y = 0; y < 4; ++y) {
+			tiles::SCREENBLOCKS[ui_layer_map][idx(x, y)] =
+				ScreenEntry(2, 0, 15);
+		}
+	}
+	for (size_t x = this->actual_width; x < 30; ++x) {
+		for (size_t y = 0; y < 4; ++y) {
+			tiles::SCREENBLOCKS[ui_layer_map][idx(x, y)] =
+				ScreenEntry(0, 0, 15);
+		}
+	}
+	for (auto [x, c] : this->name | rv::enumerate | rv::take(25)) {
+		tiles::SCREENBLOCKS[ui_layer_map][idx((size_t)x + 5, 1)] =
+			ScreenEntry((u16)(c - ' ' + 2), 0, 15);
+	}
+	for (auto [x, c] : hp_text | rv::enumerate | rv::take(25)) {
+		tiles::SCREENBLOCKS[ui_layer_map][idx((size_t)x + 5, 2)] =
+			ScreenEntry((u16)(c - ' ' + 2), 0, 15);
+	}
+
+	constexpr u16 PORTRAIT_BASE_OFFSET = 96;
+	auto const offset = [&](u16 offset) {
+		return (u16)(PORTRAIT_BASE_OFFSET + this->portrait * 4 + offset);
+	};
+	tiles::SCREENBLOCKS[ui_layer_map][33] = ScreenEntry(offset(0), 0, 14);
+	tiles::SCREENBLOCKS[ui_layer_map][34] = ScreenEntry(offset(1), 0, 14);
+	tiles::SCREENBLOCKS[ui_layer_map][65] = ScreenEntry(offset(2), 0, 14);
+	tiles::SCREENBLOCKS[ui_layer_map][66] = ScreenEntry(offset(3), 0, 14);
+
+	this->rendered = true;
+}
+
 void Map::suspend() { config::cursor.cursor.hide(); }
 
 void Map::restore() {
@@ -53,7 +108,10 @@ void Map::restore() {
 	config::cursor.cursor.animation = {0, 0};
 	config::cursor.cursor.render(config::hexmap.layer0.pos);
 
-	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
+	util::clear_layer(this->ui_layer_map);
+
+	REG_DISPCNT =
+		DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_OBJ | DCNT_OBJ_1D;
 }
 
 void Map::vsync_hook() {
@@ -72,6 +130,15 @@ void Map::vsync_hook() {
 	{
 		unit.sprite.move();
 		unit.render(config::hexmap.layer0.pos, animation_cycle);
+	}
+
+	if (this->draw_status.visible) {
+		REG_BG2VOFS = 0;
+	} else {
+		REG_BG2VOFS = (u16)(-160);
+	}
+	if (!this->draw_status.rendered) {
+		this->draw_status.render(this->ui_layer_map);
 	}
 }
 
@@ -230,6 +297,22 @@ void Map::waiting_for_input_handler() {
 
 	config::hexmap.update_layer_partial(config::hexmap.layer0);
 	config::hexmap.update_layer_partial(config::hexmap.layer1);
+
+	if (auto hovered_unit = get_hovered_unit()) {
+		auto new_status = DrawStatus(*hovered_unit);
+		if (new_status != this->draw_status) {
+			this->draw_status = new_status;
+		}
+		this->draw_status.visible = true;
+	} else if (config::selected_unit != nullptr) {
+		auto new_status = DrawStatus(*config::selected_unit);
+		if (new_status != this->draw_status) {
+			this->draw_status = new_status;
+		}
+		this->draw_status.visible = true;
+	} else {
+		this->draw_status.visible = false;
+	}
 
 	if (config::selected_unit != nullptr) {
 		if (config::selected_unit->is_user()) {

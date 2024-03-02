@@ -6,6 +6,7 @@
 #include "sprite.h"
 
 #include "set.h"
+#include <string_view>
 #include <vector>
 
 namespace unit {
