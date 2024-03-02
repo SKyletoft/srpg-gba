@@ -250,7 +250,14 @@ void DefaultMap::update() {
 		);
 	} break;
 	case MapState::EnemyTurn: {
-
+		if (config::used.size() == config::enemy_soldier_count) {
+			this->end_enemy_turn();
+		}
+		for (Unit const &enemy : config::enemy_units()) {
+			auto accessible = enemy.accessible_tiles(config::hexmap.map);
+			update_palettes_of(accessible, 0);
+		}
+		this->end_enemy_turn();
 	} break;
 	}
 }
