@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <queue>
 #include <ranges>
+#include <unordered_map>
 
 extern "C" {
 #include <tonc_memmap.h>
@@ -21,9 +22,6 @@ namespace unit {
 
 namespace r = std::ranges;
 namespace rv = std::ranges::views;
-
-using hexes::CubeCoord;
-using mdspan::Span2d;
 
 u8 cost(u8 terrain) {
 	switch (terrain) {
@@ -142,6 +140,30 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 	debug::println("");
 	debug::println(end);
 	debug::println((int)end_frame_id);
+
+	return out;
+}
+
+std::vector<std::pair<Unit *, CubeCoord>>
+Unit::attackable_units(Set<CubeCoord> const &accessible) const {
+	std::unordered_map<CubeCoord, Unit *> opposing_army{};
+
+	for (auto &unit :
+		 this->is_user() ? config::enemy_units() : config::user_units())
+	{
+		opposing_army[unit.pos()] = &unit;
+	}
+
+	std::vector<std::pair<Unit *, CubeCoord>> out{};
+
+	for (auto tile : accessible) {
+		for (auto dir : hexes::CUBE_DIRECTION_VECTORS) {
+			auto cand = tile + dir;
+			if (opposing_army.contains(cand)) {
+				out.push_back({opposing_army[cand], tile});
+			}
+		}
+	}
 
 	return out;
 }

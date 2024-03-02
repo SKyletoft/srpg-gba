@@ -6,9 +6,12 @@
 #include "sprite.h"
 
 #include "set.h"
+#include <vector>
 
 namespace unit {
 
+using hexes::CubeCoord;
+using mdspan::Span2d;
 using point::Point;
 
 struct Stats {
@@ -33,12 +36,13 @@ struct Unit {
 
 	u8 animation_frames = 1;
 
-	constexpr hexes::CubeCoord const &pos() const { return this->sprite.pos; }
-	constexpr hexes::CubeCoord &pos() { return this->sprite.pos; }
+	constexpr CubeCoord const &pos() const { return this->sprite.pos; }
+	constexpr CubeCoord &pos() { return this->sprite.pos; }
 	void render(Point<s16>, u8) const;
 
-	Set<hexes::CubeCoord>
-	accessible_tiles(mdspan::Span2d<const u8> const &) const;
+	Set<CubeCoord> accessible_tiles(mdspan::Span2d<const u8> const &) const;
+	std::vector<std::pair<Unit *, CubeCoord>>
+	attackable_units(Set<CubeCoord> const &) const;
 
 	bool is_user() const;
 };

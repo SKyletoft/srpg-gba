@@ -255,13 +255,8 @@ void DefaultMap::enemy_turn_handler() {
 		Set<CubeCoord> const accessible =
 			enemy.accessible_tiles(config::hexmap.map);
 
-		std::vector<Unit *> vec{};
-		for (auto &unit : config::user_units()) {
-			if (!accessible.contains(unit.pos())) {
-				continue;
-			}
-			vec.push_back(&unit);
-		}
+		std::vector<std::pair<Unit *, CubeCoord>> vec =
+			enemy.attackable_units(accessible);
 
 		switch (vec.size()) {
 		case 0:
@@ -270,16 +265,16 @@ void DefaultMap::enemy_turn_handler() {
 			continue;
 		case 1:
 			config::used.insert(&enemy);
-			enemy.sprite.move_to(vec[0]->pos());
+			enemy.sprite.move_to(vec[0].second);
 			this->state = MapState::AnimatingEnemy;
 			update_palettes_of(accessible, 0);
 			return;
 		default:
 			config::used.insert(&enemy);
-			auto target = *r::min_element(vec, [&](Unit *l, Unit *r) {
-				return l->stats.health < r->stats.health;
+			auto target = *r::min_element(vec, [&](auto l, auto r) {
+				return l.first->stats.health < r.first->stats.health;
 			});
-			enemy.sprite.move_to(target->pos());
+			enemy.sprite.move_to(target.second);
 			this->state = MapState::AnimatingEnemy;
 			update_palettes_of(accessible, 0);
 			return;
