@@ -7,10 +7,12 @@
 #include "config.h"
 
 #include <algorithm>
+#include <ranges>
 
 namespace browse {
 
 namespace r = std::ranges;
+namespace rv = std::ranges::views;
 
 using input::Button;
 using input::InputState;
@@ -157,6 +159,135 @@ void DefaultMap::end_enemy_turn() {
 	state::next_state = 6;
 }
 
+void DefaultMap::animation_handler() {
+	if (config::selected_unit->sprite.animation == Point<s16>{0, 0}) {
+		if (config::neighbouring_enemies.empty()) {
+			this->state = MapState::WaitingForInput;
+			config::selected_unit->sprite.palette = 3;
+			config::used.insert(config::selected_unit);
+			config::selected_unit = nullptr;
+		} else {
+			this->state = MapState::SelectingEnemy;
+			config::cursor.cursor.move_to(config::neighbouring_enemies[0]->pos()
+			);
+		}
+	}
+}
+
+void DefaultMap::waiting_for_input_handler() {
+	if (config::used.size() == config::user_soldier_count) {
+		this->end_player_turn();
+		return;
+	}
+
+	auto const d =
+		config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
+	config::hexmap.move_in_bounds(d.x, d.y);
+
+	config::hexmap.update_layer_partial(config::hexmap.layer0);
+	config::hexmap.update_layer_partial(config::hexmap.layer1);
+
+	if (config::selected_unit != nullptr) {
+		if (config::selected_unit->is_user()) {
+			selected_input();
+			return;
+		}
+		if (input::get_button(Button::A) == InputState::Pressed
+			|| input::get_button(Button::B) == InputState::Pressed)
+		{
+			deselect();
+			return;
+		}
+	}
+	unselected_input();
+}
+
+void DefaultMap::selecting_enemy_handler() {
+	if (input::get_button(Button::B) == InputState::Pressed) {
+		this->state = MapState::WaitingForInput;
+		config::selected_unit->sprite.move_to(config::original_pos);
+		config::cursor.cursor.move_to(config::selected_unit->pos());
+		deselect();
+		break;
+	}
+	if (input::get_button(Button::A) == InputState::Pressed) {
+		config::battle_ani.set_combatants(
+			*config::selected_unit, config::enemy_units()[this->enemy_selection]
+		);
+		config::cursor.cursor.move_to(config::selected_unit->pos());
+		state::next_state = 4;
+		config::selected_unit->sprite.palette = 3;
+		config::used.insert(config::selected_unit);
+		this->state = MapState::WaitingForInput;
+		deselect();
+		break;
+	}
+	if (input::get_button(Button::Up) == InputState::Pressed
+		|| input::get_button(Button::Left) == InputState::Pressed)
+	{
+		if (this->enemy_selection == 0) {
+			this->enemy_selection = config::neighbouring_enemies.size();
+		}
+		this->enemy_selection--;
+	}
+	if (input::get_button(Button::Down) == InputState::Pressed
+		|| input::get_button(Button::Right) == InputState::Pressed)
+	{
+		this->enemy_selection =
+			(this->enemy_selection + 1) % config::neighbouring_enemies.size();
+	}
+	config::cursor.cursor.move_to(
+		config::neighbouring_enemies[this->enemy_selection]->pos()
+	);
+}
+
+void DefaultMap::enemy_turn_handler() {
+	if (config::used.size() == config::enemy_soldier_count) {
+		this->end_enemy_turn();
+	}
+	for (Unit &enemy : config::enemy_units() | rv::filter([&](auto e) {
+						   return !config::used.contains(&e);
+					   }))
+	{
+		Set<CubeCoord> const accessible =
+			enemy.accessible_tiles(config::hexmap.map);
+
+		std::vector<Unit *> vec{};
+		for (auto &u : config::user_units() | rv::filter([&](auto const &unit) {
+						   return accessible.contains(unit.pos());
+					   }))
+		{
+			vec.push_back(&u);
+		}
+
+		switch (vec.size()) {
+		case 0:
+			config::used.insert(&enemy);
+			update_palettes_of(accessible, 0);
+			continue;
+		case 1:
+			enemy.sprite.move_to(vec[0]->pos());
+			this->state = MapState::AnimatingEnemy;
+			update_palettes_of(accessible, 0);
+			break;
+		default:
+			auto target = *r::min_element(vec, [&](Unit *l, Unit *r) {
+				return l->stats.health < r->stats.health;
+			});
+			enemy.sprite.move_to(target->pos());
+			this->state = MapState::AnimatingEnemy;
+			update_palettes_of(accessible, 0);
+			break;
+		}
+	}
+}
+
+void DefaultMap::animating_enemy_handler() {
+	if (config::selected_unit->sprite.animation == Point<s16>{0, 0}) {
+		end_enemy_turn();
+	}
+}
+
 void DefaultMap::update() {
 	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
 
@@ -168,97 +299,21 @@ void DefaultMap::update() {
 	}
 
 	switch (this->state) {
-	case MapState::Animating: {
-		if (config::selected_unit->sprite.animation == Point<s16>{0, 0}) {
-			if (config::neighbouring_enemies.empty()) {
-				this->state = MapState::WaitingForInput;
-				config::selected_unit->sprite.palette = 3;
-				config::used.insert(config::selected_unit);
-				config::selected_unit = nullptr;
-			} else {
-				this->state = MapState::SelectingEnemy;
-				config::cursor.cursor.move_to(
-					config::neighbouring_enemies[0]->pos()
-				);
-			}
-		}
-	} break;
-	case MapState::WaitingForInput: {
-		if (config::used.size() == config::user_soldier_count) {
-			this->end_player_turn();
-			break;
-		}
-
-		auto const d =
-			config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
-		config::hexmap.move_in_bounds(d.x, d.y);
-
-		config::hexmap.update_layer_partial(config::hexmap.layer0);
-		config::hexmap.update_layer_partial(config::hexmap.layer1);
-
-		if (config::selected_unit != nullptr) {
-			if (config::selected_unit->is_user()) {
-				selected_input();
-				break;
-			}
-			if (input::get_button(Button::A) == InputState::Pressed
-				|| input::get_button(Button::B) == InputState::Pressed)
-			{
-				deselect();
-				break;
-			}
-		}
-		unselected_input();
-	} break;
-	case MapState::SelectingEnemy: {
-		if (input::get_button(Button::B) == InputState::Pressed) {
-			this->state = MapState::WaitingForInput;
-			config::selected_unit->sprite.move_to(config::original_pos);
-			config::cursor.cursor.move_to(config::selected_unit->pos());
-			deselect();
-			break;
-		}
-		if (input::get_button(Button::A) == InputState::Pressed) {
-			config::battle_ani.set_combatants(
-				*config::selected_unit,
-				config::enemy_units()[this->enemy_selection]
-			);
-			config::cursor.cursor.move_to(config::selected_unit->pos());
-			state::next_state = 4;
-			config::selected_unit->sprite.palette = 3;
-			config::used.insert(config::selected_unit);
-			this->state = MapState::WaitingForInput;
-			deselect();
-			break;
-		}
-		if (input::get_button(Button::Up) == InputState::Pressed
-			|| input::get_button(Button::Left) == InputState::Pressed)
-		{
-			if (this->enemy_selection == 0) {
-				this->enemy_selection = config::neighbouring_enemies.size();
-			}
-			this->enemy_selection--;
-		}
-		if (input::get_button(Button::Down) == InputState::Pressed
-			|| input::get_button(Button::Right) == InputState::Pressed)
-		{
-			this->enemy_selection = (this->enemy_selection + 1)
-									% config::neighbouring_enemies.size();
-		}
-		config::cursor.cursor.move_to(
-			config::neighbouring_enemies[this->enemy_selection]->pos()
-		);
-	} break;
-	case MapState::EnemyTurn: {
-		if (config::used.size() == config::enemy_soldier_count) {
-			this->end_enemy_turn();
-		}
-		for (Unit const &enemy : config::enemy_units()) {
-			auto accessible = enemy.accessible_tiles(config::hexmap.map);
-			update_palettes_of(accessible, 0);
-		}
-		this->end_enemy_turn();
-	} break;
+	case MapState::Animating:
+		this->animation_handler();
+		break;
+	case MapState::WaitingForInput:
+		this->waiting_for_input_handler();
+		break;
+	case MapState::SelectingEnemy:
+		this->selecting_enemy_handler();
+		break;
+	case MapState::EnemyTurn:
+		this->enemy_turn_handler();
+		break;
+	case MapState::AnimatingEnemy:
+		this->animating_enemy_handler();
+		break;
 	}
 }
 

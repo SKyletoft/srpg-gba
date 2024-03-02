@@ -21,6 +21,7 @@ enum class MapState {
 	Animating,
 	SelectingEnemy,
 	EnemyTurn,
+	AnimatingEnemy,
 };
 
 class DefaultMap : public map::Map {
@@ -28,6 +29,12 @@ class DefaultMap : public map::Map {
 	void selected_input();
 	void end_player_turn();
 	void end_enemy_turn();
+
+	void animation_handler();
+	void waiting_for_input_handler();
+	void selecting_enemy_handler();
+	void enemy_turn_handler();
+	void animating_enemy_handler();
 
   public:
 	MapState state = MapState::WaitingForInput;
