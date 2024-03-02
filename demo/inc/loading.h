@@ -44,6 +44,8 @@ constexpr tiles::Palette UI_PALETTE{
 	Colour(25, 25, 25),
 };
 
-void load_map_graphics();
+void load_ui();
+void load_sprites();
+void load_tiles();
 
-}
+} // namespace loading

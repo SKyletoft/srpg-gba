@@ -97,7 +97,13 @@ void Map::suspend() { config::cursor.cursor.hide(); }
 void Map::restore() {
 	if (state::last_state == 1 || state::last_state == 4 || state::blacked_out)
 	{
-		loading::load_map_graphics();
+		for (auto i : rv::iota(0uz, 128uz)) {
+			sprite::HardwareSprite::hide(i);
+		}
+
+		loading::load_ui();
+		loading::load_sprites();
+		loading::load_tiles();
 	}
 	if (state::last_state != 2) {
 		tiles::SPRITE_PALETTE_MEMORY[0] = *(tiles::Palette *)arrowPal;
@@ -110,6 +116,15 @@ void Map::restore() {
 
 	util::clear_layer(this->ui_layer_map);
 
+	REG_BG0CNT = (u16)(BG_CBB(config::hexmap.layer0.tile_source)
+					   | BG_SBB(config::hexmap.layer0.tile_map) | BG_4BPP
+					   | BG_REG_32x32 | BG_PRIO(3));
+	REG_BG1CNT = (u16)(BG_CBB(config::hexmap.layer1.tile_source)
+					   | BG_SBB(config::hexmap.layer1.tile_map) | BG_4BPP
+					   | BG_REG_32x32 | BG_PRIO(3));
+	REG_BG2CNT = (u16)(BG_CBB(config::map.ui_layer_source)
+					   | BG_SBB(config::map.ui_layer_map) | BG_4BPP
+					   | BG_REG_32x32 | BG_PRIO(0));
 	REG_DISPCNT =
 		DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_OBJ | DCNT_OBJ_1D;
 }
