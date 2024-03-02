@@ -120,6 +120,18 @@ struct HexSprite {
 		return *this;
 	}
 
+	constexpr HexSprite &move_to(Direction dir) {
+		return this->move_to(this->pos + dir);
+	}
+
+	constexpr HexSprite &move_to(CubeCoord vec) {
+		auto from = this->pos.to_pixel_space();
+		this->pos = vec;
+		auto to = this->pos.to_pixel_space();
+		this->animation += (from - to).into<s16>();
+		return *this;
+	}
+
 	void hide() const;
 	void move();
 	void render(Point<s16> const camera_offset) const;

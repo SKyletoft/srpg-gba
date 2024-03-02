@@ -60,15 +60,15 @@ class ScrollingMap {
 
 	ScrollingMap(s16 width, s16 height)
 		: layer0(Layer{
-			.tile_source = 0,
-			.tile_map = 30,
+			.tile_source = 3,
+			.tile_map = 0,
 			.max_x = width,
 			.max_y = height,
 			.pos = Point<s16>{.x = 0}
 		})
 		, layer1(Layer{
-			  .tile_source = 1,
-			  .tile_map = 29,
+			  .tile_source = 3,
+			  .tile_map = 1,
 			  .min_x = 4,
 			  .max_x = (s16)(width + 4),
 			  .max_y = height,

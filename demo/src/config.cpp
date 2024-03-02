@@ -5,18 +5,15 @@
 #include "debug.h"
 #include "export.h"
 #include "hexes.h"
+#include "overlay.h"
 #include "sprite.h"
 #include "state.h"
 #include "tiles.h"
 #include "tty.h"
 
 #include "context_menu.h"
-#include "loading.h"
-#include "map.h"
-#include "move_unit.h"
 #include "soundbank.h"
 #include "test_map.h"
-#include "unit.h"
 
 #include "set.h"
 #include <array>
@@ -26,13 +23,16 @@ extern tty::TtyMode tty_mode;
 }
 
 namespace config {
-using sprite::HexSprite;
+using hexes::CubeCoord;
 
 cursor_scroller::CursorScroller cursor{};
 hl_map::HighlightMap hexmap{test_map::map};
 
 Unit *selected_unit = nullptr;
-Set<hexes::CubeCoord> highlights{};
+CubeCoord original_pos{};
+Set<CubeCoord> highlights{};
+std::vector<Unit *> neighbouring_enemies{};
+Set<Unit *> used{};
 std::array<Unit, 8> user_army{
 	Unit{
 		.sprite =
@@ -42,6 +42,7 @@ std::array<Unit, 8> user_army{
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 1,
 				.tile_index = 33,
+				.prio = 1,
 				.palette = 1,
 			},
 		.stats =
@@ -53,7 +54,7 @@ std::array<Unit, 8> user_army{
 				.resistance = 3,
 				.speed = 9,
 				.luck = 2,
-				.movement = 4,
+				.movement = 8,
 			},
 		.animation_frames = 3,
 	},
@@ -66,6 +67,7 @@ std::array<Unit, 8> user_army{
 				.hardware_id = 2,
 				.horizontal_flip = true,
 				.tile_index = 33,
+				.prio = 1,
 				.palette = 1,
 			},
 		.stats =
@@ -77,7 +79,7 @@ std::array<Unit, 8> user_army{
 				.resistance = 3,
 				.speed = 9,
 				.luck = 2,
-				.movement = 1,
+				.movement = 3,
 			},
 		.animation_frames = 3,
 	},
@@ -93,6 +95,7 @@ std::array<Unit, 20> enemy_army{
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 9,
 				.tile_index = 33,
+				.prio = 1,
 				.palette = 2,
 			},
 		.stats = Stats{},
@@ -106,6 +109,7 @@ std::array<Unit, 20> enemy_army{
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 3,
 				.tile_index = 33,
+				.prio = 1,
 				.palette = 2,
 			},
 		.stats = Stats{},
@@ -121,6 +125,7 @@ std::span<Unit> enemy_units() {
 	return std::span<Unit>{enemy_army.data(), enemy_soldier_count};
 }
 
+overlay::Overlay overlay{};
 battle::Battle battle_ani{};
 browse::DefaultMap map{};
 context_menu::ContextMenu popup{
@@ -142,22 +147,48 @@ context_menu::ContextMenu popup{
 		 BG_PALETTE_MEMORY[15].colours[1] = tiles::BLUE;
 		 SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::BLUE;
 	 }},
+	{"End turn", [](){
+		for (auto &unit : config::user_units()) {
+			config::used.insert(&unit);
+		}
+		state::next_state = 0;
+	}},
 	{"Exit", []() { state::next_state = 0; }},
 };
 context_menu::ContextMenu movement_popup{
-	{"Attack", []() { state::next_state = 4; }},
-	{"Wait", []() { state::next_state = 0; }},
+	{"Attack",
+	 []() {
+		 map.state = browse::MapState::Animating;
+		 state::next_state = 0;
+		 config::original_pos = config::selected_unit->pos();
+		 config::selected_unit->sprite.move_to(config::cursor.pos());
+		 browse::update_palettes_of(config::highlights, 0);
+
+		 highlights.clear();
+		 for (Unit *enemy : neighbouring_enemies) {
+			 highlights.insert(enemy->pos());
+		 }
+		 browse::update_palettes_of(highlights, 1);
+	 }},
+	{"Wait",
+	 []() {
+		 map.state = browse::MapState::Animating;
+		 neighbouring_enemies.clear();
+		 config::selected_unit->sprite.move_to(config::cursor.pos());
+		 browse::update_palettes_of(config::highlights, 0);
+		 config::highlights.clear();
+		 state::next_state = 0;
+	 }},
 };
-move_unit::MoveUnit move{};
 
 std::array<state::Mode *, 7> const modes_data{
 	&map,
 	&debug::tty_mode,
 	&popup,
-	&move,
+	nullptr,
 	&battle_ani,
 	&movement_popup,
-	nullptr,
+	&overlay,
 };
 
 u32 startup_song = MOD_BAD_APPLE;

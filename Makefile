@@ -57,6 +57,7 @@ CXXFLAGS := $(CFLAGS) \
 	-Werror=format-security -Werror=cast-align \
 	-Werror=missing-field-initializers -Werror=return-type \
 	-Werror=conversion -Werror=sign-conversion -Werror=float-conversion \
+	-Werror=int-in-bool-context \
 	\
 	-Wno-unused-parameter -Wno-unused-const-variable \
 	\

@@ -27,5 +27,6 @@
 -Werror=sign-conversion
 -Werror=float-conversion
 -Werror=cast-align
+-Werror=int-in-bool-context
 -std=gnu++23
 -stdlib=libstdc++

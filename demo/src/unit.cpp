@@ -1,8 +1,9 @@
 #include "unit.h"
 
+#include "browse.h"
+#include "config.h"
 #include "debug.h"
 #include "hexes.h"
-#include "move_unit.h"
 #include "perf.h"
 #include "sprite.h"
 #include "util.h"
@@ -10,6 +11,8 @@
 #include "set.h"
 #include <algorithm>
 #include <queue>
+#include <ranges>
+#include <unordered_map>
 
 extern "C" {
 #include <tonc_memmap.h>
@@ -18,9 +21,7 @@ extern "C" {
 namespace unit {
 
 namespace r = std::ranges;
-
-using hexes::CubeCoord;
-using mdspan::Span2d;
+namespace rv = std::ranges::views;
 
 u8 cost(u8 terrain) {
 	switch (terrain) {
@@ -77,7 +78,14 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 	std::priority_queue<CC_Depth, std::vector<CC_Depth>, CompareDepth> queue{};
 	// std::queue<CC_Depth> queue{};
 
-	std::vector<bool> visited(map.width * map.height, false);
+	// 0 = unvisited, 1 = visited, 2 = visited but occupied by ally
+	std::vector<u8> visited(map.width * map.height, false);
+	for (Unit const &unit : config::enemy_units()) {
+		visited[hex_to_idx(unit.pos())] = 1;
+	}
+	for (Unit const &unit : config::user_units()) {
+		visited[hex_to_idx(unit.pos())] = 2;
+	}
 
 	queue.push({this->sprite.pos, 0});
 	visited[hex_to_idx(this->sprite.pos)] = true;
@@ -92,8 +100,10 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 		// auto [curr, depth] = queue.front();
 		queue.pop();
 
-		out.insert(curr);
-		move_unit::update_palette_of_tile(curr, 1);
+		if (visited[hex_to_idx(curr)] == 1) {
+			out.insert(curr);
+			browse::update_palette_of_tile(curr, 1);
+		}
 
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
 			auto neighbour_ = neighbour + curr;
@@ -105,9 +115,11 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 
 			u8 depth_ = depth + cost(map[(size_t)xy.row, (size_t)xy.col]);
 			size_t idx = hex_to_idx(neighbour_);
-			if (!visited[idx] && depth_ <= this->stats.movement) {
+			if (0 == visited[idx] && depth_ <= this->stats.movement) {
 				queue.push({neighbour_, depth_});
-				visited[idx] = true;
+				visited[idx] = 1;
+			} else if (2 == visited[idx] && depth_ <= this->stats.movement) {
+				queue.push({neighbour_, depth_});
 			}
 		}
 	}
@@ -130,6 +142,34 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 	debug::println((int)end_frame_id);
 
 	return out;
+}
+
+std::vector<std::pair<Unit *, CubeCoord>>
+Unit::attackable_units(Set<CubeCoord> const &accessible) const {
+	std::unordered_map<CubeCoord, Unit *> opposing_army{};
+
+	for (auto &unit :
+		 this->is_user() ? config::enemy_units() : config::user_units())
+	{
+		opposing_army[unit.pos()] = &unit;
+	}
+
+	std::vector<std::pair<Unit *, CubeCoord>> out{};
+
+	for (auto tile : accessible) {
+		for (auto dir : hexes::CUBE_DIRECTION_VECTORS) {
+			auto cand = tile + dir;
+			if (opposing_army.contains(cand)) {
+				out.push_back({opposing_army[cand], tile});
+			}
+		}
+	}
+
+	return out;
+}
+
+bool Unit::is_user() const {
+	return config::user_army.begin() <= this && this < config::user_army.end();
 }
 
 } // namespace unit

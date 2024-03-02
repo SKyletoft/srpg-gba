@@ -35,10 +35,6 @@ Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 		d.y = -this->scroll_speed;
 	}
 
-	this->cursor.animation.x =
-		(s16)((this->cursor.animation.x * (s16)3) / (s16)4);
-	this->cursor.animation.y =
-		(s16)((this->cursor.animation.y * (s16)3) / (s16)4);
 	this->cursor.horizontal_flip = this->cursor.pos.is_odd();
 
 	if (screen_centre.x - cursor.x < -120 + 16
@@ -73,12 +69,8 @@ void CursorScroller::handle_input() {
 		if (input::get_button(button).is_down()
 			&& this->directional_cooldowns[index] <= 0)
 		{
-			auto const old_cur_screen = this->cursor.pos.to_pixel_space();
-			this->cursor.pos += dir;
-			auto const new_cur_screen = this->cursor.pos.to_pixel_space();
+			this->cursor.move_to(dir);
 			this->directional_cooldowns[index] = this->cooldown;
-			this->cursor.animation +=
-				(old_cur_screen - new_cur_screen).into<s16>();
 		}
 		if (this->directional_cooldowns[index] > this->cooldown) {
 			this->directional_cooldowns[index] = 0;

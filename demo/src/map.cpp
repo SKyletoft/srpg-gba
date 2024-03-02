@@ -18,23 +18,9 @@ namespace map {
 
 namespace rv = std::ranges::views;
 
-using unit::Unit;
-
-void Map::update() {
-	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
-
-	auto const d =
-		config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
-	config::hexmap.move_in_bounds(d.x, d.y);
-
-	config::hexmap.update_layer_partial(config::hexmap.layer0);
-	config::hexmap.update_layer_partial(config::hexmap.layer1);
-}
+void Map::suspend() { config::cursor.cursor.hide(); }
 
 void Map::restore() {
-	// config::hexmap.load_map(config::hexmap.layer0);
-	// config::hexmap.load_map(config::hexmap.layer1);
-
 	if (state::last_state == 1 || state::last_state == 4 || state::blacked_out)
 	{
 		loading::load_map_graphics();
@@ -54,6 +40,11 @@ void Map::restore() {
 void Map::vsync_hook() {
 	config::hexmap.update_camera();
 	config::cursor.cursor.render(config::hexmap.layer0.pos);
+
+	config::cursor.cursor.animation.x =
+		(s16)((config::cursor.cursor.animation.x * (s16)3) / (s16)4);
+	config::cursor.cursor.animation.y =
+		(s16)((config::cursor.cursor.animation.y * (s16)3) / (s16)4);
 
 	u8 animation_cycle = (u8)(this->animation_cycle / 20);
 

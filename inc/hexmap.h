@@ -30,7 +30,7 @@ class Hexmap : public scrolling_map::ScrollingMap {
 	ScreenEntry get_tile(Layer &, s16, s16) override;
 
 	Hexmap(std::array<std::array<u8, WIDTH>, HEIGHT> const &map)
-		: ScrollingMap(WIDTH * 3 * 8 - 240, HEIGHT * 16 - 155, 1, 26, 0, 30)
+		: ScrollingMap(WIDTH * 3 * 8 - 240, HEIGHT * 16 - 155)
 		, map(map) {}
 };
 

@@ -24,8 +24,8 @@ using tiles::SCREENBLOCKS;
 using tiles::ScreenEntry;
 using tiles::STile;
 
-constexpr size_t BG0_TILE_SOURCE = 0;
-constexpr size_t BG0_TILE_MAP = 8;
+constexpr size_t BG0_TILE_SOURCE = 3;
+constexpr size_t BG0_TILE_MAP = 0;
 
 void TtyMode::update() {
 	if (input::get_button(Button::R).is_up()
