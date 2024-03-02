@@ -37,6 +37,12 @@ constexpr tiles::Palette RED_USED{
 	Colour(16, 0, 0),
 	Colour(2, 0, 0),
 };
+constexpr tiles::Palette UI_PALETTE{
+	tiles::TRANSPARENT,
+	Colour::from_24bit_colour(198, 164, 89),
+	tiles::WHITE,
+	Colour(25, 25, 25),
+};
 
 void load_map_graphics();
 
