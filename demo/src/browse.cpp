@@ -244,6 +244,7 @@ void DefaultMap::selecting_enemy_handler() {
 void DefaultMap::enemy_turn_handler() {
 	if (config::used.size() == config::enemy_soldier_count) {
 		this->end_enemy_turn();
+		return;
 	}
 
 	for (Unit &enemy : config::enemy_units()) {
