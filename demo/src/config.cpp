@@ -1,6 +1,6 @@
 #include "config.h"
 
-#include "browse.h"
+#include "map.h"
 #include "cursor_scroller.h"
 #include "debug.h"
 #include "export.h"
@@ -127,7 +127,7 @@ std::span<Unit> enemy_units() {
 
 overlay::Overlay overlay{};
 battle::Battle battle_ani{};
-browse::DefaultMap map{};
+map::Map map{};
 context_menu::ContextMenu popup{
 	{"Red",
 	 []() {
@@ -147,35 +147,36 @@ context_menu::ContextMenu popup{
 		 BG_PALETTE_MEMORY[15].colours[1] = tiles::BLUE;
 		 SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::BLUE;
 	 }},
-	{"End turn", [](){
-		for (auto &unit : config::user_units()) {
-			config::used.insert(&unit);
-		}
-		state::next_state = 0;
-	}},
+	{"End turn",
+	 []() {
+		 for (auto &unit : config::user_units()) {
+			 config::used.insert(&unit);
+		 }
+		 state::next_state = 0;
+	 }},
 	{"Exit", []() { state::next_state = 0; }},
 };
 context_menu::ContextMenu movement_popup{
 	{"Attack",
 	 []() {
-		 map.state = browse::MapState::Animating;
+		 map.state = map::MapState::Animating;
 		 state::next_state = 0;
 		 config::original_pos = config::selected_unit->pos();
 		 config::selected_unit->sprite.move_to(config::cursor.pos());
-		 browse::update_palettes_of(config::highlights, 0);
+		 map::update_palettes_of(config::highlights, 0);
 
 		 highlights.clear();
 		 for (Unit *enemy : neighbouring_enemies) {
 			 highlights.insert(enemy->pos());
 		 }
-		 browse::update_palettes_of(highlights, 1);
+		 map::update_palettes_of(highlights, 1);
 	 }},
 	{"Wait",
 	 []() {
-		 map.state = browse::MapState::Animating;
+		 map.state = map::MapState::Animating;
 		 neighbouring_enemies.clear();
 		 config::selected_unit->sprite.move_to(config::cursor.pos());
-		 browse::update_palettes_of(config::highlights, 0);
+		 map::update_palettes_of(config::highlights, 0);
 		 config::highlights.clear();
 		 state::next_state = 0;
 	 }},

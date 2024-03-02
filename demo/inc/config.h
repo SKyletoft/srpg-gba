@@ -3,11 +3,11 @@
 #include "cursor_scroller.h"
 #include "tiles.h"
 
-#include "overlay.h"
 #include "battle.h"
-#include "browse.h"
 #include "context_menu.h"
 #include "hl-map.h"
+#include "map.h"
+#include "overlay.h"
 #include "soundbank.h"
 #include "unit.h"
 
@@ -17,7 +17,7 @@
 
 namespace config {
 
-using browse::CubeCoord;
+using hexes::CubeCoord;
 using sprite::HexSprite;
 using tiles::BG_PALETTE_MEMORY;
 using tiles::SPRITE_PALETTE_MEMORY;
@@ -39,7 +39,7 @@ extern size_t enemy_soldier_count;
 
 extern overlay::Overlay overlay;
 extern battle::Battle battle_ani;
-extern browse::DefaultMap map;
+extern map::Map map;
 extern context_menu::ContextMenu popup;
 extern context_menu::ContextMenu movement_popup;
 extern std::array<state::Mode *, 7> const modes_data;

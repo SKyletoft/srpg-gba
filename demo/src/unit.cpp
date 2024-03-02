@@ -1,6 +1,5 @@
 #include "unit.h"
 
-#include "browse.h"
 #include "config.h"
 #include "debug.h"
 #include "hexes.h"
@@ -102,7 +101,7 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 
 		if (visited[hex_to_idx(curr)] == 1) {
 			out.insert(curr);
-			browse::update_palette_of_tile(curr, 1);
+			map::update_palette_of_tile(curr, 1);
 		}
 
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
