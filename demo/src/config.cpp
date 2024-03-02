@@ -41,6 +41,7 @@ std::array<Unit, 8> user_army{
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 1,
 				.tile_index = 33,
+				.prio = 1,
 				.palette = 1,
 			},
 		.stats =
@@ -65,6 +66,7 @@ std::array<Unit, 8> user_army{
 				.hardware_id = 2,
 				.horizontal_flip = true,
 				.tile_index = 33,
+				.prio = 1,
 				.palette = 1,
 			},
 		.stats =
@@ -92,6 +94,7 @@ std::array<Unit, 20> enemy_army{
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 9,
 				.tile_index = 33,
+				.prio = 1,
 				.palette = 2,
 			},
 		.stats = Stats{},
@@ -105,6 +108,7 @@ std::array<Unit, 20> enemy_army{
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 3,
 				.tile_index = 33,
+				.prio = 1,
 				.palette = 2,
 			},
 		.stats = Stats{},
