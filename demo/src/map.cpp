@@ -18,6 +18,8 @@ namespace map {
 
 namespace rv = std::ranges::views;
 
+void Map::suspend() { config::cursor.cursor.hide(); }
+
 void Map::restore() {
 	if (state::last_state == 1 || state::last_state == 4 || state::blacked_out)
 	{
