@@ -1,10 +1,10 @@
 #include "config.h"
 
-#include "map.h"
 #include "cursor_scroller.h"
 #include "debug.h"
 #include "export.h"
 #include "hexes.h"
+#include "map.h"
 #include "overlay.h"
 #include "sprite.h"
 #include "state.h"

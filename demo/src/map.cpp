@@ -1,8 +1,8 @@
 #include "map.h"
 
+#include "input.h"
 #include "state.h"
 #include "tiles.h"
-#include "input.h"
 
 #include "config.h"
 #include "loading.h"
