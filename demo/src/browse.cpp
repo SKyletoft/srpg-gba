@@ -258,25 +258,26 @@ void DefaultMap::enemy_turn_handler() {
 		std::vector<std::pair<Unit *, CubeCoord>> vec =
 			enemy.attackable_units(accessible);
 
+		auto const f = [&](std::pair<Unit *, CubeCoord> target) {
+			enemy.sprite.move_to(target.second);
+			config::used.insert(&enemy);
+			this->state = MapState::AnimatingEnemy;
+			update_palettes_of(accessible, 0);
+		};
+
 		switch (vec.size()) {
 		case 0:
 			config::used.insert(&enemy);
 			update_palettes_of(accessible, 0);
 			continue;
 		case 1:
-			config::used.insert(&enemy);
-			enemy.sprite.move_to(vec[0].second);
-			this->state = MapState::AnimatingEnemy;
-			update_palettes_of(accessible, 0);
+			f(vec[0]);
 			return;
 		default:
-			config::used.insert(&enemy);
 			auto target = *r::min_element(vec, [&](auto l, auto r) {
 				return l.first->stats.health < r.first->stats.health;
 			});
-			enemy.sprite.move_to(target.second);
-			this->state = MapState::AnimatingEnemy;
-			update_palettes_of(accessible, 0);
+			f(target);
 			return;
 		}
 	}
