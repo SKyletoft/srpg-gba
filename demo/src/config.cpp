@@ -147,6 +147,12 @@ context_menu::ContextMenu popup{
 		 BG_PALETTE_MEMORY[15].colours[1] = tiles::BLUE;
 		 SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::BLUE;
 	 }},
+	{"End turn", [](){
+		for (auto &unit : config::user_units()) {
+			config::used.insert(&unit);
+		}
+		state::next_state = 0;
+	}},
 	{"Exit", []() { state::next_state = 0; }},
 };
 context_menu::ContextMenu movement_popup{
