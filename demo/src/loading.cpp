@@ -32,13 +32,8 @@ void load_map_graphics() {
 	util::wait_for_vsync();
 	config::hexmap.load_palettes(config::hexmap.layer0);
 
-	tiles::BG_PALETTE_MEMORY[15] = tiles::Palette{{
-		tiles::TRANSPARENT,
-		tiles::WHITE,
-		// clangd does not consider this a constant expression, gcc does
-		Colour::from_24bit_colour(198, 164, 89),
-	}};
 	tiles::BG_PALETTE_MEMORY[1] = *(tiles::Palette *)movement_hlPal;
+	tiles::BG_PALETTE_MEMORY[15] = UI_PALETTE;
 
 	config::hexmap.update_camera();
 
