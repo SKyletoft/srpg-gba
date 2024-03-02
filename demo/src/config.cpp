@@ -5,6 +5,7 @@
 #include "debug.h"
 #include "export.h"
 #include "hexes.h"
+#include "overlay.h"
 #include "sprite.h"
 #include "state.h"
 #include "tiles.h"
@@ -124,6 +125,7 @@ std::span<Unit> enemy_units() {
 	return std::span<Unit>{enemy_army.data(), enemy_soldier_count};
 }
 
+overlay::Overlay overlay{};
 battle::Battle battle_ani{};
 browse::DefaultMap map{};
 context_menu::ContextMenu popup{
@@ -180,7 +182,7 @@ std::array<state::Mode *, 7> const modes_data{
 	nullptr,
 	&battle_ani,
 	&movement_popup,
-	nullptr,
+	&overlay,
 };
 
 u32 startup_song = MOD_BAD_APPLE;

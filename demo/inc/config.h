@@ -3,6 +3,7 @@
 #include "cursor_scroller.h"
 #include "tiles.h"
 
+#include "overlay.h"
 #include "battle.h"
 #include "browse.h"
 #include "context_menu.h"
@@ -36,6 +37,7 @@ extern size_t user_soldier_count;
 extern std::array<Unit, 20> enemy_army;
 extern size_t enemy_soldier_count;
 
+extern overlay::Overlay overlay;
 extern battle::Battle battle_ani;
 extern browse::DefaultMap map;
 extern context_menu::ContextMenu popup;
