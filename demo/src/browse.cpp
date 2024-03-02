@@ -145,6 +145,7 @@ void DefaultMap::end_player_turn() {
 	}
 	config::used.clear();
 	config::overlay.is_enemy = true;
+	config::selected_unit = nullptr;
 	this->state = MapState::EnemyTurn;
 	state::next_state = 6;
 }
@@ -155,6 +156,7 @@ void DefaultMap::end_enemy_turn() {
 	}
 	config::used.clear();
 	config::overlay.is_enemy = false;
+	config::selected_unit = nullptr;
 	this->state = MapState::WaitingForInput;
 	state::next_state = 6;
 }
@@ -259,15 +261,17 @@ void DefaultMap::enemy_turn_handler() {
 			enemy.attackable_units(accessible);
 
 		auto const f = [&](std::pair<Unit *, CubeCoord> target) {
+			config::selected_unit = &enemy;
 			enemy.sprite.move_to(target.second);
-			config::used.insert(&enemy);
 			this->state = MapState::AnimatingEnemy;
+			config::battle_ani.set_combatants(enemy, *target.first);
 			update_palettes_of(accessible, 0);
 		};
 
 		switch (vec.size()) {
 		case 0:
 			config::used.insert(&enemy);
+			enemy.sprite.palette = 4;
 			update_palettes_of(accessible, 0);
 			continue;
 		case 1:
@@ -284,8 +288,14 @@ void DefaultMap::enemy_turn_handler() {
 }
 
 void DefaultMap::animating_enemy_handler() {
-	if (config::selected_unit->sprite.animation == Point<s16>{0, 0}) {
-		end_enemy_turn();
+	if (config::selected_unit == nullptr
+		|| config::selected_unit->sprite.animation == Point<s16>{0, 0})
+	{
+		config::used.insert(config::selected_unit);
+		config::selected_unit->sprite.palette = 4;
+		config::selected_unit = nullptr;
+		this->state = MapState::EnemyTurn;
+		state::next_state = 4;
 	}
 }
 
