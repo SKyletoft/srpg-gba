@@ -137,13 +137,24 @@ void DefaultMap::selected_input() {
 	}
 }
 
-void DefaultMap::end_turn() {
+void DefaultMap::end_player_turn() {
 	for (auto &unit : config::user_units()) {
 		unit.sprite.palette = 1;
 	}
 	config::used.clear();
+	config::overlay.is_enemy = true;
 	this->state = MapState::EnemyTurn;
-	// state::next_state = _;
+	state::next_state = 6;
+}
+
+void DefaultMap::end_enemy_turn() {
+	for (auto &unit : config::enemy_units()) {
+		unit.sprite.palette = 2;
+	}
+	config::used.clear();
+	config::overlay.is_enemy = false;
+	this->state = MapState::WaitingForInput;
+	state::next_state = 6;
 }
 
 void DefaultMap::update() {
@@ -174,7 +185,7 @@ void DefaultMap::update() {
 	} break;
 	case MapState::WaitingForInput: {
 		if (config::used.size() == config::user_soldier_count) {
-			this->end_turn();
+			this->end_player_turn();
 			break;
 		}
 

@@ -26,7 +26,8 @@ enum class MapState {
 class DefaultMap : public map::Map {
   private:
 	void selected_input();
-	void end_turn();
+	void end_player_turn();
+	void end_enemy_turn();
 
   public:
 	MapState state = MapState::WaitingForInput;
