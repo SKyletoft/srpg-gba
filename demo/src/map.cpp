@@ -95,16 +95,39 @@ void DrawStatus::render(size_t ui_layer_map) {
 void Map::suspend() { config::cursor.cursor.hide(); }
 
 void Map::restore() {
-	if (state::last_state == 1 || state::last_state == 4 || state::blacked_out)
-	{
+	if (state::blacked_out) {
 		for (auto i : rv::iota(0uz, 128uz)) {
 			sprite::HardwareSprite::hide(i);
 		}
 
-		loading::load_ui();
 		loading::load_sprites();
 		loading::load_tiles();
+		loading::load_ui();
 	}
+
+	switch (state::last_state) {
+	case 0: {
+	} break;
+	case 1: {
+		for (auto i : rv::iota(0uz, 128uz)) {
+			sprite::HardwareSprite::hide(i);
+		}
+
+		loading::load_sprites();
+		loading::load_tiles();
+		loading::load_ui();
+	} break;
+	case 2: {} break;
+	case 4: {
+		loading::load_sprites();
+		loading::load_ui();
+	} break;
+	case 5: {} break;
+	case 6: {
+		loading::load_ui();
+	} break;
+	}
+
 	if (state::last_state != 2) {
 		tiles::SPRITE_PALETTE_MEMORY[0] = *(tiles::Palette *)arrowPal;
 	}
