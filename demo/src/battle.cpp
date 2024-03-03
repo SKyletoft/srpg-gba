@@ -85,12 +85,21 @@ void Battle::fight() {
 			(s8)std::max(0, attacker.stats.attack - defender.stats.defence);
 		defender.stats.health -= damage;
 	};
+
 	attack(*this->left_unit, *this->right_unit);
+	this->continue_to_second_round = this->right_unit->stats.health > 0;
+	if (!this->continue_to_second_round) {
+		return;
+	}
 	attack(*this->right_unit, *this->left_unit);
 }
 
 void Battle::update() {
 	END_EARLY();
+	if (this->frame == 5 && !this->continue_to_second_round) {
+		state::next_state = 0;
+		return;
+	}
 	this->animation_update();
 }
 

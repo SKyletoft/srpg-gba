@@ -17,6 +17,8 @@ class Battle : public state::Mode {
 	Unit *left_unit = nullptr;
 	Unit *right_unit = nullptr;
 
+	bool continue_to_second_round;
+
 	u8 frame = 0;
 	u32 time = 0;
 
