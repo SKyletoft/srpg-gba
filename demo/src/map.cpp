@@ -418,7 +418,7 @@ void Map::selecting_enemy_handler() {
 }
 
 void Map::enemy_turn_handler() {
-	if (config::used.size() == config::enemy_soldier_count) {
+	if (config::used.size() >= config::enemy_soldier_count) {
 		this->end_enemy_turn();
 		return;
 	}
