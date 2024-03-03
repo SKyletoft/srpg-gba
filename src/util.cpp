@@ -48,13 +48,9 @@ void wait_for_drawing_start() {
 		;
 }
 
-void wait_for_drawing_complete() {
-	 VBlankIntrWait();
-}
+void wait_for_drawing_complete() { VBlankIntrWait(); }
 
-void wait_for_vsync() {
-	wait_for_drawing_complete();
-}
+void wait_for_vsync() { wait_for_drawing_complete(); }
 
 // Progress in the range 0-255
 u8 lerp(u8 from, u8 to, s32 progress) {
