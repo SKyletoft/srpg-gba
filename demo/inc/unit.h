@@ -44,7 +44,8 @@ struct Unit {
 	constexpr CubeCoord &pos() { return this->sprite.pos; }
 	void render(Point<s16>, u8) const;
 
-	Set<CubeCoord> accessible_tiles(mdspan::Span2d<const u8> const &) const;
+	Set<CubeCoord>
+	accessible_tiles(mdspan::Span2d<const u8> const &, bool = false) const;
 	std::vector<std::pair<Unit *, CubeCoord>>
 	attackable_units(Set<CubeCoord> const &) const;
 

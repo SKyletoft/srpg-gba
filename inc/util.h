@@ -16,6 +16,8 @@ namespace util {
 extern vu32 x;
 [[noreturn]] void spin();
 
+void sleep(u32);
+
 void set_screen_to_black();
 void clear_layer(size_t);
 

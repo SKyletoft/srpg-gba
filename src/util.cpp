@@ -22,6 +22,12 @@ vu32 x;
 	}
 }
 
+void sleep(u32 frames) {
+	for (; frames != 0; --frames) {
+		wait_for_vsync();
+	}
+}
+
 void clear_layer(size_t screenblock) {
 	const tiles::ScreenEntry empty{0, 0, 0};
 	std::span<u16> tile_map{(u16 *)tiles::SCREENBLOCKS[screenblock], 1024};
@@ -42,13 +48,9 @@ void wait_for_drawing_start() {
 		;
 }
 
-void wait_for_drawing_complete() {
-	 VBlankIntrWait();
-}
+void wait_for_drawing_complete() { VBlankIntrWait(); }
 
-void wait_for_vsync() {
-	wait_for_drawing_complete();
-}
+void wait_for_vsync() { wait_for_drawing_complete(); }
 
 // Progress in the range 0-255
 u8 lerp(u8 from, u8 to, s32 progress) {
