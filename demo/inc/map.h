@@ -28,18 +28,18 @@ enum class MapState {
 };
 
 struct DrawStatus {
-	std::string_view name;
-	std::string hp_text;
-	size_t actual_width;
-	u16 portrait;
+	std::string_view name = "";
+	std::string hp_text = "";
+	size_t actual_width = 0;
+	u16 portrait = 0;
 
 	bool rendered = false;
 	bool visible = true;
 
-	DrawStatus();
+	constexpr DrawStatus() {};
 	DrawStatus(Unit const &unit);
 
-	bool operator==(DrawStatus const &) const ;
+	bool operator==(DrawStatus const &) const;
 
 	void render(size_t ui_layer_map);
 };

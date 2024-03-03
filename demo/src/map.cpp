@@ -39,15 +39,14 @@ Unit *get_hovered_unit() {
 	return &*selected_unit;
 }
 
-DrawStatus::DrawStatus() {}
-
 DrawStatus::DrawStatus(Unit const &unit)
 	: name(unit.name)
 	, hp_text(std::format("{}/{}", unit.stats.health, unit.stats.max_health))
 	, actual_width(
 		  std::min(std::max(unit.name.size(), hp_text.size()) + 6, 30uz)
 	  )
-	, portrait(unit.portrait) {}
+	, portrait(unit.portrait)
+	, rendered(false) {}
 
 bool DrawStatus::operator==(DrawStatus const &rhs) const {
 	// Explicitly don't check rendered or visible
@@ -152,6 +151,8 @@ void Map::restore() {
 					   | BG_REG_32x32 | BG_PRIO(0));
 	REG_DISPCNT =
 		DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_OBJ | DCNT_OBJ_1D;
+
+	this->draw_status = {};
 }
 
 void Map::vsync_hook() {
