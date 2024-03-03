@@ -22,6 +22,12 @@ vu32 x;
 	}
 }
 
+void sleep(u32 frames) {
+	for (; frames != 0; --frames) {
+		wait_for_vsync();
+	}
+}
+
 void clear_layer(size_t screenblock) {
 	const tiles::ScreenEntry empty{0, 0, 0};
 	std::span<u16> tile_map{(u16 *)tiles::SCREENBLOCKS[screenblock], 1024};
