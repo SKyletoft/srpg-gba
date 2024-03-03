@@ -92,7 +92,6 @@ void Battle::fight() {
 void Battle::update() {
 	END_EARLY();
 	this->animation_update();
-	this->fight();
 }
 
 void Battle::restore() {
@@ -141,6 +140,8 @@ void Battle::restore() {
 
 	// REG_DISPCNT = DCNT_MODE0 | DCNT_OBJ | DCNT_OBJ_1D;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
+
+	this->fight();
 }
 
 void Battle::vsync_hook() {
