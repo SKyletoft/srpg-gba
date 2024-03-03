@@ -18,7 +18,7 @@ void HexSprite::hide() const {
 	HardwareSprite::hide((size_t)this->hardware_id);
 }
 
-void HexSprite::move() { this->animation = this->animation * 3 / 4; }
+void HexSprite::move() { this->animation = this->animation * 7 / 8; }
 
 void HexSprite::render(Point<s16> const camera_offset) const {
 	auto const pixel_space = this->pos.to_pixel_space().into<s16>();
