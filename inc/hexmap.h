@@ -15,9 +15,6 @@ using tiles::Palette;
 using tiles::ScreenEntry;
 using tiles::STile;
 
-static constexpr s16 WIDTH = (s16)40;
-static constexpr s16 HEIGHT = (s16)29;
-
 class Hexmap : public scrolling_map::ScrollingMap {
   public:
 	mdspan::Span2d<const u8> const map;
@@ -29,8 +26,11 @@ class Hexmap : public scrolling_map::ScrollingMap {
 	void load_palettes(Layer &) override;
 	ScreenEntry get_tile(Layer &, s16, s16) override;
 
-	Hexmap(std::array<std::array<u8, WIDTH>, HEIGHT> const &map)
-		: ScrollingMap(WIDTH * 3 * 8 - 240, HEIGHT * 16 - 155)
+	Hexmap(mdspan::Span2d<const u8> const map)
+		: ScrollingMap(
+			std::max((s16)0, (s16)(map.width * 3 * 8 - 240)),
+			std::max((s16)0, (s16)(map.height * 16 - 155))
+		)
 		, map(map) {}
 };
 
@@ -44,8 +44,7 @@ class SimpleHexmap : public Hexmap {
 	void load_palettes(Layer &) override;
 
 	SimpleHexmap(
-		std::array<std::array<u8, WIDTH>, HEIGHT> const &map,
-		std::span<const STile> const tiles,
+		mdspan::Span2d<const u8> const map, std::span<const STile> const tiles,
 		std::span<const Palette> const palettes
 	)
 		: Hexmap(map)

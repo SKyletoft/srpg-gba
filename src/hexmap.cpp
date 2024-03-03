@@ -56,7 +56,7 @@ ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
 
 	u16 index = 0;
 	u8 palette = 0;
-	if (offset.col < WIDTH - (offset.row & 1) && offset.row < HEIGHT) {
+	if (offset.col < this->map.width - (offset.row & 1) && offset.row < this->map.height) {
 		u8 tile_type = this->map[(size_t)offset.row, (size_t)offset.col];
 		u16 tile_index = (u16)((y % 4) * 3 + (x % 3));
 		u16 hex_index = tile_type * TILE_SIZE;
