@@ -25,13 +25,14 @@ LIBTONC := $(DEVKITPRO)/libtonc
 # the makefile is found
 #
 #---------------------------------------------------------------------------------
-TARGET   := $(notdir $(CURDIR))
-BUILD    := build
-SOURCES  := src demo/src
-INCLUDES := inc demo/inc
-DATA     :=
-MUSIC    := demo/audio
-GRAPHICS := demo/gfx
+TARGET   		:= $(notdir $(CURDIR))
+BUILD    		:= build
+SOURCES  		:= src demo/src
+INCLUDES 		:= inc demo/inc
+DATA     		:=
+MUSIC    		:= demo/audio
+ENGINE_MUSIC 	:= audio
+GRAPHICS 		:= demo/gfx
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -104,8 +105,13 @@ PNGFILES := $(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
 BINFILES := $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
 ifneq ($(strip $(MUSIC)),)
-	export AUDIOFILES := $(foreach dir,$(notdir $(wildcard $(MUSIC)/*.*)),$(CURDIR)/$(MUSIC)/$(dir))
+	export AUDIOFILES := $(foreach file, $(foreach dir, $(MUSIC), $(wildcard $(dir)/*.*)), $(CURDIR)/$(file))
 	BINFILES += soundbank.bin
+endif
+
+ifneq ($(strip $(ENGINE_MUSIC)),)
+	export ENGINE_AUDIOFILES := $(foreach file, $(foreach dir, $(ENGINE_MUSIC), $(wildcard $(dir)/*.*)), $(CURDIR)/$(file))
+	BINFILES += engine_soundbank.bin
 endif
 
 #---------------------------------------------------------------------------------
@@ -176,6 +182,10 @@ $(OFILES_SOURCES) : $(HFILES)
 soundbank.bin soundbank.h : $(AUDIOFILES)
 #---------------------------------------------------------------------------------
 	@mmutil $^ -osoundbank.bin -hsoundbank.h
+
+engine_soundbank.bin engine_soundbank.h : $(ENGINE_AUDIOFILES)
+#---------------------------------------------------------------------------------
+	@mmutil $^ -oengine_soundbank.bin -hengine_soundbank.h
 
 #---------------------------------------------------------------------------------
 # This rule links in binary data with the .bin extension
