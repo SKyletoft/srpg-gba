@@ -133,7 +133,8 @@ void Battle::restore() {
 }
 
 void Battle::suspend() {
-	REG_DISPCNT &= (u16) ~(DCNT_OBJ | DCNT_OBJ_1D);
+	this->left.hide(1);
+	this->right.hide(2);
 
 	auto const maybe_kill = [](Unit *unit) {
 		if (unit->stats.health > 0) {
