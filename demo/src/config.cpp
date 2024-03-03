@@ -5,6 +5,7 @@
 #include "export.h"
 #include "hexes.h"
 #include "map.h"
+#include "mdspan.h"
 #include "overlay.h"
 #include "sprite.h"
 #include "state.h"
@@ -12,6 +13,8 @@
 #include "tty.h"
 
 #include "context_menu.h"
+#include "map1.h"
+#include "map2.h"
 #include "soundbank.h"
 #include "test_map.h"
 
@@ -26,7 +29,8 @@ namespace config {
 using hexes::CubeCoord;
 
 cursor_scroller::CursorScroller cursor{};
-hl_map::HighlightMap hexmap{test_map::map};
+// hl_map::HighlightMap hexmap{test_map::map};
+hl_map::HighlightMap hexmap{mdspan::Span2d<const u8>(map2::map)};
 
 Unit *selected_unit = nullptr;
 CubeCoord original_pos{};
