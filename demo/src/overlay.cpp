@@ -31,11 +31,11 @@ using tiles::Palette;
 using tiles::SCREENBLOCKS;
 using tiles::ScreenEntry;
 
-size_t coord(Point<s32> point) { return (size_t)(point.y * 32 + point.x); }
+size_t coord(Point<u32> point) { return (size_t)(point.y * 32 + point.x); }
 
-void draw_logo(s32 from) {
-	s32 x = from % 20;
-	s32 y = from / 20;
+void draw_logo(u32 from) {
+	u32 x = from % 20;
+	u32 y = from / 20;
 
 	size_t const tile_idx = coord({x, y});
 	u16 const se_idx = (u16)(y * 20 + x) + 1;
@@ -46,7 +46,7 @@ bool Overlay::blackout() { return false; }
 
 void Overlay::update() {
 	if (this->time < 220 / 5) {
-		for (s32 i = (s32)(this->time * 5); i < (this->time + 1) * 5; ++i) {
+		for (u32 i = this->time * 5; i < (this->time + 1) * 5; ++i) {
 			draw_logo(i);
 		}
 	}
@@ -77,7 +77,7 @@ void Overlay::restore() {
 		);
 	}
 
-	for (auto [x, y] : rv::cartesian_product(rv::iota(0, 32), rv::iota(0, 32)))
+	for (auto [x, y] : rv::cartesian_product(rv::iota(0u, 32u), rv::iota(0u, 32u)))
 	{
 		size_t const idx = coord({x, y});
 		SCREENBLOCKS[TILE_MAP][idx] = ScreenEntry(0, 0, 15);
