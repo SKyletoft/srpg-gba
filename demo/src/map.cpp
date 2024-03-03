@@ -117,12 +117,14 @@ void Map::restore() {
 		loading::load_tiles();
 		loading::load_ui();
 	} break;
-	case 2: {} break;
+	case 2: {
+	} break;
 	case 4: {
 		loading::load_sprites();
 		loading::load_ui();
 	} break;
-	case 5: {} break;
+	case 5: {
+	} break;
 	case 6: {
 		loading::load_ui();
 	} break;
