@@ -31,13 +31,6 @@ namespace rv = std::ranges::views;
 using tiles::Colour;
 using tiles::Palette;
 
-// Progress in the range 0-255
-u8 lerp(u8 from, u8 to, s32 progress) {
-	s32 base = to;
-	s32 range = from - to;
-	return (u8)(range * progress / 255 + base);
-}
-
 void Battle::animation_update() {
 	this->time++;
 	if (this->time > Battle::speed) {
@@ -57,8 +50,8 @@ void Battle::animation_update() {
 		animation_sequence[(this->frame + 1) % animation_sequence.size()];
 
 	s32 progress = (s32)(this->time * (255 / Battle::speed));
-	u8 x_l = lerp(x_l_to, x_l_from, progress);
-	u8 x_r = lerp(x_r_to, x_r_from, progress);
+	u8 x_l = util::lerp(x_l_to, x_l_from, progress);
+	u8 x_r = util::lerp(x_r_to, x_r_from, progress);
 
 	this->left.x = x_l;
 	this->left.tile_index = frame_l * 64;
