@@ -43,6 +43,7 @@ std::array<Unit, 8> user_army{
 				.centre = {4, 0},
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 1,
+				.horizontal_flip = true,
 				.tile_index = 33,
 				.prio = 1,
 				.palette = 1,
@@ -99,7 +100,7 @@ std::array<Unit, 20> enemy_army{
 		.sprite =
 			HexSprite{
 				.pos = hexes::OffsetXYCoord(6, 5).to_cube_coord(),
-				.centre = {4, 0},
+				.centre = {5, 0},
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 9,
 				.tile_index = 33,
@@ -126,7 +127,7 @@ std::array<Unit, 20> enemy_army{
 		.sprite =
 			HexSprite{
 				.pos = hexes::OffsetXYCoord(7, 3).to_cube_coord(),
-				.centre = {4, 0},
+				.centre = {5, 0},
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 3,
 				.tile_index = 33,
