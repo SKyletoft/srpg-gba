@@ -11,6 +11,19 @@ namespace battle {
 using sprite::HardwareSprite;
 using unit::Unit;
 
+constexpr std::array<std::tuple<u8, u8, u8, u8>, 10> animation_sequence{
+	std::tuple<u8, u8, u8, u8>{48, 0, 128, 0},
+	{50, 1, 128, 0},
+	{70, 2, 128, 0},
+	{90, 3, 128, 0},
+	{108, 4, 128, 0},
+	{50, 0, 128, 1},
+	{50, 0, 108, 2},
+	{50, 0, 88, 3},
+	{50, 0, 78, 4},
+	{50, 0, 128, 0},
+};
+
 class Battle : public state::Mode {
 	std::default_random_engine rng;
 
@@ -40,7 +53,7 @@ class Battle : public state::Mode {
 		.palette = 1,
 	};
 
-	static constexpr decltype(time) speed = 5;
+	static constexpr decltype(time) speed = 15;
 
   public:
 	Battle() : rng() {}
