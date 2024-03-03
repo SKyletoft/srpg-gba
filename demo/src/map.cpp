@@ -265,7 +265,8 @@ void Map::selected_input() {
 	}
 
 	if (input::get_button(Button::A) == InputState::Pressed
-		&& config::highlights.contains(config::cursor.pos()))
+		&& config::highlights.contains(config::cursor.pos())
+		&& !config::used.contains(config::selected_unit))
 	{
 		config::neighbouring_enemies.clear();
 		for (auto const &neighbour : hexes::CUBE_DIRECTION_VECTORS) {
