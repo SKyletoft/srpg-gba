@@ -25,7 +25,7 @@ void load_ui() {
 		sizeof(fontTiles)
 	);
 	std::memcpy(
-		tiles::CHARBLOCKS[config::map.ui_layer_source] + 96,
+		tiles::CHARBLOCKS[config::map.ui_layer_source] + 98,
 		portraitsTiles,
 		sizeof(portraitsTiles)
 	);

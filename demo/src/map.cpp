@@ -80,7 +80,7 @@ void DrawStatus::render(size_t ui_layer_map) {
 			ScreenEntry((u16)(c - ' ' + 2), 0, 15);
 	}
 
-	constexpr u16 PORTRAIT_BASE_OFFSET = 96;
+	constexpr u16 PORTRAIT_BASE_OFFSET = 98;
 	auto const offset = [&](u16 offset) {
 		return (u16)(PORTRAIT_BASE_OFFSET + this->portrait * 4 + offset);
 	};
