@@ -62,7 +62,7 @@ Unit::accessible_tiles(Span2d<const u8> const &map, bool slow) const {
 	};
 	auto const hex_to_idx = [&](CubeCoord cc) {
 		auto const xy = cc.to_offset_xy();
-		return (size_t)xy.col * map.width + (size_t)xy.row;
+		return (size_t)xy.row * map.width + (size_t)xy.col;
 	};
 
 	// Should be π(mov + 0.5)², but close enough
