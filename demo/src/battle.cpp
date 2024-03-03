@@ -147,11 +147,12 @@ void Battle::restore() {
 		HardwareSprite::hide(i);
 	}
 
-	// REG_DISPCNT = DCNT_MODE0 | DCNT_OBJ | DCNT_OBJ_1D;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 
 	this->fight();
 }
+
+void Battle::suspend() { REG_DISPCNT &= (u16) ~(DCNT_OBJ | DCNT_OBJ_1D); }
 
 void Battle::vsync_hook() {
 	END_EARLY();
