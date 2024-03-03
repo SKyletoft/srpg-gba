@@ -147,6 +147,10 @@ void Battle::suspend() {
 
 		idx--;
 		std::swap(*unit, container[idx]);
+
+		if (!config::used.contains(&container[idx])) {
+			config::used.erase(unit);
+		}
 	};
 
 	maybe_kill(this->left_unit);
