@@ -6,6 +6,7 @@
 #include "sprite.h"
 
 #include "set.h"
+#include <string_view>
 #include <vector>
 
 namespace unit {
@@ -31,6 +32,9 @@ struct Stats {
 };
 
 struct Unit {
+	std::string_view name = "Untitled solider";
+	u8 portrait = 0;
+
 	sprite::HexSprite sprite{};
 	Stats stats{};
 

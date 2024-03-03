@@ -31,26 +31,6 @@ namespace rv = std::ranges::views;
 using tiles::Colour;
 using tiles::Palette;
 
-// Progress in the range 0-255
-u8 lerp(u8 from, u8 to, s32 progress) {
-	s32 base = to;
-	s32 range = from - to;
-	return (u8)(range * progress / 255 + base);
-}
-
-constexpr std::array<std::tuple<u8, u8, u8, u8>, 10> animation_sequence{
-	std::tuple<u8, u8, u8, u8>{48, 0, 128, 0},
-	{50, 1, 128, 0},
-	{70, 2, 128, 0},
-	{90, 3, 128, 0},
-	{108, 4, 128, 0},
-	{50, 0, 128, 1},
-	{50, 0, 108, 2},
-	{50, 0, 88, 3},
-	{50, 0, 78, 4},
-	{50, 0, 128, 0},
-};
-
 void Battle::animation_update() {
 	this->time++;
 	if (this->time > Battle::speed) {
@@ -70,8 +50,8 @@ void Battle::animation_update() {
 		animation_sequence[(this->frame + 1) % animation_sequence.size()];
 
 	s32 progress = (s32)(this->time * (255 / Battle::speed));
-	u8 x_l = lerp(x_l_to, x_l_from, progress);
-	u8 x_r = lerp(x_r_to, x_r_from, progress);
+	u8 x_l = util::lerp(x_l_to, x_l_from, progress);
+	u8 x_r = util::lerp(x_r_to, x_r_from, progress);
 
 	this->left.x = x_l;
 	this->left.tile_index = frame_l * 64;
@@ -85,14 +65,22 @@ void Battle::fight() {
 			(s8)std::max(0, attacker.stats.attack - defender.stats.defence);
 		defender.stats.health -= damage;
 	};
+
 	attack(*this->left_unit, *this->right_unit);
+	this->continue_to_second_round = this->right_unit->stats.health > 0;
+	if (!this->continue_to_second_round) {
+		return;
+	}
 	attack(*this->right_unit, *this->left_unit);
 }
 
 void Battle::update() {
 	END_EARLY();
+	if (this->frame == 5 && !this->continue_to_second_round) {
+		state::next_state = 0;
+		return;
+	}
 	this->animation_update();
-	this->fight();
 }
 
 void Battle::restore() {
@@ -139,8 +127,30 @@ void Battle::restore() {
 		HardwareSprite::hide(i);
 	}
 
-	// REG_DISPCNT = DCNT_MODE0 | DCNT_OBJ | DCNT_OBJ_1D;
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
+
+	this->fight();
+}
+
+void Battle::suspend() {
+	REG_DISPCNT &= (u16) ~(DCNT_OBJ | DCNT_OBJ_1D);
+
+	auto const maybe_kill = [](Unit *unit) {
+		if (unit->stats.health > 0) {
+			return;
+		}
+
+		auto container = unit->is_user() ? config::user_army.data()
+										 : config::enemy_army.data();
+		auto &idx = unit->is_user() ? config::user_soldier_count
+									: config::enemy_soldier_count;
+
+		idx--;
+		std::swap(*unit, container[idx]);
+	};
+
+	maybe_kill(this->left_unit);
+	maybe_kill(this->right_unit);
 }
 
 void Battle::vsync_hook() {

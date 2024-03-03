@@ -50,4 +50,11 @@ void wait_for_vsync() {
 	wait_for_drawing_complete();
 }
 
+// Progress in the range 0-255
+u8 lerp(u8 from, u8 to, s32 progress) {
+	s32 base = to;
+	s32 range = from - to;
+	return (u8)(range * progress / 255 + base);
+}
+
 } // namespace util

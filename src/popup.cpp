@@ -6,6 +6,9 @@
 #include "tiles.h"
 #include "tty.h"
 #include "util.h"
+
+#include "loading.h"
+
 #include <cstring>
 #include <ranges>
 
@@ -110,12 +113,7 @@ void PopupMenu::load_tiles_and_palettes() {
 		0x00044000,
 	}};
 
-	BG_PALETTE_MEMORY[15] = Palette{{
-		tiles::TRANSPARENT,
-		Colour::from_24bit_colour(198, 164, 89),
-		tiles::WHITE,
-		Colour(25, 25, 25),
-	}};
+	BG_PALETTE_MEMORY[15] = loading::UI_PALETTE;
 	SPRITE_PALETTE_MEMORY[15] = Palette{{
 		tiles::TRANSPARENT,
 		tiles::BLACK,

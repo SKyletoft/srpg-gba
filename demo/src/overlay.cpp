@@ -59,7 +59,7 @@ void Overlay::update() {
 void Overlay::restore() {
 	this->time = 0;
 
-	REG_DISPCNT &= (u16) ~DCNT_BG3;
+	REG_DISPCNT &= (u16) ~(DCNT_BG3 | DCNT_BG2);
 
 	if (this->is_enemy) {
 		BG_PALETTE_MEMORY[15] = *(Palette *)enemy_turn_overlayPal;
