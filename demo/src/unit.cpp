@@ -49,7 +49,8 @@ void Unit::render(Point<s16> camera_offset, u8 animation_cycle) const {
 	sprite.render(camera_offset);
 }
 
-Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
+Set<CubeCoord>
+Unit::accessible_tiles(Span2d<const u8> const &map, bool slow) const {
 	const s16 height = (s16)map.height;
 	const s16 width = (s16)map.width;
 
@@ -82,6 +83,10 @@ Set<CubeCoord> Unit::accessible_tiles(Span2d<const u8> const &map) const {
 	visited[hex_to_idx(this->sprite.pos)] = true;
 
 	while (!queue.empty()) {
+		if (slow) {
+			util::sleep(2);
+		}
+
 		auto [curr, depth] = queue.top();
 		queue.pop();
 
