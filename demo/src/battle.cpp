@@ -152,7 +152,26 @@ void Battle::restore() {
 	this->fight();
 }
 
-void Battle::suspend() { REG_DISPCNT &= (u16) ~(DCNT_OBJ | DCNT_OBJ_1D); }
+void Battle::suspend() {
+	REG_DISPCNT &= (u16) ~(DCNT_OBJ | DCNT_OBJ_1D);
+
+	auto const maybe_kill = [](Unit *unit) {
+		if (unit->stats.health > 0) {
+			return;
+		}
+
+		auto container = unit->is_user() ? config::user_army.data()
+										 : config::enemy_army.data();
+		auto &idx = unit->is_user() ? config::user_soldier_count
+									: config::enemy_soldier_count;
+
+		idx--;
+		std::swap(*unit, container[idx]);
+	};
+
+	maybe_kill(this->left_unit);
+	maybe_kill(this->right_unit);
+}
 
 void Battle::vsync_hook() {
 	END_EARLY();
