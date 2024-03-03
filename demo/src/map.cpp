@@ -286,6 +286,7 @@ void Map::selected_input() {
 			config::movement_popup.hide(0);
 		}
 
+		this->draw_status.visible = false;
 		state::next_state = 5;
 	}
 }
@@ -408,6 +409,12 @@ void Map::selecting_enemy_handler() {
 	config::cursor.cursor.move_to(
 		config::neighbouring_enemies[this->enemy_selection]->pos()
 	);
+	auto new_status =
+		DrawStatus(*config::neighbouring_enemies[this->enemy_selection]);
+	if (new_status != this->draw_status) {
+		this->draw_status = new_status;
+	}
+	this->draw_status.visible = true;
 }
 
 void Map::enemy_turn_handler() {
