@@ -184,9 +184,7 @@ void Map::vsync_hook() {
 	}
 }
 
-bool Map::blackout() {
-	return false;
-}
+bool Map::blackout() { return false; }
 
 void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 	auto px = tile.to_pixel_space() - config::hexmap.layer0.pos.into<s32>();
