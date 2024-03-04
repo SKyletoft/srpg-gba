@@ -31,9 +31,9 @@ bool CursorScroller::move_cursor(Point<s32> const camera_position) {
 	{
 		this->cursor = old_cursor;
 		this->cursor.animation = old_offset;
-		return false;
 	}
-	return true;
+
+	return this->cursor.pos != old_cursor.pos;
 }
 
 Point<s16> CursorScroller::recentre_camera(Point<s32> const camera_position) {
