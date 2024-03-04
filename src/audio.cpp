@@ -23,4 +23,13 @@ void play_sfx(u32 sfx) {
 void play_jingle(u32 jingle) {
 	mmJingle(jingle);
 }
+
+void set_bgm_volume(u32 volume){
+	mmSetModuleVolume(volume);
+}
+
+void set_jingle_volume(u32 volume){
+	mmSetJingleVolume(volume);
+}
+
 } // namespace audio
