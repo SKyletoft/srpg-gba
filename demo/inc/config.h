@@ -1,6 +1,8 @@
 #pragma once
 
 #include "cursor_scroller.h"
+#include "image.h"
+#include "main_menu.h"
 #include "tiles.h"
 
 #include "battle.h"
