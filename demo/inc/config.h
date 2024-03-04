@@ -43,6 +43,11 @@ extern map::Map map;
 extern context_menu::ContextMenu popup;
 extern context_menu::ContextMenu movement_popup;
 
+extern image::Image image;
+extern main_menu::MainMenu game_over;
+extern main_menu::MainMenu main_menu;
+extern main_menu::MainMenu win;
+
 std::span<Unit> user_units();
 std::span<Unit> enemy_units();
 
