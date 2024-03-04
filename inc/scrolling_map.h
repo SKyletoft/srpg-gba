@@ -51,6 +51,7 @@ class ScrollingMap {
 	void update_layer_partial(Layer &);
 	void recolour(Point<s32>, Point<s32>, Layer &);
 	void load_map(Layer &);
+	void move_in_bounds(Point<s16>);
 	void move_in_bounds(s16, s16);
 	void update_camera();
 	ScreenEntry get_tile_from_camera(Layer &, s16, s16);

@@ -36,6 +36,10 @@ void Layer::move_in_bounds(s16 x, s16 y) {
 	this->pos.y = std::clamp((s16)(this->pos.y + y), this->min_y, this->max_y);
 }
 
+void ScrollingMap::move_in_bounds(Point<s16> p) {
+	this->move_in_bounds(p.x, p.y);
+}
+
 void ScrollingMap::move_in_bounds(s16 x, s16 y) {
 	if (x == 0 && y == 0) {
 		return;
