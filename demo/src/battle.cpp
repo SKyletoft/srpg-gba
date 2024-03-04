@@ -26,9 +26,9 @@ extern "C" {
 	}
 
 namespace config {
-	extern u32 sfx_swoosh;
-	extern u32 sfx_fwoop;
-	extern u32 jingle_battle;
+extern u32 sfx_swoosh;
+extern u32 sfx_fwoop;
+extern u32 jingle_battle;
 } // namespace config
 
 namespace battle {
@@ -84,11 +84,11 @@ void Battle::fight() {
 
 void Battle::update() {
 	END_EARLY();
-	if (this->frame == 3 && this->time == 0){
+	if (this->frame == 3 && this->time == 0) {
 		audio::play_sfx(config::sfx_swoosh);
 	}
 
-	if (this->frame == 6 && this->time == 0){
+	if (this->frame == 6 && this->time == 0) {
 		audio::play_sfx(config::sfx_fwoop);
 	}
 
@@ -188,13 +188,13 @@ void Battle::set_combatants(Unit &left, Unit &right) {
 	this->right_unit = &right;
 }
 
-void start_battle_bgm(){
+void start_battle_bgm() {
 	audio::pause_bgm();
 	audio::set_jingle_volume(512);
 	audio::play_jingle(config::jingle_battle);
 }
 
-void stop_battle_bgm(){
+void stop_battle_bgm() {
 	audio::stop_jingle();
 	audio::resume_bgm();
 }

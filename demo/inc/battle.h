@@ -56,7 +56,8 @@ class Battle : public state::Mode {
 	static constexpr decltype(time) speed = 8;
 
   public:
-	Battle() : rng() {}
+	Battle()
+		: rng() {}
 
 	void update() override;
 	void restore() override;

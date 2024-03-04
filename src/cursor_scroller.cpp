@@ -1,9 +1,10 @@
 #include "cursor_scroller.h"
 
+#include "audio.h"
 #include "hexes.h"
 #include "input.h"
-#include "audio.h"
 #include "soundbank.h"
+
 #include <array>
 #include <cstring>
 #include <tuple>

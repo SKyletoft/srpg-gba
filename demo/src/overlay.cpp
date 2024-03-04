@@ -77,7 +77,8 @@ void Overlay::restore() {
 		);
 	}
 
-	for (auto [x, y] : rv::cartesian_product(rv::iota(0u, 32u), rv::iota(0u, 32u)))
+	for (auto [x, y] :
+		 rv::cartesian_product(rv::iota(0u, 32u), rv::iota(0u, 32u)))
 	{
 		size_t const idx = coord({x, y});
 		SCREENBLOCKS[TILE_MAP][idx] = ScreenEntry(0, 0, 15);

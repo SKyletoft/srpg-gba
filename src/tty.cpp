@@ -168,9 +168,7 @@ void TtyMode::pad_to_newline() {
 	this->len = len;
 }
 
-void TtyMode::println() {
-	this->print("\n");
-}
+void TtyMode::println() { this->print("\n"); }
 
 void TtyMode::println(s32 i) {
 	this->print(i);

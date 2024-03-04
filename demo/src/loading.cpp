@@ -50,7 +50,6 @@ void load_tiles() {
 	config::hexmap.load_palettes(config::hexmap.layer0);
 	tiles::BG_PALETTE_MEMORY[1] = *(tiles::Palette *)movement_hlPal;
 	config::hexmap.update_camera();
-
 }
 
 } // namespace loading

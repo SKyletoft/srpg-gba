@@ -36,7 +36,7 @@ struct DrawStatus {
 	bool rendered = false;
 	bool visible = true;
 
-	constexpr DrawStatus() {};
+	constexpr DrawStatus(){};
 	DrawStatus(Unit const &unit);
 
 	bool operator==(DrawStatus const &) const;

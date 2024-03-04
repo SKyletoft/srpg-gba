@@ -13,9 +13,7 @@ namespace rv = std::ranges::views;
 
 using tiles::CHARBLOCKS;
 
-bool MainMenu::blackout() {
-	return state::last_state == 3;
-}
+bool MainMenu::blackout() { return state::last_state == 3; }
 
 void MainMenu::restore() {
 	for (auto const idx : rv::iota(0uz, 128uz)) {
