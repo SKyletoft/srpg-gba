@@ -26,8 +26,11 @@ extern "C" {
 	}
 
 namespace config {
+	extern u32 sfx_swoosh;
+	extern u32 sfx_fwoop;
 	extern u32 jingle_battle;
 } // namespace config
+
 namespace battle {
 
 namespace rv = std::ranges::views;
@@ -81,6 +84,14 @@ void Battle::fight() {
 
 void Battle::update() {
 	END_EARLY();
+	if (this->frame == 3 && this->time == 0){
+		audio::play_sfx(config::sfx_swoosh);
+	}
+
+	if (this->frame == 6 && this->time == 0){
+		audio::play_sfx(config::sfx_fwoop);
+	}
+
 	if (this->frame == 5 && !this->continue_to_second_round) {
 		state::next_state = 0;
 		return;
