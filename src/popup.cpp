@@ -104,6 +104,11 @@ void PopupMenu::load_tiles_and_palettes() {
 		0x11111111,
 	}};
 	std::memcpy(CHARBLOCKS[this->tile_source] + 1, fontTiles, fontTilesLen);
+
+	BG_PALETTE_MEMORY[15] = loading::UI_PALETTE;
+}
+
+void PopupMenu::load_sprites() {
 	SPRITE_CHARBLOCK[0][1] = tiles::STile{{
 		0x00033000,
 		0x00033300,
@@ -115,7 +120,6 @@ void PopupMenu::load_tiles_and_palettes() {
 		0x00044000,
 	}};
 
-	BG_PALETTE_MEMORY[15] = loading::UI_PALETTE;
 	SPRITE_PALETTE_MEMORY[15] = Palette{{
 		tiles::TRANSPARENT,
 		tiles::BLACK,
@@ -134,6 +138,7 @@ void PopupMenu::restore() {
 	util::wait_for_drawing_complete();
 	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_BG2);
 	this->load_tiles_and_palettes();
+	this->load_sprites();
 	util::clear_layer(this->tile_map);
 
 	size_t const menu_width = ([&]() {
