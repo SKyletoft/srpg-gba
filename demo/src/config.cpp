@@ -196,7 +196,11 @@ context_menu::ContextMenu popup{
 		 }
 		 state::next_state = 0;
 	 }},
-	{"Exit", []() { state::next_state = 0; }},
+	{"Exit",
+	 []() {
+		 state::next_state = 3;
+		 image.bg = image::Background::TitleScreen;
+	 }},
 };
 context_menu::ContextMenu movement_popup{
 	{"Attack",
