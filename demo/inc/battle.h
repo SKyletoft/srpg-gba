@@ -53,6 +53,43 @@ class Battle : public state::Mode {
 		.palette = 1,
 	};
 
+	HardwareSprite damage_left =
+		HardwareSprite{
+			.horizontal_flip = false,
+			.tile_index = 5 * 64,
+			.palette = 2,
+		}
+			.set_size(sprite::SpriteSize::w32h8);
+	HardwareSprite damage_right =
+		HardwareSprite{
+			.horizontal_flip = false,
+			.tile_index = 5 * 64 + 4,
+			.palette = 2,
+		}
+			.set_size(sprite::SpriteSize::w32h8);
+	s8 display_hp_left;
+	HardwareSprite hp_left =
+		HardwareSprite{
+			.y = 140,
+			.object_mode = sprite::ObjectMode::Normal,
+			.x = 150,
+			.horizontal_flip = false,
+			.tile_index = 5 * 64 + 8,
+			.palette = 2,
+		}
+			.set_size(sprite::SpriteSize::w32h8);
+	s8 display_hp_right;
+	HardwareSprite hp_right =
+		HardwareSprite{
+			.y = 140,
+			.object_mode = sprite::ObjectMode::Normal,
+			.x = 20,
+			.horizontal_flip = false,
+			.tile_index = 5 * 64 + 12,
+			.palette = 2,
+		}
+			.set_size(sprite::SpriteSize::w32h8);
+
 	static constexpr decltype(time) speed = 8;
 
   public:
