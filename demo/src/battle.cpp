@@ -6,6 +6,7 @@
 #include "state.h"
 #include "tiles.h"
 #include "util.h"
+#include "config.h"
 
 #include <array>
 #include <cstring>
@@ -24,12 +25,6 @@ extern "C" {
 		state::next_state = 0;                                                 \
 		return;                                                                \
 	}
-
-namespace config {
-extern u32 sfx_swoosh;
-extern u32 sfx_fwoop;
-extern u32 jingle_battle;
-} // namespace config
 
 namespace battle {
 
