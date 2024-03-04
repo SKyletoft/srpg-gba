@@ -113,7 +113,7 @@ void Battle::restore() {
 	std::memcpy(
 		tiles::SPRITE_CHARBLOCK[0], battle_aniTiles, sizeof(battle_aniTiles)
 	);
-	tty::decompress_1bpp_to_4bpp(alphabet_tiles, sys8Glyphs, '9' - ' ');
+	tty::decompress_1bpp_to_4bpp(alphabet_tiles, sys8Glyphs, '9' - ' ' + 1);
 
 	constexpr Palette RED{
 		tiles::TRANSPARENT,
