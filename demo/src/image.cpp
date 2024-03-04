@@ -47,7 +47,7 @@ void Image::update() {}
 void Image::restore() {
 	auto [pal, tiles, map, pal_len, tiles_len, map_len] =
 		backgrounds[(size_t)this->bg];
-	std::memcpy(tiles::BG_PALETTE_MEMORY.data(), pal, (size_t)pal_len);
+	std::memcpy((void *)tiles::BG_PALETTE_MEMORY.data(), pal, (size_t)pal_len);
 	std::memcpy(tiles::CHARBLOCKS[TILE_SOURCE], tiles, (size_t)tiles_len);
 	std::memcpy((void *)tiles::SCREENBLOCKS[TILE_MAP], map, (size_t)map_len);
 

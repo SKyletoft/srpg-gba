@@ -1,6 +1,8 @@
 #pragma once
 
 #include "cursor_scroller.h"
+#include "image.h"
+#include "main_menu.h"
 #include "tiles.h"
 
 #include "battle.h"
@@ -31,6 +33,7 @@ extern std::vector<Unit *> neighbouring_enemies;
 extern Set<Unit *> used;
 extern cursor_scroller::CursorScroller cursor;
 extern hl_map::HighlightMap hexmap;
+extern std::array<Unit, 8> const default_user_army;
 extern std::array<Unit, 8> user_army;
 extern size_t user_soldier_count;
 
@@ -42,6 +45,11 @@ extern battle::Battle battle_ani;
 extern map::Map map;
 extern context_menu::ContextMenu popup;
 extern context_menu::ContextMenu movement_popup;
+
+extern image::Image image;
+extern main_menu::MainMenu game_over;
+extern main_menu::MainMenu main_menu;
+extern main_menu::MainMenu win;
 
 std::span<Unit> user_units();
 std::span<Unit> enemy_units();
