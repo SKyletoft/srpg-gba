@@ -1,12 +1,8 @@
 #pragma once
 
-#include "hl-map.h"
 #include "mdspan.h"
 #include "unit.h"
 
-#include "config.h"
-
-#include <ranges>
 #include <span>
 
 extern "C" {
@@ -14,8 +10,6 @@ extern "C" {
 }
 
 namespace level {
-
-namespace rv = std::ranges::views;
 
 class Level {
   public:
