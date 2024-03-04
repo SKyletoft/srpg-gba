@@ -184,7 +184,7 @@ void Map::vsync_hook() {
 }
 
 bool Map::blackout() {
-	return state::current_state == 1 || state::last_state == 1;
+	return false;
 }
 
 void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
