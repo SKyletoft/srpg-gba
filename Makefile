@@ -25,13 +25,13 @@ LIBTONC := $(DEVKITPRO)/libtonc
 # the makefile is found
 #
 #---------------------------------------------------------------------------------
-TARGET   := $(notdir $(CURDIR))
-BUILD    := build
-SOURCES  := src demo/src
-INCLUDES := inc demo/inc
-DATA     :=
-MUSIC    := demo/audio
-GRAPHICS := demo/gfx
+TARGET       := $(notdir $(CURDIR))
+BUILD        := build
+SOURCES      := src demo/src
+INCLUDES     := inc demo/inc
+DATA         :=
+MUSIC        := audio demo/audio
+GRAPHICS     := demo/gfx
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -104,7 +104,7 @@ PNGFILES := $(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
 BINFILES := $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
 ifneq ($(strip $(MUSIC)),)
-	export AUDIOFILES := $(foreach dir,$(notdir $(wildcard $(MUSIC)/*.*)),$(CURDIR)/$(MUSIC)/$(dir))
+	export AUDIOFILES := $(foreach file, $(foreach dir, $(MUSIC), $(wildcard $(dir)/*.*)), $(CURDIR)/$(file))
 	BINFILES += soundbank.bin
 endif
 

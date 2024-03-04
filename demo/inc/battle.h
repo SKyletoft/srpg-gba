@@ -53,7 +53,7 @@ class Battle : public state::Mode {
 		.palette = 1,
 	};
 
-	static constexpr decltype(time) speed = 15;
+	static constexpr decltype(time) speed = 8;
 
   public:
 	Battle() : rng() {}
@@ -68,5 +68,8 @@ class Battle : public state::Mode {
 	void animation_update();
 	void fight();
 };
+
+void start_battle_bgm();
+void stop_battle_bgm();
 
 } // namespace battle

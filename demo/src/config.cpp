@@ -227,6 +227,9 @@ std::array<state::Mode *, 10> const modes_data{
 };
 
 u32 startup_song = MOD_BAD_APPLE;
+u32 jingle_battle = MOD_BATTLE;
+u32 sfx_swoosh = SFX_SWOOSH;
+u32 sfx_fwoop = SFX_FWOOP;
 
 EXPORT(modes_data, startup_song);
 
