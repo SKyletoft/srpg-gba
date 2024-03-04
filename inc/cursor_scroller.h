@@ -35,7 +35,8 @@ class CursorScroller {
 	s16 cooldown = 12;
 
 	void handle_input();
-	Point<s16> move_cursor(Point<s32> const);
+	bool move_cursor(Point<s32> const);
+	Point<s16> recentre_camera(Point<s32> const);
 	CubeCoord &pos();
 
 	constexpr CursorScroller() {}
