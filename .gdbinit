@@ -1,4 +1,4 @@
-file out/gba-dev.elf
+file out/srpg-engine.elf
 target extended-remote localhost:2345
 load
 b main
