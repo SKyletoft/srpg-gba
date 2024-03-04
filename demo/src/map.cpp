@@ -333,9 +333,10 @@ void Map::waiting_for_input_handler() {
 		return;
 	}
 
-	auto const d =
 		config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
-	config::hexmap.move_in_bounds(d.x, d.y);
+	Point<s16> const diff =
+		config::cursor.recentre_camera(config::hexmap.layer0.pos.into<s32>());
+	config::hexmap.move_in_bounds(diff.x, diff.y);
 
 	config::hexmap.update_layer_partial(config::hexmap.layer0);
 	config::hexmap.update_layer_partial(config::hexmap.layer1);
