@@ -23,6 +23,7 @@ WORKDIR /srpg-engine
 
 COPY src src
 COPY inc inc
+COPY audio audio
 COPY demo/src demo/src
 COPY demo/inc demo/inc
 COPY demo/gfx demo/gfx
