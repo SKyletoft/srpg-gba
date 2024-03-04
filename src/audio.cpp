@@ -19,4 +19,8 @@ void play_song(u32 song) { mmStart(song, MM_PLAY_LOOP); }
 void play_sfx(u32 sfx) {
 	mmEffect(sfx);
 }
+
+void play_jingle(u32 jingle) {
+	mmJingle(jingle);
+}
 } // namespace audio
