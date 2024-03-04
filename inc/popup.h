@@ -47,6 +47,8 @@ class PopupMenu : public state::Mode {
 	void restore() override;
 	void vsync_hook() override;
 
+	virtual void b();
+
 	PopupMenu &show(size_t);
 	PopupMenu &hide(size_t);
 

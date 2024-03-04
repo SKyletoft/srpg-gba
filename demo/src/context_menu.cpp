@@ -17,4 +17,6 @@ void ContextMenu::restore() {
 
 void ContextMenu::suspend() { this->PopupMenu::suspend(); }
 
+void ContextMenu::b() { state::next_state = 0; }
+
 } // namespace context_menu

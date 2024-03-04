@@ -49,9 +49,11 @@ PopupMenu &PopupMenu::hide(size_t i) {
 	return *this;
 }
 
+void PopupMenu::b() {}
+
 void PopupMenu::update() {
 	if (input::get_button(Button::B).is_down()) {
-		state::next_state = 0;
+		this->b();
 	}
 
 	size_t const entry_count = (size_t)r::count_if(this->visible, id);

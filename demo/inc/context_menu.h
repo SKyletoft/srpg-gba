@@ -18,6 +18,8 @@ class ContextMenu : public popup::PopupMenu {
 	bool blackout() override;
 	void restore() override;
 	void suspend() override;
+
+	void b() override;
 };
 
 } // namespace context_menu
