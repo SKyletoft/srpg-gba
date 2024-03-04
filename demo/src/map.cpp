@@ -1,13 +1,14 @@
 #include "map.h"
 
+#include "audio.h"
 #include "input.h"
 #include "state.h"
 #include "tiles.h"
+#include "util.h"
 
 #include "config.h"
 #include "loading.h"
 #include "unit.h"
-#include "util.h"
 
 #include <cstring>
 #include <format>
@@ -333,7 +334,11 @@ void Map::waiting_for_input_handler() {
 		return;
 	}
 
+	bool const moved =
 		config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
+	if (moved) {
+		audio::play_sfx(SFX__BLIP);
+	}
 	Point<s16> const diff =
 		config::cursor.recentre_camera(config::hexmap.layer0.pos.into<s32>());
 	config::hexmap.move_in_bounds(diff.x, diff.y);
