@@ -32,4 +32,11 @@ void set_jingle_volume(u32 volume){
 	mmSetJingleVolume(volume);
 }
 
+void pause_bgm(){
+	mmPause();
+}
+void resume_bgm(){
+	mmResume();
+}
+
 } // namespace audio
