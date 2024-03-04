@@ -69,4 +69,7 @@ class Battle : public state::Mode {
 	void fight();
 };
 
+void start_battle_bgm();
+void stop_battle_bgm();
+
 } // namespace battle

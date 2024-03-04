@@ -1,5 +1,6 @@
 #include "battle.h"
 
+#include "audio.h"
 #include "config.h"
 #include "sprite.h"
 #include "state.h"
@@ -24,6 +25,9 @@ extern "C" {
 		return;                                                                \
 	}
 
+namespace config {
+	extern u32 jingle_battle;
+} // namespace config
 namespace battle {
 
 namespace rv = std::ranges::views;
@@ -60,6 +64,7 @@ void Battle::animation_update() {
 }
 
 void Battle::fight() {
+	start_battle_bgm();
 	std::function attack = [&](Unit &attacker, Unit &defender) {
 		s8 damage =
 			(s8)std::max(0, attacker.stats.attack - defender.stats.defence);
@@ -135,6 +140,7 @@ void Battle::restore() {
 void Battle::suspend() {
 	this->left.hide(1);
 	this->right.hide(2);
+	stop_battle_bgm();
 
 	auto const maybe_kill = [](Unit *unit) {
 		if (unit->stats.health > 0) {
@@ -169,6 +175,17 @@ bool Battle::blackout() { return false; }
 void Battle::set_combatants(Unit &left, Unit &right) {
 	this->left_unit = &left;
 	this->right_unit = &right;
+}
+
+void start_battle_bgm(){
+	audio::pause_bgm();
+	audio::set_jingle_volume(512);
+	audio::play_jingle(config::jingle_battle);
+}
+
+void stop_battle_bgm(){
+	audio::stop_jingle();
+	audio::resume_bgm();
 }
 
 } // namespace battle
