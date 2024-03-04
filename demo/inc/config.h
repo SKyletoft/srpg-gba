@@ -51,6 +51,11 @@ extern main_menu::MainMenu game_over;
 extern main_menu::MainMenu main_menu;
 extern main_menu::MainMenu win;
 
+extern u32 startup_song;
+extern u32 sfx_swoosh;
+extern u32 sfx_fwoop;
+extern u32 jingle_battle;
+
 std::span<Unit> user_units();
 std::span<Unit> enemy_units();
 

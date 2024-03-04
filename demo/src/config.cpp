@@ -87,8 +87,8 @@ std::array<Unit, 8> const default_user_army{
 			Stats{
 				.health = 20,
 				.max_health = 20,
-				.attack = 10,
-				.defence = 8,
+				.attack = 8,
+				.defence = 9,
 				.magic = 3,
 				.resistance = 3,
 				.speed = 9,
