@@ -183,7 +183,18 @@ main_menu::MainMenu game_over{
 };
 
 main_menu::MainMenu main_menu{
-	{"Start", []() { state::next_state = 0; }},
+	{"Level 1",
+	 []() {
+		 state::next_state = 0;
+		 auto level = map1::Level{};
+		 level::load_level(level);
+	 }},
+	{"Level 2",
+	 []() {
+		 state::next_state = 0;
+		 auto level = map2::Level{};
+		 level::load_level(level);
+	 }},
 	{"Game over",
 	 []() {
 		 state::next_state = 3;
