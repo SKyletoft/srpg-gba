@@ -14,5 +14,6 @@ void set_bgm_volume(u32);
 void set_jingle_volume(u32);
 void pause_bgm();
 void resume_bgm();
+void stop_jingle();
 
 } // namespace audio

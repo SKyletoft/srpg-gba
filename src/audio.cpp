@@ -1,6 +1,7 @@
 #include "audio.h"
 
 #include "soundbank_bin.h"
+#include "soundbank.h"
 #include <maxmod.h>
 
 extern "C" {
@@ -39,4 +40,7 @@ void resume_bgm(){
 	mmResume();
 }
 
+void stop_jingle(){
+	play_jingle(0);
+}
 } // namespace audio
