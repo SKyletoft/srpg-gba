@@ -5,6 +5,7 @@
 #include "export.h"
 #include "hexes.h"
 #include "image.h"
+#include "level.h"
 #include "main_menu.h"
 #include "map.h"
 #include "mdspan.h"
@@ -32,8 +33,7 @@ namespace config {
 using hexes::CubeCoord;
 
 cursor_scroller::CursorScroller cursor{};
-// hl_map::HighlightMap hexmap{test_map::map};
-hl_map::HighlightMap hexmap{mdspan::Span2d<const u8>(map2::map)};
+hl_map::HighlightMap hexmap{test_map::map};
 
 Unit *selected_unit = nullptr;
 CubeCoord original_pos{};
@@ -102,63 +102,8 @@ std::array<Unit, 8> const default_user_army{
 std::array<Unit, 8> user_army = default_user_army;
 size_t user_soldier_count = 2;
 
-std::array<Unit, 20> enemy_army{
-	Unit{
-		.name = "Dude #1",
-		.portrait = 2,
-		.sprite =
-			HexSprite{
-				.pos = hexes::OffsetXYCoord(6, 5).to_cube_coord(),
-				.centre = {5, 0},
-				.size = sprite::SpriteSize::x16,
-				.hardware_id = 9,
-				.tile_index = 33,
-				.prio = 1,
-				.palette = 2,
-			},
-		.stats =
-			Stats{
-				.health = 18,
-				.max_health = 18,
-				.attack = 10,
-				.defence = 2,
-				.magic = 3,
-				.resistance = 3,
-				.speed = 9,
-				.luck = 2,
-				.movement = 3,
-			},
-		.animation_frames = 3,
-	},
-	Unit{
-		.name = "Dude #2",
-		.portrait = 3,
-		.sprite =
-			HexSprite{
-				.pos = hexes::OffsetXYCoord(7, 3).to_cube_coord(),
-				.centre = {5, 0},
-				.size = sprite::SpriteSize::x16,
-				.hardware_id = 3,
-				.tile_index = 33,
-				.prio = 1,
-				.palette = 2,
-			},
-		.stats =
-			Stats{
-				.health = 16,
-				.max_health = 16,
-				.attack = 5,
-				.defence = 4,
-				.magic = 3,
-				.resistance = 3,
-				.speed = 9,
-				.luck = 2,
-				.movement = 3,
-			},
-		.animation_frames = 3,
-	}
-};
-size_t enemy_soldier_count = 2;
+std::array<Unit, 20> enemy_army{};
+size_t enemy_soldier_count = 0;
 
 std::span<Unit> user_units() {
 	return std::span<Unit>{user_army.data(), user_soldier_count};
