@@ -3,23 +3,21 @@
 #include "popup.h"
 #include <initializer_list>
 
-namespace context_menu {
+namespace main_menu {
 
-class ContextMenu : public popup::PopupMenu {
+class MainMenu : public popup::PopupMenu {
   public:
-	ContextMenu()
+	MainMenu()
 		: PopupMenu() {}
 
-	ContextMenu(
+	MainMenu(
 		std::initializer_list<std::pair<char const *, std::function<void()>>> l
 	)
-		: PopupMenu(l) {}
+		: PopupMenu(l, 1, 4, 3) {}
 
 	bool blackout() override;
 	void restore() override;
-	void suspend() override;
-
-	void b() override;
+	void load_tiles_and_palettes() override;
 };
 
-} // namespace context_menu
+} // namespace main_menu

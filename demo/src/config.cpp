@@ -4,14 +4,20 @@
 #include "debug.h"
 #include "export.h"
 #include "hexes.h"
+#include "image.h"
+#include "main_menu.h"
 #include "map.h"
+#include "mdspan.h"
 #include "overlay.h"
+#include "popup.h"
 #include "sprite.h"
 #include "state.h"
 #include "tiles.h"
 #include "tty.h"
 
 #include "context_menu.h"
+#include "map1.h"
+#include "map2.h"
 #include "soundbank.h"
 #include "test_map.h"
 
@@ -26,7 +32,8 @@ namespace config {
 using hexes::CubeCoord;
 
 cursor_scroller::CursorScroller cursor{};
-hl_map::HighlightMap hexmap{test_map::map};
+// hl_map::HighlightMap hexmap{test_map::map};
+hl_map::HighlightMap hexmap{mdspan::Span2d<const u8>(map2::map)};
 
 Unit *selected_unit = nullptr;
 CubeCoord original_pos{};
@@ -214,15 +221,47 @@ context_menu::ContextMenu movement_popup{
 		 state::next_state = 0;
 	 }},
 };
+image::Image image{};
 
-std::array<state::Mode *, 7> const modes_data{
+main_menu::MainMenu game_over{
+	{"Return to title",
+	 []() {
+		 state::next_state = 3;
+		 image.bg = image::Background::TitleScreen;
+	 }},
+};
+
+main_menu::MainMenu main_menu{
+	{"Start", []() { state::next_state = 0; }},
+	{"Game over",
+	 []() {
+		 state::next_state = 3;
+		 image.bg = image::Background::GameOver;
+	 }},
+	{"Win",
+	 []() {
+		 state::next_state = 3;
+		 image.bg = image::Background::Win;
+	 }},
+};
+
+main_menu::MainMenu win{
+	{"Start", []() {}},
+	{"Reboot", []() {}},
+	{"Game over", []() {}},
+};
+
+std::array<state::Mode *, 10> const modes_data{
 	&map,
 	&debug::tty_mode,
 	&popup,
-	nullptr,
+	&image,
 	&battle_ani,
 	&movement_popup,
 	&overlay,
+	&game_over,
+	&main_menu,
+	&win,
 };
 
 u32 startup_song = MOD_BAD_APPLE;
