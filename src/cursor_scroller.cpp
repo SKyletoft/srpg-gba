@@ -1,9 +1,7 @@
 #include "cursor_scroller.h"
 
-#include "audio.h"
 #include "hexes.h"
 #include "input.h"
-#include "soundbank.h"
 
 #include <array>
 #include <cstring>
@@ -81,7 +79,6 @@ void CursorScroller::handle_input() {
 		{
 			this->cursor.move_to(dir);
 			this->directional_cooldowns[index] = this->cooldown;
-			audio::play_sfx(SFX__BLIP);
 		}
 		if (this->directional_cooldowns[index] > this->cooldown) {
 			this->directional_cooldowns[index] = 0;
