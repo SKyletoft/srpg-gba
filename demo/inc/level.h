@@ -23,11 +23,13 @@ class Level {
 
 #define DECLARE_LEVEL(name, map_data, enemy_data)                              \
 	class name : public level::Level {                                         \
-		constexpr mdspan::Span2d<const unsigned char> map() override {                    \
-			return mdspan::Span2d<const unsigned char>(map_data);                         \
+		constexpr mdspan::Span2d<const unsigned char> map() override {         \
+			return mdspan::Span2d<const unsigned char>(map_data);              \
 		}                                                                      \
-		constexpr std::span<const unit::Unit> enemies() override { \
-			return std::span(enemy_data, sizeof(enemy_data) / sizeof(unit::Unit)); \
+		constexpr std::span<const unit::Unit> enemies() override {             \
+			return std::span(                                                  \
+				enemy_data, sizeof(enemy_data) / sizeof(unit::Unit)            \
+			);                                                                 \
 		}                                                                      \
 	};
 
