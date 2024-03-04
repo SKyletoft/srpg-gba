@@ -30,8 +30,7 @@ BUILD        := build
 SOURCES      := src demo/src
 INCLUDES     := inc demo/inc
 DATA         :=
-MUSIC        := demo/audio
-ENGINE_MUSIC := audio
+MUSIC        := audio demo/audio
 GRAPHICS     := demo/gfx
 
 #---------------------------------------------------------------------------------
@@ -109,11 +108,6 @@ ifneq ($(strip $(MUSIC)),)
 	BINFILES += soundbank.bin
 endif
 
-ifneq ($(strip $(ENGINE_MUSIC)),)
-	export ENGINE_AUDIOFILES := $(foreach file, $(foreach dir, $(ENGINE_MUSIC), $(wildcard $(dir)/*.*)), $(CURDIR)/$(file))
-	BINFILES += engine_soundbank.bin
-endif
-
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
 #---------------------------------------------------------------------------------
@@ -182,10 +176,6 @@ $(OFILES_SOURCES) : $(HFILES)
 soundbank.bin soundbank.h : $(AUDIOFILES)
 #---------------------------------------------------------------------------------
 	@mmutil $^ -osoundbank.bin -hsoundbank.h
-
-engine_soundbank.bin engine_soundbank.h : $(ENGINE_AUDIOFILES)
-#---------------------------------------------------------------------------------
-	@mmutil $^ -oengine_soundbank.bin -hengine_soundbank.h
 
 #---------------------------------------------------------------------------------
 # This rule links in binary data with the .bin extension
