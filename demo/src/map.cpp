@@ -105,9 +105,14 @@ void Map::restore() {
 	}
 
 	switch (state::last_state) {
-	case 0: {
+	case 0:
+	case 2:
+	case 5: {
 	} break;
-	case 1: {
+	case 1:
+	case 7:
+	case 8:
+	case 9: {
 		for (auto i : rv::iota(0uz, 128uz)) {
 			sprite::HardwareSprite::hide(i);
 		}
@@ -116,13 +121,9 @@ void Map::restore() {
 		loading::load_tiles();
 		loading::load_ui();
 	} break;
-	case 2: {
-	} break;
 	case 4: {
 		loading::load_sprites();
 		loading::load_ui();
-	} break;
-	case 5: {
 	} break;
 	case 6: {
 		loading::load_ui();
