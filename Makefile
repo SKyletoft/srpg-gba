@@ -25,14 +25,14 @@ LIBTONC := $(DEVKITPRO)/libtonc
 # the makefile is found
 #
 #---------------------------------------------------------------------------------
-TARGET   		:= $(notdir $(CURDIR))
-BUILD    		:= build
-SOURCES  		:= src demo/src
-INCLUDES 		:= inc demo/inc
-DATA     		:=
-MUSIC    		:= demo/audio
-ENGINE_MUSIC 	:= audio
-GRAPHICS 		:= demo/gfx
+TARGET       := $(notdir $(CURDIR))
+BUILD        := build
+SOURCES      := src demo/src
+INCLUDES     := inc demo/inc
+DATA         :=
+MUSIC        := demo/audio
+ENGINE_MUSIC := audio
+GRAPHICS     := demo/gfx
 
 #---------------------------------------------------------------------------------
 # options for code generation
