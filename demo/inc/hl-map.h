@@ -2,6 +2,7 @@
 
 #include "hexmap.h"
 #include "point.h"
+#include <cstring>
 
 namespace hl_map {
 
@@ -15,6 +16,11 @@ class HighlightMap : public hexmap::Hexmap {
 
 	HighlightMap(mdspan::Span2d<const u8> const map)
 		: Hexmap(map) {}
+
+	HighlightMap &operator=(HighlightMap const &&rhs) {
+		std::memcpy((void *)this, (void *)&rhs, sizeof(HighlightMap));
+		return *this;
+	}
 };
 
 } // namespace hl_map
