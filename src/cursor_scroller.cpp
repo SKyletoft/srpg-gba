@@ -1,9 +1,7 @@
 #include "cursor_scroller.h"
 
-#include "audio.h"
 #include "hexes.h"
 #include "input.h"
-#include "soundbank.h"
 
 #include <array>
 #include <cstring>
@@ -16,7 +14,7 @@ using input::Button;
 
 CubeCoord &CursorScroller::pos() { return this->cursor.pos; }
 
-Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
+bool CursorScroller::move_cursor(Point<s32> const camera_position) {
 	auto old_cursor = this->cursor;
 	auto old_offset = this->cursor.animation;
 	this->handle_input();
@@ -24,7 +22,26 @@ Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 	Point<s32> const screen_centre = camera_position + Point{120, 80};
 	Point<s32> const cursor = this->cursor.pos.to_pixel_space();
 
-	Point<s16> d{};
+	this->cursor.horizontal_flip = this->cursor.pos.is_odd();
+
+	if (screen_centre.x - cursor.x < -120 + 16
+		|| screen_centre.x - cursor.x > 120
+		|| screen_centre.y - cursor.y < -80 + 16
+		|| screen_centre.y - cursor.y > 80)
+	{
+		this->cursor = old_cursor;
+		this->cursor.animation = old_offset;
+	}
+
+	return this->cursor.pos != old_cursor.pos;
+}
+
+Point<s16> CursorScroller::recentre_camera(Point<s32> const camera_position) {
+	Point<s32> const screen_centre = camera_position + Point{120, 80};
+	Point<s32> const cursor = this->cursor.pos.to_pixel_space();
+
+	Point<s16> d{0, 0};
+
 	// 240px wide, split in two = 120px, with 30px buffer = 90px
 	if (screen_centre.x - cursor.x < -90 + 16) {
 		d.x = this->scroll_speed;
@@ -38,19 +55,7 @@ Point<s16> CursorScroller::move_cursor(Point<s32> const camera_position) {
 		d.y = -this->scroll_speed;
 	}
 
-	this->cursor.horizontal_flip = this->cursor.pos.is_odd();
-
-	if (screen_centre.x - cursor.x < -120 + 16
-		|| screen_centre.x - cursor.x > 120
-		|| screen_centre.y - cursor.y < -80 + 16
-		|| screen_centre.y - cursor.y > 80)
-	{
-		this->cursor = old_cursor;
-		this->cursor.animation = old_offset;
-		return Point<s16>{0, 0};
-	} else {
-		return d;
-	}
+	return d;
 }
 
 void CursorScroller::handle_input() {
@@ -74,7 +79,6 @@ void CursorScroller::handle_input() {
 		{
 			this->cursor.move_to(dir);
 			this->directional_cooldowns[index] = this->cooldown;
-			audio::play_sfx(SFX__BLIP);
 		}
 		if (this->directional_cooldowns[index] > this->cooldown) {
 			this->directional_cooldowns[index] = 0;

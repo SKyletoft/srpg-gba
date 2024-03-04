@@ -1,13 +1,15 @@
 #include "map.h"
 
+#include "audio.h"
+#include "image.h"
 #include "input.h"
 #include "state.h"
 #include "tiles.h"
+#include "util.h"
 
 #include "config.h"
 #include "loading.h"
 #include "unit.h"
-#include "util.h"
 
 #include <cstring>
 #include <format>
@@ -26,6 +28,17 @@ using input::Button;
 using input::InputState;
 using point::Point;
 using tiles::ScreenEntry;
+
+void maybe_end_game() {
+	if (config::enemy_soldier_count == 0) {
+		config::image.bg = image::Background::Win;
+		state::next_state = 3;
+	}
+	if (config::user_soldier_count == 0) {
+		config::image.bg = image::Background::GameOver;
+		state::next_state = 3;
+	}
+}
 
 Unit *get_hovered_unit() {
 	auto const range =
@@ -105,9 +118,14 @@ void Map::restore() {
 	}
 
 	switch (state::last_state) {
-	case 0: {
+	case 0:
+	case 2:
+	case 5: {
 	} break;
-	case 1: {
+	case 1:
+	case 7:
+	case 8:
+	case 9: {
 		for (auto i : rv::iota(0uz, 128uz)) {
 			sprite::HardwareSprite::hide(i);
 		}
@@ -116,13 +134,9 @@ void Map::restore() {
 		loading::load_tiles();
 		loading::load_ui();
 	} break;
-	case 2: {
-	} break;
 	case 4: {
 		loading::load_sprites();
 		loading::load_ui();
-	} break;
-	case 5: {
 	} break;
 	case 6: {
 		loading::load_ui();
@@ -183,9 +197,7 @@ void Map::vsync_hook() {
 	}
 }
 
-bool Map::blackout() {
-	return state::current_state == 1 || state::last_state == 1;
-}
+bool Map::blackout() { return false; }
 
 void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 	auto px = tile.to_pixel_space() - config::hexmap.layer0.pos.into<s32>();
@@ -329,14 +341,21 @@ void Map::animation_handler() {
 }
 
 void Map::waiting_for_input_handler() {
+	maybe_end_game();
+
 	if (config::used.size() == config::user_soldier_count) {
 		this->end_player_turn();
 		return;
 	}
 
-	auto const d =
+	bool const moved =
 		config::cursor.move_cursor(config::hexmap.layer0.pos.into<s32>());
-	config::hexmap.move_in_bounds(d.x, d.y);
+	if (moved) {
+		audio::play_sfx(SFX__BLIP);
+	}
+	Point<s16> const diff =
+		config::cursor.recentre_camera(config::hexmap.layer0.pos.into<s32>());
+	config::hexmap.move_in_bounds(diff.x, diff.y);
 
 	config::hexmap.update_layer_partial(config::hexmap.layer0);
 	config::hexmap.update_layer_partial(config::hexmap.layer1);
@@ -418,6 +437,8 @@ void Map::selecting_enemy_handler() {
 }
 
 void Map::enemy_turn_handler() {
+	maybe_end_game();
+
 	if (config::used.size() >= config::enemy_soldier_count) {
 		this->end_enemy_turn();
 		return;
