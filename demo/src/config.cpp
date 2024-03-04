@@ -40,7 +40,7 @@ CubeCoord original_pos{};
 Set<CubeCoord> highlights{};
 std::vector<Unit *> neighbouring_enemies{};
 Set<Unit *> used{};
-std::array<Unit, 8> user_army{
+std::array<Unit, 8> const default_user_army{
 	Unit{
 		.name = "Guy #1",
 		.portrait = 0,
@@ -98,6 +98,8 @@ std::array<Unit, 8> user_army{
 		.animation_frames = 3,
 	},
 };
+
+std::array<Unit, 8> user_army = default_user_army;
 size_t user_soldier_count = 2;
 
 std::array<Unit, 20> enemy_army{

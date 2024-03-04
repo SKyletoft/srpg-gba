@@ -31,6 +31,7 @@ extern std::vector<Unit *> neighbouring_enemies;
 extern Set<Unit *> used;
 extern cursor_scroller::CursorScroller cursor;
 extern hl_map::HighlightMap hexmap;
+extern std::array<Unit, 8> const default_user_army;
 extern std::array<Unit, 8> user_army;
 extern size_t user_soldier_count;
 
