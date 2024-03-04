@@ -1,6 +1,7 @@
 #include "map.h"
 
 #include "audio.h"
+#include "image.h"
 #include "input.h"
 #include "state.h"
 #include "tiles.h"
@@ -27,6 +28,17 @@ using input::Button;
 using input::InputState;
 using point::Point;
 using tiles::ScreenEntry;
+
+void maybe_end_game() {
+	if (config::enemy_soldier_count == 0) {
+		config::image.bg = image::Background::Win;
+		state::next_state = 3;
+	}
+	if (config::user_soldier_count == 0) {
+		config::image.bg = image::Background::GameOver;
+		state::next_state = 3;
+	}
+}
 
 Unit *get_hovered_unit() {
 	auto const range =
@@ -329,6 +341,8 @@ void Map::animation_handler() {
 }
 
 void Map::waiting_for_input_handler() {
+	maybe_end_game();
+
 	if (config::used.size() == config::user_soldier_count) {
 		this->end_player_turn();
 		return;
@@ -423,6 +437,8 @@ void Map::selecting_enemy_handler() {
 }
 
 void Map::enemy_turn_handler() {
+	maybe_end_game();
+
 	if (config::used.size() >= config::enemy_soldier_count) {
 		this->end_enemy_turn();
 		return;
