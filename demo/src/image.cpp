@@ -51,7 +51,7 @@ void Image::restore() {
 	std::memcpy(tiles::CHARBLOCKS[TILE_SOURCE], tiles, (size_t)tiles_len);
 	std::memcpy((void *)tiles::SCREENBLOCKS[TILE_MAP], map, (size_t)map_len);
 
-	REG_BG0CNT = BG_CBB(TILE_SOURCE) | BG_SBB(TILE_MAP) | BG_4BPP | BG_REG_64x32
+	REG_BG0CNT = BG_CBB(TILE_SOURCE) | BG_SBB(TILE_MAP) | BG_4BPP | BG_REG_32x32
 				 | BG_PRIO(3);
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
 
