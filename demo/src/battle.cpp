@@ -116,6 +116,9 @@ void Battle::update() {
 	{
 		this->display_hp_right--;
 	}
+	if (this->frame == 6 && this->time == 0) {
+		this->damage_right.object_mode = sprite::ObjectMode::Hidden;
+	}
 
 	if (this->frame == 6 && this->time == 0) {
 		audio::play_sfx(config::sfx_fwoop);
@@ -131,6 +134,9 @@ void Battle::update() {
 		&& this->display_hp_left > this->left_unit->stats.health)
 	{
 		this->display_hp_left--;
+	}
+	if (this->frame == 9 && this->time == 0) {
+		this->damage_left.object_mode = sprite::ObjectMode::Hidden;
 	}
 
 	if (this->frame == 5 && !this->continue_to_second_round) {
