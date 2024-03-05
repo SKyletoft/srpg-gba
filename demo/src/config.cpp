@@ -13,6 +13,7 @@
 #include "popup.h"
 #include "sprite.h"
 #include "state.h"
+#include "stats.h"
 #include "tiles.h"
 #include "tty.h"
 
@@ -172,6 +173,9 @@ context_menu::ContextMenu movement_popup{
 		 state::next_state = 0;
 	 }},
 };
+
+stats::Stats stats{};
+
 image::Image image{};
 
 main_menu::MainMenu game_over{
@@ -213,7 +217,7 @@ main_menu::MainMenu win{
 	{"Game over", []() {}},
 };
 
-std::array<state::Mode *, 10> const modes_data{
+std::array<state::Mode *, 11> const modes_data{
 	&map,
 	&debug::tty_mode,
 	&popup,
@@ -224,6 +228,7 @@ std::array<state::Mode *, 10> const modes_data{
 	&game_over,
 	&main_menu,
 	&win,
+	&stats,
 };
 
 u32 startup_song = MOD_BAD_APPLE;
