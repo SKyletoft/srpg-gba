@@ -157,8 +157,7 @@ void Map::restore() {
 	switch (state::last_state) {
 	case 0:
 	case 2:
-	case 5:
-	case 10: {
+	case 5: {
 	} break;
 	case 1:
 	case 7:
@@ -180,6 +179,10 @@ void Map::restore() {
 	} break;
 	case 6: {
 		loading::load_ui();
+	} break;
+	case 10: {
+		loading::load_palettes();
+		loading::load_tiles();
 	} break;
 	default:
 		break;
@@ -260,7 +263,8 @@ void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 	auto tile_coord = tile.to_pixel_space() / 8;
 	// Stored by column so we can skip the last column when it goes off-screen
 	constexpr std::array<size_t, 12> tiles_offsets_in_hex = {
-		0, 32, 64, 96, 1, 33, 65, 97, 2, 34, 66, 98};
+		0, 32, 64, 96, 1, 33, 65, 97, 2, 34, 66, 98
+	};
 
 	ScreenEntry volatile *base;
 	if (!tile.is_odd()) {

@@ -5,8 +5,10 @@
 
 namespace stats {
 
-constexpr u16 TILE_SOURCE = 2;
-constexpr u16 TILE_MAP = 3;
+constexpr u16 TILE_SOURCE_2 = 2;
+constexpr u16 TILE_MAP_2 = 3;
+constexpr u16 TILE_SOURCE_3 = 3;
+constexpr u16 TILE_MAP_3 = 4;
 
 class Stats : public state::Mode {
 	unit::Unit const *data = nullptr;
