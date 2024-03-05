@@ -155,7 +155,8 @@ void Map::restore() {
 	switch (state::last_state) {
 	case 0:
 	case 2:
-	case 5: {
+	case 5:
+	case 10: {
 	} break;
 	case 1:
 	case 7:
@@ -176,6 +177,8 @@ void Map::restore() {
 	case 6: {
 		loading::load_ui();
 	} break;
+	default:
+		break;
 	}
 
 	if (state::last_state != 2) {
@@ -411,12 +414,22 @@ void Map::waiting_for_input_handler() {
 			this->draw_status = new_status;
 		}
 		this->draw_status.visible = true;
+
+		if (input::get_button(Button::R) == InputState::Pressed) {
+			config::stats.set_unit(*hovered_unit);
+			state::next_state = 10;
+		}
 	} else if (config::selected_unit != nullptr) {
 		auto new_status = DrawStatus(*config::selected_unit);
 		if (new_status != this->draw_status) {
 			this->draw_status = new_status;
 		}
 		this->draw_status.visible = true;
+
+		if (input::get_button(Button::R) == InputState::Pressed) {
+			config::stats.set_unit(*config::selected_unit);
+			state::next_state = 10;
+		}
 	} else {
 		this->draw_status.visible = false;
 	}
