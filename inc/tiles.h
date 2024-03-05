@@ -152,6 +152,12 @@ union ScreenEntry {
 	}
 	constexpr void operator=(const ScreenEntry &rhs) { this->raw = rhs.raw; }
 	constexpr void operator=(volatile ScreenEntry &rhs) { this->raw = rhs.raw; }
+
+	constexpr ScreenEntry with_palette(u8 new_pal) {
+		ScreenEntry copy{this->raw};
+		copy.palette = new_pal & 0b1111;
+		return copy;
+	}
 };
 static_assert(sizeof(ScreenEntry) == sizeof(u16));
 static_assert(alignof(ScreenEntry) == alignof(u16));
