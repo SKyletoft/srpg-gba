@@ -148,7 +148,9 @@ void Map::restore() {
 		}
 
 		loading::load_sprites();
+		loading::load_palettes();
 		loading::load_tiles();
+		loading::load_map();
 		loading::load_ui();
 	}
 
@@ -167,7 +169,9 @@ void Map::restore() {
 		}
 
 		loading::load_sprites();
+		loading::load_palettes();
 		loading::load_tiles();
+		loading::load_map();
 		loading::load_ui();
 	} break;
 	case 4: {
