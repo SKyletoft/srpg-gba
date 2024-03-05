@@ -45,11 +45,17 @@ void load_sprites() {
 
 void load_tiles() {
 	config::hexmap.load_tilesets(config::hexmap.layer0);
+}
+
+void load_map() {
 	config::hexmap.load_map(config::hexmap.layer0);
 	config::hexmap.load_map(config::hexmap.layer1);
+	config::hexmap.update_camera();
+}
+
+void load_palettes() {
 	config::hexmap.load_palettes(config::hexmap.layer0);
 	tiles::BG_PALETTE_MEMORY[1] = *(tiles::Palette *)movement_hlPal;
-	config::hexmap.update_camera();
 }
 
 } // namespace loading

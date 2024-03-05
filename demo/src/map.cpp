@@ -148,7 +148,9 @@ void Map::restore() {
 		}
 
 		loading::load_sprites();
+		loading::load_palettes();
 		loading::load_tiles();
+		loading::load_map();
 		loading::load_ui();
 	}
 
@@ -166,7 +168,9 @@ void Map::restore() {
 		}
 
 		loading::load_sprites();
+		loading::load_palettes();
 		loading::load_tiles();
+		loading::load_map();
 		loading::load_ui();
 	} break;
 	case 4: {
@@ -176,6 +180,12 @@ void Map::restore() {
 	case 6: {
 		loading::load_ui();
 	} break;
+	case 10: {
+		loading::load_palettes();
+		loading::load_tiles();
+	} break;
+	default:
+		break;
 	}
 
 	if (state::last_state != 2) {
@@ -253,7 +263,8 @@ void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 	auto tile_coord = tile.to_pixel_space() / 8;
 	// Stored by column so we can skip the last column when it goes off-screen
 	constexpr std::array<size_t, 12> tiles_offsets_in_hex = {
-		0, 32, 64, 96, 1, 33, 65, 97, 2, 34, 66, 98};
+		0, 32, 64, 96, 1, 33, 65, 97, 2, 34, 66, 98
+	};
 
 	ScreenEntry volatile *base;
 	if (!tile.is_odd()) {
@@ -411,12 +422,22 @@ void Map::waiting_for_input_handler() {
 			this->draw_status = new_status;
 		}
 		this->draw_status.visible = true;
+
+		if (input::get_button(Button::R) == InputState::Pressed) {
+			config::stats.set_unit(*hovered_unit);
+			state::next_state = 10;
+		}
 	} else if (config::selected_unit != nullptr) {
 		auto new_status = DrawStatus(*config::selected_unit);
 		if (new_status != this->draw_status) {
 			this->draw_status = new_status;
 		}
 		this->draw_status.visible = true;
+
+		if (input::get_button(Button::R) == InputState::Pressed) {
+			config::stats.set_unit(*config::selected_unit);
+			state::next_state = 10;
+		}
 	} else {
 		this->draw_status.visible = false;
 	}

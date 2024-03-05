@@ -47,5 +47,7 @@ constexpr tiles::Palette UI_PALETTE{
 void load_ui();
 void load_sprites();
 void load_tiles();
+void load_map();
+void load_palettes();
 
 } // namespace loading

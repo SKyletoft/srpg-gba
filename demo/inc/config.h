@@ -3,6 +3,7 @@
 #include "cursor_scroller.h"
 #include "image.h"
 #include "main_menu.h"
+#include "stats.h"
 #include "tiles.h"
 
 #include "battle.h"
@@ -45,6 +46,7 @@ extern battle::Battle battle_ani;
 extern map::Map map;
 extern context_menu::ContextMenu popup;
 extern context_menu::ContextMenu movement_popup;
+extern stats::Stats stats;
 
 extern image::Image image;
 extern main_menu::MainMenu game_over;
