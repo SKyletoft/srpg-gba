@@ -88,25 +88,35 @@ void Stats::restore() {
 
 	load_portrait(this->data->portrait);
 
-	for (size_t i : rv::iota(0uz, 1024uz)) {
-		SCREENBLOCKS[TILE_MAP_2][i] = ScreenEntry(2, 0, 15);
+	for (size_t y : rv::iota(1uz, 19uz)) {
+		for (size_t x : rv::iota(1uz, 29uz)) {
+			SCREENBLOCKS[TILE_MAP_2][y * 32 + x] = ScreenEntry(2, 0, 15);
+		}
+	}
+	for (size_t y : rv::iota(0uz, 20uz)) {
+		SCREENBLOCKS[TILE_MAP_2][y * 32 + 0] = ScreenEntry(0, 0, 15);
+		SCREENBLOCKS[TILE_MAP_2][y * 32 + 29] = ScreenEntry(0, 0, 15);
+	}
+	for (size_t x : rv::iota(1uz, 29uz)) {
+		SCREENBLOCKS[TILE_MAP_2][0 * 32 + x] = ScreenEntry(0, 0, 15);
+		SCREENBLOCKS[TILE_MAP_2][19 * 32 + x] = ScreenEntry(0, 0, 15);
 	}
 
 	std::string lines[]{
 		std::string{this->data->name},
 		"",
 		std::format(
-			"Health:  {:2}/{:2}",
+			"Health: {:2}/{:2}",
 			this->data->stats.health,
 			this->data->stats.max_health
 		),
-		std::format("Attack:     {:2}", this->data->stats.attack),
-		std::format("Defence:    {:2}", this->data->stats.defence),
-		std::format("Magic:      {:2}", this->data->stats.magic),
-		std::format("Resistance: {:2}", this->data->stats.resistance),
-		std::format("Speed:      {:2}", this->data->stats.speed),
-		std::format("Luck:       {:2}", this->data->stats.luck),
-		std::format("Movement:   {:2}", this->data->stats.movement),
+		std::format("Attack:    {:2}", this->data->stats.attack),
+		std::format("Defence:   {:2}", this->data->stats.defence),
+		std::format("Magic:     {:2}", this->data->stats.magic),
+		std::format("Resistance:{:2}", this->data->stats.resistance),
+		std::format("Speed:     {:2}", this->data->stats.speed),
+		std::format("Luck:      {:2}", this->data->stats.luck),
+		std::format("Movement:  {:2}", this->data->stats.movement),
 	};
 
 	constexpr size_t Y_OFFSET_TEXT = 5;
@@ -129,7 +139,7 @@ void Stats::restore() {
 				 | BG_REG_32x32 | BG_PRIO(1);
 	REG_BG3CNT = BG_CBB(TILE_SOURCE_3) | BG_SBB(TILE_MAP_3) | BG_4BPP
 				 | BG_REG_32x32 | BG_PRIO(0);
-	REG_DISPCNT = DCNT_MODE0 | DCNT_BG2 | DCNT_BG3;
+	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_BG3;
 }
 
 void Stats::update() {
