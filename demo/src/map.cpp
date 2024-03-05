@@ -63,12 +63,9 @@ void cycle_selected_unit() {
 		return;
 	}
 	deselect();
-	config::selected_unit = next_unit;
-	config::cursor.cursor.move_to(config::selected_unit->pos());
+	config::cursor.cursor.move_to(next_unit->pos());
 	audio::play_sfx(SFX__BLIP);
-	config::highlights =
-		config::selected_unit->accessible_tiles(config::hexmap.map);
-	update_palettes_of(config::highlights, 1);
+	select_unit(next_unit);
 	return;
 }
 
@@ -291,15 +288,7 @@ void update_palettes_of(Set<CubeCoord> const &highlights, u8 new_palette) {
 
 void unselected_input() {
 	if (input::get_button(Button::A) == InputState::Pressed) {
-		if (Unit *selected_unit = get_hovered_unit()) {
-			config::selected_unit = &*selected_unit;
-			config::highlights =
-				config::selected_unit->accessible_tiles(config::hexmap.map);
-			update_palettes_of(config::highlights, 1);
-			return;
-		}
-
-		state::next_state = 2;
+		select_unit(get_hovered_unit());
 	}
 	if (input::get_button(Button::L) == InputState::Pressed) {
 		cycle_hovered_unit();
@@ -310,6 +299,17 @@ void deselect() {
 	config::selected_unit = nullptr;
 	update_palettes_of(config::highlights, 0);
 	config::highlights.clear();
+}
+
+void select_unit(Unit *selected_unit) {
+	if (selected_unit != nullptr) {
+		config::selected_unit = &*selected_unit;
+		config::highlights =
+			config::selected_unit->accessible_tiles(config::hexmap.map);
+		update_palettes_of(config::highlights, 1);
+		return;
+	}
+	state::next_state = 2;
 }
 
 void Map::selected_input() {
