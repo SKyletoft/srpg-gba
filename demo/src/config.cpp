@@ -2,6 +2,7 @@
 
 #include "cursor_scroller.h"
 #include "debug.h"
+#include "dialogue.h"
 #include "export.h"
 #include "hexes.h"
 #include "image.h"
@@ -175,6 +176,7 @@ context_menu::ContextMenu movement_popup{
 };
 
 stats::Stats stats{};
+dialogue::Dialogue dialogue{};
 
 image::Image image{};
 
@@ -217,7 +219,7 @@ main_menu::MainMenu win{
 	{"Game over", []() {}},
 };
 
-std::array<state::Mode *, 11> const modes_data{
+std::array<state::Mode *, 12> const modes_data{
 	&map,
 	&debug::tty_mode,
 	&popup,
@@ -229,6 +231,7 @@ std::array<state::Mode *, 11> const modes_data{
 	&main_menu,
 	&win,
 	&stats,
+	&dialogue,
 };
 
 u32 startup_song = MOD_BAD_APPLE;
