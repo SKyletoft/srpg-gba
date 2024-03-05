@@ -52,6 +52,42 @@ Unit *get_hovered_unit() {
 	return &*selected_unit;
 }
 
+// Assumes a player unit is selected and so should only be called
+// when such is the case
+void cycle_selected_unit() {
+	Unit *next_unit = config::selected_unit + 1;
+	if (next_unit == &*config::user_units().end()) {
+			next_unit = &*config::user_units().begin();
+	}
+	if (config::selected_unit == next_unit) {
+		return;
+	}
+	deselect();
+	config::selected_unit = next_unit;
+	config::cursor.cursor.move_to(config::selected_unit->pos());
+	config::highlights =
+		config::selected_unit->accessible_tiles(config::hexmap.map);
+	update_palettes_of(config::highlights, 1);
+	return;
+}
+
+void cycle_hovered_unit() {
+	Unit *next_unit = &* config::user_units().begin();
+	if (Unit *unit = get_hovered_unit()) {
+		next_unit = unit + 1;
+		if (unit->is_user()){
+			if (next_unit == &* config::user_units().end()) {
+				next_unit = &* config::user_units().begin();
+			}
+		} else {
+			if (next_unit == &* config::enemy_units().end()) {
+				next_unit = &* config::enemy_units().begin();
+			}
+		}
+	}
+	config::cursor.cursor.move_to(next_unit->pos());
+}
+
 DrawStatus::DrawStatus(Unit const &unit)
 	: name(unit.name)
 	, hp_text(std::format("{}/{}", unit.stats.health, unit.stats.max_health))
@@ -263,6 +299,9 @@ void unselected_input() {
 
 		state::next_state = 2;
 	}
+	if (input::get_button(Button::L) == InputState::Pressed) {
+		cycle_hovered_unit();
+	}
 }
 
 void deselect() {
@@ -301,6 +340,9 @@ void Map::selected_input() {
 		this->draw_status.visible = false;
 		state::next_state = 5;
 	}
+
+	// Assumes a player unit is selected, which should always be the case here?
+	if (input::get_button(Button::L) == InputState::Pressed) cycle_selected_unit();
 }
 
 void Map::end_player_turn() {
