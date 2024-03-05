@@ -61,7 +61,7 @@ constexpr std::array<std::tuple<void *, size_t, void *, void *>, 4> PORTRAITS{
 	},
 };
 
-void load_portrait(size_t idx) {
+void load_portrait(size_t idx, u8 palette) {
 	auto [tiles, tiles_len, map, pal] = PORTRAITS[idx];
 
 	std::memcpy(CHARBLOCKS[TILE_SOURCE_3], tiles, tiles_len);
@@ -75,7 +75,8 @@ void load_portrait(size_t idx) {
 			size_t const offset_idx =
 				(y + Y_OFFSET_PORTRAIT) * 32 + x + X_OFFSET_PORTRAIT;
 			size_t const idx = y * 32 + x;
-			SCREENBLOCKS[TILE_MAP_3][offset_idx] = ((ScreenEntry *)map)[idx];
+			SCREENBLOCKS[TILE_MAP_3][offset_idx] =
+				((ScreenEntry *)map)[idx].with_palette(palette);
 		}
 	}
 }
@@ -86,7 +87,7 @@ void Stats::restore() {
 	std::memcpy(CHARBLOCKS[TILE_SOURCE_2] + 1, fontTiles, fontTilesLen);
 	tiles::BG_PALETTE_MEMORY[15] = loading::UI_PALETTE;
 
-	load_portrait(this->data->portrait);
+	load_portrait(this->data->portrait, 0);
 
 	for (size_t y : rv::iota(1uz, 19uz)) {
 		for (size_t x : rv::iota(1uz, 29uz)) {
