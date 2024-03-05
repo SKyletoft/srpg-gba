@@ -28,7 +28,7 @@ void Hexmap::load_tilesets(Layer &layer) {
 }
 
 void Hexmap::load_palettes(Layer &) {
-	BG_PALETTE_MEMORY[0] = *(Palette *)completePal;
+	BG_PALETTE_MEMORY[2] = *(Palette *)completePal;
 }
 
 std::pair<hexes::OffsetXYCoord, Point<s16>>
@@ -55,7 +55,7 @@ ScreenEntry Hexmap::get_tile(Layer &layer, s16 x, s16 y) {
 	y = x_y.y;
 
 	u16 index = 0;
-	u8 palette = 0;
+	u8 palette = 2;
 	if (offset.col < (s16)this->map.width - (offset.row & 1)
 		&& offset.row < (s16)this->map.height)
 	{

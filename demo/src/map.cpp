@@ -307,7 +307,7 @@ void unselected_input() {
 
 void deselect() {
 	config::selected_unit = nullptr;
-	update_palettes_of(config::highlights, 0);
+	update_palettes_of(config::highlights, 2);
 	config::highlights.clear();
 }
 
@@ -526,14 +526,14 @@ void Map::enemy_turn_handler() {
 			enemy.sprite.move_to(target.second);
 			this->state = MapState::AnimatingEnemy;
 			config::battle_ani.set_combatants(enemy, *target.first);
-			update_palettes_of(accessible, 0);
+			update_palettes_of(accessible, 2);
 		};
 
 		switch (vec.size()) {
 		case 0:
 			config::used.insert(&enemy);
 			enemy.sprite.palette = 4;
-			update_palettes_of(accessible, 0);
+			update_palettes_of(accessible, 2);
 			continue;
 		case 1:
 			f(vec[0]);

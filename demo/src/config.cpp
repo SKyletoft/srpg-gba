@@ -155,7 +155,7 @@ context_menu::ContextMenu movement_popup{
 		 state::next_state = 0;
 		 config::original_pos = config::selected_unit->pos();
 		 config::selected_unit->sprite.move_to(config::cursor.pos());
-		 map::update_palettes_of(config::highlights, 0);
+		 map::update_palettes_of(config::highlights, 2);
 
 		 highlights.clear();
 		 for (Unit *enemy : neighbouring_enemies) {
@@ -168,7 +168,7 @@ context_menu::ContextMenu movement_popup{
 		 map.state = map::MapState::Animating;
 		 neighbouring_enemies.clear();
 		 config::selected_unit->sprite.move_to(config::cursor.pos());
-		 map::update_palettes_of(config::highlights, 0);
+		 map::update_palettes_of(config::highlights, 2);
 		 config::highlights.clear();
 		 state::next_state = 0;
 	 }},
