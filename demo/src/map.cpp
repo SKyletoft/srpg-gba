@@ -57,7 +57,7 @@ Unit *get_hovered_unit() {
 void cycle_selected_unit() {
 	Unit *next_unit = config::selected_unit + 1;
 	if (next_unit == &*config::user_units().end()) {
-			next_unit = &*config::user_units().begin();
+		next_unit = &*config::user_units().begin();
 	}
 	if (config::selected_unit == next_unit) {
 		return;
@@ -70,16 +70,16 @@ void cycle_selected_unit() {
 }
 
 void cycle_hovered_unit() {
-	Unit *next_unit = &* config::user_units().begin();
+	Unit *next_unit = &*config::user_units().begin();
 	if (Unit *unit = get_hovered_unit()) {
 		next_unit = unit + 1;
-		if (unit->is_user()){
-			if (next_unit == &* config::user_units().end()) {
-				next_unit = &* config::user_units().begin();
+		if (unit->is_user()) {
+			if (next_unit == &*config::user_units().end()) {
+				next_unit = &*config::user_units().begin();
 			}
 		} else {
-			if (next_unit == &* config::enemy_units().end()) {
-				next_unit = &* config::enemy_units().begin();
+			if (next_unit == &*config::enemy_units().end()) {
+				next_unit = &*config::enemy_units().begin();
 			}
 		}
 	}
@@ -253,8 +253,7 @@ void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 	auto tile_coord = tile.to_pixel_space() / 8;
 	// Stored by column so we can skip the last column when it goes off-screen
 	constexpr std::array<size_t, 12> tiles_offsets_in_hex = {
-		0, 32, 64, 96, 1, 33, 65, 97, 2, 34, 66, 98
-	};
+		0, 32, 64, 96, 1, 33, 65, 97, 2, 34, 66, 98};
 
 	ScreenEntry volatile *base;
 	if (!tile.is_odd()) {
@@ -344,7 +343,9 @@ void Map::selected_input() {
 	}
 
 	// Assumes a player unit is selected, which should always be the case here?
-	if (input::get_button(Button::L) == InputState::Pressed) cycle_selected_unit();
+	if (input::get_button(Button::L) == InputState::Pressed) {
+		cycle_selected_unit();
+	}
 }
 
 void Map::end_player_turn() {
