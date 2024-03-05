@@ -65,6 +65,7 @@ void cycle_selected_unit() {
 	deselect();
 	config::selected_unit = next_unit;
 	config::cursor.cursor.move_to(config::selected_unit->pos());
+	audio::play_sfx(SFX__BLIP);
 	config::highlights =
 		config::selected_unit->accessible_tiles(config::hexmap.map);
 	update_palettes_of(config::highlights, 1);
@@ -86,6 +87,7 @@ void cycle_hovered_unit() {
 		}
 	}
 	config::cursor.cursor.move_to(next_unit->pos());
+	audio::play_sfx(SFX__BLIP);
 }
 
 DrawStatus::DrawStatus(Unit const &unit)
