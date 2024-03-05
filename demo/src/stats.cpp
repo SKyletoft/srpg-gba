@@ -67,7 +67,7 @@ void load_portrait(size_t idx) {
 	std::memcpy(CHARBLOCKS[TILE_SOURCE_3], tiles, tiles_len);
 	tiles::BG_PALETTE_MEMORY[0] = *(tiles::Palette *)pal;
 
-	constexpr size_t Y_OFFSET_PORTRAIT = 0;
+	constexpr size_t Y_OFFSET_PORTRAIT = 1;
 	constexpr size_t X_OFFSET_PORTRAIT = 0;
 
 	for (size_t y = 0; y < 128 / 8; ++y) {
@@ -109,8 +109,8 @@ void Stats::restore() {
 		std::format("Movement:   {:2}", this->data->stats.movement),
 	};
 
-	constexpr size_t Y_OFFSET_TEXT = 4;
-	constexpr size_t X_OFFSET_TEXT = 13;
+	constexpr size_t Y_OFFSET_TEXT = 5;
+	constexpr size_t X_OFFSET_TEXT = 15;
 
 	for (auto [y, s] : lines | v::enumerate) {
 		for (auto const [x, c] : s | v::enumerate | v::take(s.size())) {
