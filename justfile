@@ -1,19 +1,12 @@
 build: setup
 	mkdir out | true
-	mkdir src | true
-	mkdir inc | true
-	mkdir -p demo/src | true
-	mkdir -p demo/inc | true
-	mkdir -p demo/gfx | true
-	mkdir -p demo/audio | true
-	-rm -rf out/*.gba
-	docker run -v $(pwd)/out:/srpg-engine/out builder
+	docker run -v $(pwd):/srpg-engine builder
 
 setup:
 	docker build . -t builder
 
 bash: setup
-	docker run -v $(pwd)/out:/srpg-engine/out -it builder /bin/bash
+	docker run -v $(pwd):/srpg-engine -it builder /bin/bash
 
 setup-env:
 	git clone https://github.com/devkitPro/libtonc.git
@@ -21,7 +14,7 @@ setup-env:
 	sed -i 's/\r//g' libtonc/include/*.h libtonc/src/*.c libtonc/src/tte/*.c maxmod/include/* maxmod/source/*
 
 mgba: build
-	mgba-qt out/srpg-engine.elf -4
+	mgba-qt srpg-engine.elf -4
 
 clean:
 	-rm -rf out/* libtonc maxmod

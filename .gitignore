@@ -3,6 +3,8 @@ out
 .idea
 *.o
 *.a
+*.elf
+*.gba
 .envrc
 libtonc
 maxmod

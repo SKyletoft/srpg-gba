@@ -1,4 +1,4 @@
-file out/srpg-engine.elf
+file srpg-engine.elf
 target extended-remote localhost:2345
 load
 b main
