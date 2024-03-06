@@ -55,13 +55,16 @@ Unit *get_hovered_unit() {
 // Assumes a player unit is selected and so should only be called
 // when such is the case
 void cycle_selected_unit() {
-	Unit *next_unit = config::selected_unit + 1;
-	if (next_unit == &*config::user_units().end()) {
-		next_unit = &*config::user_units().begin();
-	}
-	if (config::selected_unit == next_unit) {
-		return;
-	}
+	Unit *next_unit = config::selected_unit;
+	do {
+		next_unit++;
+		if (next_unit == &*config::user_units().end()) {
+			next_unit = &*config::user_units().begin();
+		}
+		if (config::selected_unit == next_unit) {
+			return;
+		}
+	} while (config::used.contains(next_unit));
 	deselect();
 	config::cursor.cursor.move_to(next_unit->pos());
 	audio::play_sfx(SFX__BLIP);
@@ -70,10 +73,14 @@ void cycle_selected_unit() {
 }
 
 void cycle_hovered_unit() {
-	Unit *next_unit = &*config::user_units().begin();
-	if (Unit *unit = get_hovered_unit()) {
-		next_unit = unit + 1;
-		if (unit->is_user()) {
+	Unit *next_unit = get_hovered_unit();
+	if (next_unit == nullptr) {
+		next_unit = &*config::user_units().begin() - 1;
+	}
+
+	do {
+		next_unit++;
+		if (next_unit->is_user()) {
 			if (next_unit == &*config::user_units().end()) {
 				next_unit = &*config::user_units().begin();
 			}
@@ -82,7 +89,7 @@ void cycle_hovered_unit() {
 				next_unit = &*config::enemy_units().begin();
 			}
 		}
-	}
+	} while (config::used.contains(next_unit));
 	config::cursor.cursor.move_to(next_unit->pos());
 	audio::play_sfx(SFX__BLIP);
 }
