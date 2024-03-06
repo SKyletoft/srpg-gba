@@ -134,7 +134,6 @@ void PopupMenu::restore() {
 
 	this->selection = 0;
 
-	// We don't blackout, but we do disable gui
 	util::wait_for_drawing_complete();
 	REG_DISPCNT &= ~(u32)(DCNT_BG3 | DCNT_BG2);
 	this->load_tiles_and_palettes();

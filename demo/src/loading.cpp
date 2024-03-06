@@ -47,9 +47,7 @@ void load_sprites() {
 	tiles::SPRITE_PALETTE_MEMORY[4] = RED_USED;
 }
 
-void load_tiles() {
-	config::hexmap.load_tilesets(config::hexmap.layer0);
-}
+void load_tiles() { config::hexmap.load_tilesets(config::hexmap.layer0); }
 
 void load_map() {
 	config::hexmap.load_map(config::hexmap.layer0);
