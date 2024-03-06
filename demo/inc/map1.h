@@ -111,7 +111,7 @@ constexpr Unit enemies[]{
 				.health = 30,
 				.max_health = 30,
 				.attack = 5,
-				.defence = 4,
+				.defence = -2,
 				.magic = 3,
 				.resistance = 3,
 				.speed = 9,
