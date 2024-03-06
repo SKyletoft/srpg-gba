@@ -176,7 +176,7 @@ context_menu::ContextMenu movement_popup{
 };
 
 stats::Stats stats{};
-dialogue::Dialogue dialogue{};
+dialogue::Dialogue dialogue{dialogue::TEXT};
 
 image::Image image{};
 

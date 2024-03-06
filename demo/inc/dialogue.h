@@ -57,6 +57,10 @@ class Dialogue : public state::Mode {
 	std::span<const TextBoxEvent> items{TEXT};
 
   public:
+	Dialogue(std::span<const TextBoxEvent> items)
+		: step(0)
+		, items(items) {}
+
 	bool blackout() override;
 	void restore() override;
 	void update() override;
