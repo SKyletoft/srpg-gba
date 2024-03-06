@@ -57,12 +57,13 @@ class Map : public state::Mode {
 	void enemy_turn_handler();
 	void animating_enemy_handler();
 
+  public:
 	void suspend() override;
 	void restore() override;
 	void vsync_hook() override;
 	bool blackout() override;
+	void update() override;
 
-  public:
 	u8 animation_cycle = 0;
 	size_t const ui_layer_map = 3;
 	size_t const ui_layer_source = 2;
@@ -70,7 +71,6 @@ class Map : public state::Mode {
 	size_t enemy_selection = 0;
 	DrawStatus draw_status{};
 
-	void update() override;
 };
 
 } // namespace map
