@@ -480,7 +480,8 @@ void Map::selecting_enemy_handler() {
 	}
 	if (input::get_button(Button::A) == InputState::Pressed) {
 		config::battle_ani.set_combatants(
-			*config::selected_unit, config::enemy_units()[this->enemy_selection]
+			*config::selected_unit,
+			*config::neighbouring_enemies[this->enemy_selection]
 		);
 		config::cursor.cursor.move_to(config::selected_unit->pos());
 		state::next_state = 4;
