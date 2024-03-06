@@ -201,6 +201,7 @@ main_menu::MainMenu main_menu{
 		 state::next_state = 0;
 		 auto level = map1::Level{};
 		 level::load_level(level);
+		 config::map.end_enemy_turn();
 		 map::cycle_hovered_unit();
 	 }},
 	{"Level 2",
@@ -208,6 +209,7 @@ main_menu::MainMenu main_menu{
 		 state::next_state = 0;
 		 auto level = map2::Level{};
 		 level::load_level(level);
+		 config::map.end_enemy_turn();
 		 map::cycle_hovered_unit();
 	 }},
 };
@@ -218,6 +220,7 @@ main_menu::MainMenu win{
 		 state::next_state = 0;
 		 auto level = map2::Level{};
 		 level::load_level(level);
+		 config::map.end_enemy_turn();
 		 map::cycle_hovered_unit();
 	 }},
 	{"Return to title",

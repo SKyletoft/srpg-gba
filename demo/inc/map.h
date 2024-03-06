@@ -50,9 +50,6 @@ struct DrawStatus {
 class Map : public state::Mode {
   private:
 	void selected_input();
-	void end_player_turn();
-	void end_enemy_turn();
-
 	void animation_handler();
 	void waiting_for_input_handler();
 	void selecting_enemy_handler();
@@ -61,6 +58,9 @@ class Map : public state::Mode {
 	void animating_cutscene_handler();
 
   public:
+	void end_player_turn();
+	void end_enemy_turn();
+
 	void suspend() override;
 	void restore() override;
 	void vsync_hook() override;

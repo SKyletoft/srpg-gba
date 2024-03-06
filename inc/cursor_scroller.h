@@ -25,6 +25,7 @@ class CursorScroller {
 		.size = SpriteSize::x16,
 		.hardware_id = 0,
 		.tile_index = 1,
+		.hidden = true,
 	};
 
 	/// Up, Down, Left, Right

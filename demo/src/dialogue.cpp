@@ -15,6 +15,8 @@
 
 extern "C" {
 #include <tonc.h>
+
+#include "arrow.h"
 }
 
 namespace dialogue {
@@ -83,6 +85,8 @@ void Dialogue::restore() {
 		loading::load_tiles();
 		loading::load_map();
 		loading::load_ui();
+		tiles::SPRITE_PALETTE_MEMORY[0] = *(tiles::Palette *)arrowPal;
+		std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
 
 		REG_BG0CNT = (u16)(BG_CBB(config::hexmap.layer0.tile_source)
 						   | BG_SBB(config::hexmap.layer0.tile_map) | BG_4BPP
@@ -95,6 +99,7 @@ void Dialogue::restore() {
 						   | BG_REG_32x32 | BG_PRIO(0));
 		REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_OBJ
 					  | DCNT_OBJ_1D;
+
 		config::map.vsync_hook();
 	}
 
@@ -128,6 +133,7 @@ void end() {
 	config::overlay.image = overlay::Image::Rout;
 	state::next_state = 6;
 	config::cursor.cursor.move_to(config::user_army[0].pos());
+	config::map.end_enemy_turn();
 }
 
 void Dialogue::update() {
