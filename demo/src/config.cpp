@@ -100,7 +100,7 @@ std::array<Unit, 8> const default_user_army{
 	},
 };
 
-std::array<Unit, 8> user_army = default_user_army;
+std::array<Unit, 8> user_army = {};
 size_t user_soldier_count = 2;
 
 std::array<Unit, 20> enemy_army{};
