@@ -153,7 +153,8 @@ void Battle::restore() {
 	std::memcpy(
 		tiles::SPRITE_CHARBLOCK[0], battle_aniTiles, sizeof(battle_aniTiles)
 	);
-	tty::decompress_1bpp_to_4bpp(alphabet_tiles, sys8Glyphs, '9' - ' ' + 1);
+	// tty::decompress_1bpp_to_4bpp(alphabet_tiles, sys8Glyphs, '9' - ' ' + 1);
+	std::memcpy(alphabet_tiles, fontTiles + 8, fontTilesLen - 8 * sizeof(int));
 
 	constexpr Palette RED{
 		tiles::TRANSPARENT,
@@ -171,8 +172,8 @@ void Battle::restore() {
 		Colour::from_24bit_colour(0x00, 0xBD, 0xEA),
 		Colour(25, 25, 25),
 	};
-	constexpr Palette WHITE{tiles::TRANSPARENT, tiles::WHITE};
-	constexpr Palette BLACK{tiles::TRANSPARENT, tiles::BLACK};
+	constexpr Palette WHITE{tiles::TRANSPARENT, tiles::WHITE, tiles::BLACK};
+	constexpr Palette BLACK{tiles::TRANSPARENT, tiles::BLACK, tiles::WHITE};
 
 	tiles::SPRITE_PALETTE_MEMORY[2] = WHITE;
 	tiles::SPRITE_PALETTE_MEMORY[3] = BLACK;
