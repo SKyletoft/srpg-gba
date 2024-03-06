@@ -9,6 +9,8 @@
 
 namespace dialogue {
 
+using tiles::Palette;
+
 constexpr u16 TILE_SOURCE_2 = 2;
 constexpr u16 TILE_MAP_2 = 3;
 constexpr u16 TILE_SOURCE_3 = 1;
@@ -50,6 +52,10 @@ constexpr std::array<TextBoxEvent, 10> TEXT{
 };
 
 class Dialogue : public state::Mode {
+	Palette left_focus, left_defocus, right_focus, right_defocus;
+	size_t step;
+	std::span<const TextBoxEvent> items{TEXT};
+
   public:
 	bool blackout() override;
 	void restore() override;
