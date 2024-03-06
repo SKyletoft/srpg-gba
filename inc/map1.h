@@ -25,14 +25,14 @@ static constexpr std::array<std::array<unsigned char,  10>,  19> map {
 	{ 0, 1, 6, 1,15,15,15, 1, 1, 0}
 	, { 0, 1, 3, 9, 9,15,15, 2, 0},
 	{ 0, 1, 1, 1, 1, 8,15,15, 2, 0}
-	, { 0, 1, 1, 1, 1,14,15,12, 0},
-	{ 0, 1, 1, 1, 1, 1,14,15, 1, 0}
-	, { 0, 1, 3, 3, 1, 1, 8, 1, 0},
-	{ 0, 1, 3, 3, 3, 1, 1, 3, 3, 0}
-	, { 0, 1, 3, 3, 1, 1, 1, 1, 0},
-	{ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0}
-	, { 0, 1, 1, 1, 1, 1, 1, 1, 0},
-	{ 0, 1, 1, 1, 1, 1, 1, 1, 4, 0}
+	, { 0, 1, 1, 1, 1,14,15,14, 0},
+	{ 0, 1, 1, 1, 1, 1,14,15,15, 0}
+	, { 0, 1, 3, 3, 1, 1, 8,15, 0},
+	{ 0, 1, 3, 3, 3, 1,15,15,15, 0}
+	, { 0, 1, 3, 3, 1,15, 1, 1, 0},
+	{ 0, 1, 1, 1, 1, 3,15, 3, 1, 0}
+	, { 0, 1, 1, 1, 1,15, 1, 1, 0},
+	{ 0, 1, 1, 1, 3, 1, 1, 1, 4, 0}
 	, { 0, 1, 1, 1, 1, 1, 1, 4, 0},
 	{ 0, 1, 1, 1, 1, 1, 1, 1, 4, 0}
 };
@@ -74,7 +74,7 @@ constexpr Unit enemies[]{
 				.pos = hexes::OffsetXYCoord(7, 3).to_cube_coord(),
 				.centre = {5, 0},
 				.size = sprite::SpriteSize::x16,
-				.hardware_id = 3,
+				.hardware_id = 10,
 				.tile_index = 33,
 				.prio = 1,
 				.palette = 2,
@@ -83,6 +83,33 @@ constexpr Unit enemies[]{
 			Stats{
 				.health = 16,
 				.max_health = 16,
+				.attack = 5,
+				.defence = 4,
+				.magic = 3,
+				.resistance = 3,
+				.speed = 9,
+				.luck = 2,
+				.movement = 3,
+			},
+		.animation_frames = 3,
+	},
+	Unit{
+		.name = "Dude Leader",
+		.portrait = 3,
+		.sprite =
+			HexSprite{
+				.pos = hexes::OffsetXYCoord(5, 15).to_cube_coord(),
+				.centre = {5, 0},
+				.size = sprite::SpriteSize::x16,
+				.hardware_id = 11,
+				.tile_index = 33,
+				.prio = 1,
+				.palette = 2,
+			},
+		.stats =
+			Stats{
+				.health = 30,
+				.max_health = 30,
 				.attack = 5,
 				.defence = 4,
 				.magic = 3,
