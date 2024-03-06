@@ -41,9 +41,9 @@ void HexSprite::render(Point<s16> const camera_offset) const {
 		.horizontal_flip = this->horizontal_flip,
 		.vertical_flip = this->vertical_flip,
 		.size = (u8)((u8)this->size & 0b11),
-		.tile_index = this->tile_index,
-		.prio = this->prio,
-		.palette = this->palette,
+		.tile_index = (u16)(this->tile_index & 0b1'111'111'111),
+		.prio = (u8)(this->prio & 0b11),
+		.palette = (u8)(this->palette & 0b1111),
 	}
 		.write_to_screen(this->hardware_id);
 }

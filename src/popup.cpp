@@ -1,8 +1,6 @@
 #include "popup.h"
 
-#include "debug.h"
 #include "input.h"
-#include "state.h"
 #include "tiles.h"
 #include "tty.h"
 #include "util.h"

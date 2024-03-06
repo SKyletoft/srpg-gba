@@ -100,15 +100,15 @@ struct HexSprite {
 	CubeCoord pos{};
 	Point<s16> animation{};
 	Point<s16> centre{};
-	SpriteSize size : 4 = SpriteSize::x8;
-	u8 hardware_id : 7 = 0;
-	bool horizontal_flip : 1 = false;
-	bool vertical_flip : 1 = false;
-	u16 tile_index : 10 = 0;
-	u8 prio : 2 = 0;
-	u8 palette : 4 = 0;
-	ObjectMode object_mode : 2 = ObjectMode::Normal;
-	ColourMode colour_mode : 2 = ColourMode::BPP4;
+	SpriteSize size = SpriteSize::x8;
+	u8 hardware_id = 0;
+	bool horizontal_flip = false;
+	bool vertical_flip = false;
+	u16 tile_index = 0;
+	u8 prio = 0;
+	u8 palette = 0;
+	ObjectMode object_mode = ObjectMode::Normal;
+	ColourMode colour_mode = ColourMode::BPP4;
 	bool hidden = false;
 
 	constexpr HexSprite &translate(Direction d) {
