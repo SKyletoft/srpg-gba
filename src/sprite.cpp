@@ -34,7 +34,7 @@ void HexSprite::render(Point<s16> const camera_offset) const {
 
 	HardwareSprite{
 		.y = (u8)y,
-		.object_mode = ObjectMode::Normal,
+		.object_mode = this->hidden ? ObjectMode::Hidden : this->object_mode,
 		.colour_mode = this->colour_mode,
 		.shape = (u8)(((u8)this->size & 0b1100) >> 2),
 		.x = (u16)(x & 0b111'111'111),

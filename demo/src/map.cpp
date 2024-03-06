@@ -364,7 +364,7 @@ void Map::end_player_turn() {
 		unit.sprite.palette = 1;
 	}
 	config::used.clear();
-	config::overlay.is_enemy = true;
+	config::overlay.image = overlay::Image::Enemy;
 	config::selected_unit = nullptr;
 	this->state = MapState::EnemyTurn;
 	state::next_state = 6;
@@ -375,7 +375,7 @@ void Map::end_enemy_turn() {
 		unit.sprite.palette = 2;
 	}
 	config::used.clear();
-	config::overlay.is_enemy = false;
+	config::overlay.image = overlay::Image::Player;
 	config::selected_unit = nullptr;
 	this->state = MapState::WaitingForInput;
 	state::next_state = 6;
