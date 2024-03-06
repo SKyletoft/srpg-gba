@@ -203,6 +203,9 @@ void Battle::restore() {
 
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 
+	this->frame = 0;
+	this->time = 0;
+
 	this->fight();
 }
 
