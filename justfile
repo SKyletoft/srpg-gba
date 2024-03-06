@@ -1,5 +1,5 @@
 build: setup
-	mkdir out | true
+	mkdir -p out
 	docker run -v $(pwd):/srpg-engine builder
 
 setup:
