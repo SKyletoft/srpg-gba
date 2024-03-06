@@ -606,11 +606,14 @@ void Map::animating_cutscene_handler() {
 	config::hexmap.update_layer_partial(config::hexmap.layer0);
 	config::hexmap.update_layer_partial(config::hexmap.layer1);
 
+	config::cursor.cursor.hidden = false;
+
 	if (diff == Point<s16>{0, 0}) {
 		this->animation_pause++;
 		if (this->animation_pause > 60) {
 			this->state = MapState::WaitingForInput;
 			state::next_state = 11;
+			config::cursor.cursor.hidden = true;
 		}
 	}
 }
