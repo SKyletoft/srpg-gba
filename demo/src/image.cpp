@@ -14,7 +14,7 @@ extern "C" {
 
 namespace image {
 
-BackgroundData backgrounds[] = {
+constexpr std::array<BackgroundData, 3> backgrounds = {
 	BackgroundData{
 		game_overPal,
 		game_overTiles,
