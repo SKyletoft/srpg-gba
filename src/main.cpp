@@ -36,6 +36,7 @@ int main() {
 
 	initialise();
 	audio::play_song(config::the_startup_song);
+	audio::set_bgm_volume(768);
 
 	state::next_state = 3;
 	state::current_state = state::next_state;
