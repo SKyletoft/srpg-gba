@@ -39,7 +39,7 @@ GRAPHICS     := demo/gfx
 ARCH := -mthumb -mthumb-interwork
 
 CFLAGS := -g -Og \
-	-fdebug-prefix-map=/gba-dev=. \
+	-fdebug-prefix-map=/srpg-engine=. \
 	-mcpu=arm7tdmi -mtune=arm7tdmi \
 	$(ARCH)
 
