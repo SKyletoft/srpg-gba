@@ -189,34 +189,42 @@ main_menu::MainMenu game_over{
 };
 
 main_menu::MainMenu main_menu{
+	{"Start",
+	 []() {
+		 state::next_state = 11;
+		 auto level = map1::Level{};
+		 level::load_level(level);
+		 map::cycle_hovered_unit();
+	 }},
 	{"Level 1",
 	 []() {
 		 state::next_state = 0;
 		 auto level = map1::Level{};
 		 level::load_level(level);
+		 map::cycle_hovered_unit();
 	 }},
 	{"Level 2",
 	 []() {
 		 state::next_state = 0;
 		 auto level = map2::Level{};
 		 level::load_level(level);
-	 }},
-	{"Game over",
-	 []() {
-		 state::next_state = 3;
-		 image.bg = image::Background::GameOver;
-	 }},
-	{"Win",
-	 []() {
-		 state::next_state = 3;
-		 image.bg = image::Background::Win;
+		 map::cycle_hovered_unit();
 	 }},
 };
 
 main_menu::MainMenu win{
-	{"Start", []() {}},
-	{"Reboot", []() {}},
-	{"Game over", []() {}},
+	{"Continue to next level",
+	 []() {
+		 state::next_state = 0;
+		 auto level = map2::Level{};
+		 level::load_level(level);
+		 map::cycle_hovered_unit();
+	 }},
+	{"Return to title",
+	 []() {
+		 state::next_state = 3;
+		 image.bg = image::Background::TitleScreen;
+	 }},
 };
 
 std::array<state::Mode *, 12> const modes_data{
