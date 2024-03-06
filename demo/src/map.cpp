@@ -164,7 +164,8 @@ void Map::restore() {
 	switch (state::last_state) {
 	case 0:
 	case 2:
-	case 5: {
+	case 5:
+	case 11: {
 	} break;
 	case 1:
 	case 7:
