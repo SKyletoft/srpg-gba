@@ -365,6 +365,7 @@ void Map::end_player_turn() {
 	for (auto &unit : config::user_units()) {
 		unit.sprite.palette = 1;
 	}
+	REG_DISPCNT &= (u16)~DCNT_BG2;
 	config::used.clear();
 	config::overlay.image = overlay::Image::Enemy;
 	config::selected_unit = nullptr;
@@ -405,6 +406,8 @@ void Map::animation_handler() {
 
 void Map::waiting_for_input_handler() {
 	maybe_end_game();
+
+	REG_DISPCNT |= (u16)DCNT_BG2;
 
 	if (config::used.size() == config::user_soldier_count) {
 		this->end_player_turn();
