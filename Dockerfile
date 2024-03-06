@@ -21,12 +21,4 @@ ENV EDITOR=nano
 
 WORKDIR /srpg-engine
 
-COPY src src
-COPY inc inc
-COPY audio audio
-COPY demo/src demo/src
-COPY demo/inc demo/inc
-COPY demo/gfx demo/gfx
-COPY demo/audio demo/audio
-COPY Makefile .
-CMD make -kj && cp *.gba out && cp build/*.h out && cp *.elf out
+CMD make -kj && cp build/*.h out

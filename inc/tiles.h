@@ -15,13 +15,13 @@ class Colour {
   private:
 	u16 data;
 
+	static constexpr u16 MASK = 0b11111;
 	static constexpr u16 convert(u8 red, u8 green, u8 blue) {
 		auto const clamp = [](u8 x) { return std::clamp(x, (u8)0, (u8)31); };
 		red = clamp(red);
 		green = clamp(green);
 		blue = clamp(blue);
 
-		constexpr u16 MASK = 0b11111;
 		const u16 be =
 			(u16)(((blue & MASK) << 10) | ((green & MASK) << 5) | (red & MASK));
 
@@ -53,6 +53,15 @@ class Colour {
 
 	constexpr Colour()
 		: data(0) {}
+
+	constexpr u16 raw() { return this->data; }
+	constexpr RGB rgb() {
+		return RGB{
+			.red = (u8)(this->data & MASK),
+			.green = (u8)((this->data >> 5) & MASK),
+			.blue = (u8)((this->data >> 10) & MASK),
+		};
+	}
 };
 static_assert(sizeof(Colour) == sizeof(u16));
 
@@ -152,6 +161,12 @@ union ScreenEntry {
 	}
 	constexpr void operator=(const ScreenEntry &rhs) { this->raw = rhs.raw; }
 	constexpr void operator=(volatile ScreenEntry &rhs) { this->raw = rhs.raw; }
+
+	constexpr ScreenEntry with_palette(u8 new_pal) {
+		ScreenEntry copy{this->raw};
+		copy.palette = new_pal & 0b1111;
+		return copy;
+	}
 };
 static_assert(sizeof(ScreenEntry) == sizeof(u16));
 static_assert(alignof(ScreenEntry) == alignof(u16));

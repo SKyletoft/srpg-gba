@@ -19,6 +19,7 @@ void update_palette_of_tile(CubeCoord const, u8);
 void update_palettes_of(Set<CubeCoord> const &, u8);
 void deselect();
 void select_unit(Unit *);
+void cycle_hovered_unit();
 
 enum class MapState {
 	WaitingForInput,
@@ -26,6 +27,7 @@ enum class MapState {
 	SelectingEnemy,
 	EnemyTurn,
 	AnimatingEnemy,
+	AnimatingCutscene,
 };
 
 struct DrawStatus {
@@ -48,21 +50,24 @@ struct DrawStatus {
 class Map : public state::Mode {
   private:
 	void selected_input();
-	void end_player_turn();
-	void end_enemy_turn();
-
 	void animation_handler();
 	void waiting_for_input_handler();
 	void selecting_enemy_handler();
 	void enemy_turn_handler();
 	void animating_enemy_handler();
+	void animating_cutscene_handler();
+
+  public:
+	void end_player_turn();
+	void end_enemy_turn();
 
 	void suspend() override;
 	void restore() override;
 	void vsync_hook() override;
 	bool blackout() override;
+	void update() override;
 
-  public:
+	u8 animation_pause = 0;
 	u8 animation_cycle = 0;
 	size_t const ui_layer_map = 3;
 	size_t const ui_layer_source = 2;
@@ -70,7 +75,6 @@ class Map : public state::Mode {
 	size_t enemy_selection = 0;
 	DrawStatus draw_status{};
 
-	void update() override;
 };
 
 } // namespace map

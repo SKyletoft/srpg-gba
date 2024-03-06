@@ -107,8 +107,9 @@ struct HexSprite {
 	u16 tile_index : 10 = 0;
 	u8 prio : 2 = 0;
 	u8 palette : 4 = 0;
-	ObjectMode object_mode : 2 = ObjectMode::Hidden;
+	ObjectMode object_mode : 2 = ObjectMode::Normal;
 	ColourMode colour_mode : 2 = ColourMode::BPP4;
+	bool hidden = false;
 
 	constexpr HexSprite &translate(Direction d) {
 		this->pos += d;

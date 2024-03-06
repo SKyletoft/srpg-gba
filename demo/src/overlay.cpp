@@ -16,6 +16,7 @@
 extern "C" {
 #include "enemy-turn-overlay.h"
 #include "player-turn-overlay.h"
+#include "rout-the-enemy-overlay.h"
 
 #include <tonc.h>
 }
@@ -61,18 +62,25 @@ void Overlay::restore() {
 
 	REG_DISPCNT &= (u16) ~(DCNT_BG3 | DCNT_BG2);
 
-	if (this->is_enemy) {
+	if (this->image == Image::Enemy) {
 		BG_PALETTE_MEMORY[15] = *(Palette *)enemy_turn_overlayPal;
 		std::memcpy(
 			(void *)&CHARBLOCKS[TILE_SOURCE][1],
 			enemy_turn_overlayTiles,
 			sizeof(tiles::STile) * 11 * 20
 		);
-	} else {
+	} else if (this->image == Image::Player) {
 		BG_PALETTE_MEMORY[15] = *(Palette *)player_turn_overlayPal;
 		std::memcpy(
 			(void *)&CHARBLOCKS[TILE_SOURCE][1],
 			player_turn_overlayTiles,
+			sizeof(tiles::STile) * 11 * 20
+		);
+	} else if (this->image == Image::Rout) {
+		BG_PALETTE_MEMORY[15] = *(Palette *)rout_the_enemy_overlayPal;
+		std::memcpy(
+			(void *)&CHARBLOCKS[TILE_SOURCE][1],
+			rout_the_enemy_overlayTiles,
 			sizeof(tiles::STile) * 11 * 20
 		);
 	}

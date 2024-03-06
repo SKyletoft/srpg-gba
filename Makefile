@@ -38,7 +38,7 @@ GRAPHICS     := demo/gfx
 #---------------------------------------------------------------------------------
 ARCH := -mthumb -mthumb-interwork
 
-CFLAGS := -g -Og -flto \
+CFLAGS := -g -Og \
 	-fdebug-prefix-map=/gba-dev=. \
 	-mcpu=arm7tdmi -mtune=arm7tdmi \
 	$(ARCH)
@@ -64,7 +64,7 @@ CXXFLAGS := $(CFLAGS) \
 	-std=gnu++23
 
 ASFLAGS := -g $(ARCH)
-LDFLAGS = -g $(ARCH) -flto -Wl,-Map,$(notdir $*.map)
+LDFLAGS = -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project

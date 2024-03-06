@@ -61,21 +61,21 @@ constexpr std::array<std::tuple<void *, size_t, void *, void *>, 4> PORTRAITS{
 	},
 };
 
-void load_portrait(size_t idx) {
+void load_portrait(
+	size_t idx, u8 palette, size_t y_offset, size_t x_offset, bool second
+) {
 	auto [tiles, tiles_len, map, pal] = PORTRAITS[idx];
 
-	std::memcpy(CHARBLOCKS[TILE_SOURCE_3], tiles, tiles_len);
-	tiles::BG_PALETTE_MEMORY[0] = *(tiles::Palette *)pal;
-
-	constexpr size_t Y_OFFSET_PORTRAIT = 1;
-	constexpr size_t X_OFFSET_PORTRAIT = 0;
-
+	std::memcpy(CHARBLOCKS[TILE_SOURCE_3] + second * 256, tiles, tiles_len);
+	tiles::BG_PALETTE_MEMORY[(size_t)palette] = *(tiles::Palette *)pal;
 	for (size_t y = 0; y < 128 / 8; ++y) {
-		for (size_t x = 0; x < 128 / 8; ++x) {
-			size_t const offset_idx =
-				(y + Y_OFFSET_PORTRAIT) * 32 + x + X_OFFSET_PORTRAIT;
+		for (size_t x = 0; x < 112 / 8; ++x) {
+			size_t const offset_idx = (y + y_offset) * 32 + x + x_offset;
 			size_t const idx = y * 32 + x;
-			SCREENBLOCKS[TILE_MAP_3][offset_idx] = ((ScreenEntry *)map)[idx];
+			auto se = ((ScreenEntry *)map)[idx].with_palette(palette);
+			se.index += (256 * second) & 0b1111111111;
+
+			SCREENBLOCKS[TILE_MAP_3][offset_idx] = se;
 		}
 	}
 }
@@ -86,27 +86,40 @@ void Stats::restore() {
 	std::memcpy(CHARBLOCKS[TILE_SOURCE_2] + 1, fontTiles, fontTilesLen);
 	tiles::BG_PALETTE_MEMORY[15] = loading::UI_PALETTE;
 
-	load_portrait(this->data->portrait);
-
-	for (size_t i : rv::iota(0uz, 1024uz)) {
-		SCREENBLOCKS[TILE_MAP_2][i] = ScreenEntry(2, 0, 15);
+	for (ScreenEntry volatile &se : SCREENBLOCKS[TILE_MAP_3]) {
+		se = ScreenEntry(0, 0, 0);
 	}
+	for (size_t y : rv::iota(1uz, 19uz)) {
+		for (size_t x : rv::iota(1uz, 29uz)) {
+			SCREENBLOCKS[TILE_MAP_2][y * 32 + x] = ScreenEntry(2, 0, 15);
+		}
+	}
+	for (size_t y : rv::iota(0uz, 20uz)) {
+		SCREENBLOCKS[TILE_MAP_2][y * 32 + 0] = ScreenEntry(0, 0, 15);
+		SCREENBLOCKS[TILE_MAP_2][y * 32 + 29] = ScreenEntry(0, 0, 15);
+	}
+	for (size_t x : rv::iota(1uz, 29uz)) {
+		SCREENBLOCKS[TILE_MAP_2][0 * 32 + x] = ScreenEntry(0, 0, 15);
+		SCREENBLOCKS[TILE_MAP_2][19 * 32 + x] = ScreenEntry(0, 0, 15);
+	}
+
+	load_portrait(this->data->portrait, 0, 1, 0, false);
 
 	std::string lines[]{
 		std::string{this->data->name},
 		"",
 		std::format(
-			"Health:  {:2}/{:2}",
+			"Health: {:2}/{:2}",
 			this->data->stats.health,
 			this->data->stats.max_health
 		),
-		std::format("Attack:     {:2}", this->data->stats.attack),
-		std::format("Defence:    {:2}", this->data->stats.defence),
-		std::format("Magic:      {:2}", this->data->stats.magic),
-		std::format("Resistance: {:2}", this->data->stats.resistance),
-		std::format("Speed:      {:2}", this->data->stats.speed),
-		std::format("Luck:       {:2}", this->data->stats.luck),
-		std::format("Movement:   {:2}", this->data->stats.movement),
+		std::format("Attack:    {:2}", this->data->stats.attack),
+		std::format("Defence:   {:2}", this->data->stats.defence),
+		std::format("Magic:     {:2}", this->data->stats.magic),
+		std::format("Resistance:{:2}", this->data->stats.resistance),
+		std::format("Speed:     {:2}", this->data->stats.speed),
+		std::format("Luck:      {:2}", this->data->stats.luck),
+		std::format("Movement:  {:2}", this->data->stats.movement),
 	};
 
 	constexpr size_t Y_OFFSET_TEXT = 5;
@@ -123,11 +136,13 @@ void Stats::restore() {
 
 	REG_BG2HOFS = 0;
 	REG_BG2VOFS = 0;
+	REG_BG3HOFS = 0;
+	REG_BG3VOFS = 0;
 	REG_BG2CNT = BG_CBB(TILE_SOURCE_2) | BG_SBB(TILE_MAP_2) | BG_4BPP
 				 | BG_REG_32x32 | BG_PRIO(1);
 	REG_BG3CNT = BG_CBB(TILE_SOURCE_3) | BG_SBB(TILE_MAP_3) | BG_4BPP
 				 | BG_REG_32x32 | BG_PRIO(0);
-	REG_DISPCNT = DCNT_MODE0 | DCNT_BG2 | DCNT_BG3;
+	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_BG3;
 }
 
 void Stats::update() {

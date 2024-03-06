@@ -14,7 +14,7 @@ extern "C" {
 
 namespace image {
 
-BackgroundData backgrounds[] = {
+constexpr std::array<BackgroundData, 3> BACKGROUNDS = {
 	BackgroundData{
 		game_overPal,
 		game_overTiles,
@@ -46,7 +46,7 @@ void Image::update() {}
 
 void Image::restore() {
 	auto [pal, tiles, map, pal_len, tiles_len, map_len] =
-		backgrounds[(size_t)this->bg];
+		BACKGROUNDS[(size_t)this->bg];
 	std::memcpy((void *)tiles::BG_PALETTE_MEMORY.data(), pal, (size_t)pal_len);
 	std::memcpy(tiles::CHARBLOCKS[TILE_SOURCE], tiles, (size_t)tiles_len);
 	std::memcpy((void *)tiles::SCREENBLOCKS[TILE_MAP], map, (size_t)map_len);
@@ -54,6 +54,9 @@ void Image::restore() {
 	REG_BG0CNT = BG_CBB(TILE_SOURCE) | BG_SBB(TILE_MAP) | BG_4BPP | BG_REG_32x32
 				 | BG_PRIO(3);
 	REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
+
+	REG_BG0HOFS = 0;
+	REG_BG0VOFS = 0;
 
 	state::next_state = 7 + (size_t)this->bg;
 }

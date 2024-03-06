@@ -36,7 +36,7 @@ bool CursorScroller::move_cursor(Point<s32> const camera_position) {
 	return this->cursor.pos != old_cursor.pos;
 }
 
-Point<s16> CursorScroller::recentre_camera(Point<s32> const camera_position) {
+Point<s16> CursorScroller::recentre_camera(Point<s32> const camera_position) const {
 	Point<s32> const screen_centre = camera_position + Point{120, 80};
 	Point<s32> const cursor = this->cursor.pos.to_pixel_space();
 

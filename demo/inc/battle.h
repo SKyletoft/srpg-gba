@@ -11,7 +11,7 @@ namespace battle {
 using sprite::HardwareSprite;
 using unit::Unit;
 
-constexpr std::array<std::tuple<u8, u8, u8, u8>, 10> animation_sequence{
+constexpr std::array<std::tuple<u8, u8, u8, u8>, 10> ANIMATION_SEQUENCE{
 	std::tuple<u8, u8, u8, u8>{48, 0, 128, 0},
 	{50, 1, 128, 0},
 	{70, 2, 128, 0},
@@ -56,14 +56,14 @@ class Battle : public state::Mode {
 	HardwareSprite damage_left =
 		HardwareSprite{
 			.horizontal_flip = false,
-			.tile_index = 5 * 64,
+			.tile_index = 5 * 64 + 4,
 			.palette = 2,
 		}
 			.set_size(sprite::SpriteSize::w32h8);
 	HardwareSprite damage_right =
 		HardwareSprite{
 			.horizontal_flip = false,
-			.tile_index = 5 * 64 + 4,
+			.tile_index = 5 * 64,
 			.palette = 2,
 		}
 			.set_size(sprite::SpriteSize::w32h8);

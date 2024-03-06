@@ -1,11 +1,10 @@
 #pragma once
 
-#include <cstddef>
-
 #include "hexes.h"
 #include "point.h"
-#include "scrolling_map.h"
 #include "sprite.h"
+
+#include <cstddef>
 
 extern "C" {
 #include <tonc_types.h>
@@ -26,6 +25,7 @@ class CursorScroller {
 		.size = SpriteSize::x16,
 		.hardware_id = 0,
 		.tile_index = 1,
+		.hidden = true,
 	};
 
 	/// Up, Down, Left, Right
@@ -36,7 +36,7 @@ class CursorScroller {
 
 	void handle_input();
 	bool move_cursor(Point<s32> const);
-	Point<s16> recentre_camera(Point<s32> const);
+	Point<s16> recentre_camera(Point<s32> const) const;
 	CubeCoord &pos();
 
 	constexpr CursorScroller() {}

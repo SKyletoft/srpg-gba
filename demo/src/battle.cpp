@@ -6,7 +6,6 @@
 #include "sprite.h"
 #include "state.h"
 #include "tiles.h"
-#include "tty.h"
 #include "util.h"
 
 #include <array>
@@ -14,7 +13,6 @@
 #include <format>
 #include <functional>
 #include <ranges>
-#include <tuple>
 
 extern "C" {
 #include <tonc.h>
@@ -38,8 +36,8 @@ using tiles::Colour;
 using tiles::Palette;
 using tiles::SPRITE_CHARBLOCK;
 
-STile *const post_animation_tiles = &SPRITE_CHARBLOCK[0][5 * 64];
-STile *const alphabet_tiles = post_animation_tiles + 16;
+STile *const POST_ANIMATION_TILES = &SPRITE_CHARBLOCK[0][5 * 64];
+STile *const ALPHABET_TILES = POST_ANIMATION_TILES + 16;
 
 void Battle::animation_update() {
 	this->time++;
@@ -47,7 +45,7 @@ void Battle::animation_update() {
 		this->time = 0;
 		this->frame = (u8)(this->frame + 1);
 
-		if (this->frame >= animation_sequence.size()) {
+		if (this->frame >= ANIMATION_SEQUENCE.size()) {
 			this->time = 0;
 			this->frame = 0;
 			state::next_state = 0;
@@ -55,9 +53,9 @@ void Battle::animation_update() {
 	}
 
 	auto [x_l_from, frame_l, x_r_from, frame_r] =
-		animation_sequence[this->frame];
+		ANIMATION_SEQUENCE[this->frame];
 	auto [x_l_to, _, x_r_to, __] =
-		animation_sequence[(this->frame + 1) % animation_sequence.size()];
+		ANIMATION_SEQUENCE[(this->frame + 1) % ANIMATION_SEQUENCE.size()];
 
 	s32 progress = (s32)(this->time * (255 / Battle::speed));
 	u8 x_l = util::lerp(x_l_to, x_l_from, progress);
@@ -73,7 +71,7 @@ void write_number(STile *tile, s8 num) {
 	num = (s8)std::clamp((s32)num, 0, 9999);
 	std::string damage_text = std::format("{:4}", num);
 	for (size_t i = 0; i < 4; ++i) {
-		tile[i] = alphabet_tiles[damage_text[i] - ' '];
+		tile[i] = ALPHABET_TILES[damage_text[i] - ' '];
 	}
 }
 
@@ -90,12 +88,12 @@ void Battle::fight() {
 	this->display_hp_left = this->left_unit->stats.health;
 	this->display_hp_right = this->right_unit->stats.health;
 
-	attack(*this->left_unit, *this->right_unit, post_animation_tiles);
+	attack(*this->left_unit, *this->right_unit, POST_ANIMATION_TILES);
 	this->continue_to_second_round = this->right_unit->stats.health > 0;
 	if (!this->continue_to_second_round) {
 		return;
 	}
-	attack(*this->right_unit, *this->left_unit, post_animation_tiles + 4);
+	attack(*this->right_unit, *this->left_unit, POST_ANIMATION_TILES + 4);
 }
 
 void Battle::update() {
@@ -116,6 +114,9 @@ void Battle::update() {
 	{
 		this->display_hp_right--;
 	}
+	if (this->frame == 6 && this->time == 0) {
+		this->damage_right.object_mode = sprite::ObjectMode::Hidden;
+	}
 
 	if (this->frame == 6 && this->time == 0) {
 		audio::play_sfx(config::sfx_fwoop);
@@ -132,6 +133,9 @@ void Battle::update() {
 	{
 		this->display_hp_left--;
 	}
+	if (this->frame == 9 && this->time == 0) {
+		this->damage_left.object_mode = sprite::ObjectMode::Hidden;
+	}
 
 	if (this->frame == 5 && !this->continue_to_second_round) {
 		state::next_state = 0;
@@ -147,7 +151,8 @@ void Battle::restore() {
 	std::memcpy(
 		tiles::SPRITE_CHARBLOCK[0], battle_aniTiles, sizeof(battle_aniTiles)
 	);
-	tty::decompress_1bpp_to_4bpp(alphabet_tiles, sys8Glyphs, '9' - ' ' + 1);
+	// tty::decompress_1bpp_to_4bpp(alphabet_tiles, sys8Glyphs, '9' - ' ' + 1);
+	std::memcpy(ALPHABET_TILES, fontTiles + 8, fontTilesLen - 8 * sizeof(int));
 
 	constexpr Palette RED{
 		tiles::TRANSPARENT,
@@ -165,8 +170,8 @@ void Battle::restore() {
 		Colour::from_24bit_colour(0x00, 0xBD, 0xEA),
 		Colour(25, 25, 25),
 	};
-	constexpr Palette WHITE{tiles::TRANSPARENT, tiles::WHITE};
-	constexpr Palette BLACK{tiles::TRANSPARENT, tiles::BLACK};
+	constexpr Palette WHITE{tiles::TRANSPARENT, tiles::WHITE, tiles::BLACK};
+	constexpr Palette BLACK{tiles::TRANSPARENT, tiles::BLACK, tiles::WHITE};
 
 	tiles::SPRITE_PALETTE_MEMORY[2] = WHITE;
 	tiles::SPRITE_PALETTE_MEMORY[3] = BLACK;
@@ -240,8 +245,8 @@ void Battle::vsync_hook() {
 	this->damage_left.write_to_screen(3);
 	this->damage_right.write_to_screen(4);
 
-	write_number(post_animation_tiles + 8, this->display_hp_right);
-	write_number(post_animation_tiles + 12, this->display_hp_left);
+	write_number(POST_ANIMATION_TILES + 8, this->display_hp_right);
+	write_number(POST_ANIMATION_TILES + 12, this->display_hp_left);
 }
 
 bool Battle::blackout() { return false; }

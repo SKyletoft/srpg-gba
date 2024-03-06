@@ -1,8 +1,10 @@
 #include "map.h"
 
 #include "audio.h"
+#include "hexes.h"
 #include "image.h"
 #include "input.h"
+#include "sprite.h"
 #include "state.h"
 #include "tiles.h"
 #include "util.h"
@@ -55,13 +57,16 @@ Unit *get_hovered_unit() {
 // Assumes a player unit is selected and so should only be called
 // when such is the case
 void cycle_selected_unit() {
-	Unit *next_unit = config::selected_unit + 1;
-	if (next_unit == &*config::user_units().end()) {
-		next_unit = &*config::user_units().begin();
-	}
-	if (config::selected_unit == next_unit) {
-		return;
-	}
+	Unit *next_unit = config::selected_unit;
+	do {
+		next_unit++;
+		if (next_unit == &*config::user_units().end()) {
+			next_unit = &*config::user_units().begin();
+		}
+		if (config::selected_unit == next_unit) {
+			return;
+		}
+	} while (config::used.contains(next_unit));
 	deselect();
 	config::cursor.cursor.move_to(next_unit->pos());
 	audio::play_sfx(SFX__BLIP);
@@ -70,10 +75,14 @@ void cycle_selected_unit() {
 }
 
 void cycle_hovered_unit() {
-	Unit *next_unit = &*config::user_units().begin();
-	if (Unit *unit = get_hovered_unit()) {
-		next_unit = unit + 1;
-		if (unit->is_user()) {
+	Unit *next_unit = get_hovered_unit();
+	if (next_unit == nullptr) {
+		next_unit = &*config::user_units().begin() - 1;
+	}
+
+	do {
+		next_unit++;
+		if (next_unit->is_user()) {
 			if (next_unit == &*config::user_units().end()) {
 				next_unit = &*config::user_units().begin();
 			}
@@ -82,7 +91,7 @@ void cycle_hovered_unit() {
 				next_unit = &*config::enemy_units().begin();
 			}
 		}
-	}
+	} while (config::used.contains(next_unit));
 	config::cursor.cursor.move_to(next_unit->pos());
 	audio::play_sfx(SFX__BLIP);
 }
@@ -157,7 +166,8 @@ void Map::restore() {
 	switch (state::last_state) {
 	case 0:
 	case 2:
-	case 5: {
+	case 5:
+	case 11: {
 	} break;
 	case 1:
 	case 7:
@@ -307,7 +317,7 @@ void unselected_input() {
 
 void deselect() {
 	config::selected_unit = nullptr;
-	update_palettes_of(config::highlights, 0);
+	update_palettes_of(config::highlights, 2);
 	config::highlights.clear();
 }
 
@@ -364,9 +374,10 @@ void Map::end_player_turn() {
 		unit.sprite.palette = 1;
 	}
 	config::used.clear();
-	config::overlay.is_enemy = true;
+	config::overlay.image = overlay::Image::Enemy;
 	config::selected_unit = nullptr;
 	this->state = MapState::EnemyTurn;
+	config::cursor.cursor.hidden = true;
 	state::next_state = 6;
 }
 
@@ -375,10 +386,14 @@ void Map::end_enemy_turn() {
 		unit.sprite.palette = 2;
 	}
 	config::used.clear();
-	config::overlay.is_enemy = false;
+	config::overlay.image = overlay::Image::Player;
 	config::selected_unit = nullptr;
 	this->state = MapState::WaitingForInput;
+	config::cursor.cursor.hidden = false;
 	state::next_state = 6;
+
+	config::cursor.pos() = hexes::CubeCoord::from_axial_coord({-1, -1});
+	cycle_hovered_unit();
 }
 
 void Map::animation_handler() {
@@ -415,6 +430,17 @@ void Map::waiting_for_input_handler() {
 
 	config::hexmap.update_layer_partial(config::hexmap.layer0);
 	config::hexmap.update_layer_partial(config::hexmap.layer1);
+
+	if (input::get_button(Button::Start) == InputState::Pressed) {
+		state::next_state = 2;
+		return;
+	}
+	if (input::get_button(Button::Select) == InputState::Pressed) {
+		for (auto &unit : config::user_units()) {
+			config::used.insert(&unit);
+		}
+		return;
+	}
 
 	if (auto hovered_unit = get_hovered_unit()) {
 		auto new_status = DrawStatus(*hovered_unit);
@@ -467,7 +493,8 @@ void Map::selecting_enemy_handler() {
 	}
 	if (input::get_button(Button::A) == InputState::Pressed) {
 		config::battle_ani.set_combatants(
-			*config::selected_unit, config::enemy_units()[this->enemy_selection]
+			*config::selected_unit,
+			*config::neighbouring_enemies[this->enemy_selection]
 		);
 		config::cursor.cursor.move_to(config::selected_unit->pos());
 		state::next_state = 4;
@@ -524,16 +551,17 @@ void Map::enemy_turn_handler() {
 		auto const f = [&](std::pair<Unit *, CubeCoord> target) {
 			config::selected_unit = &enemy;
 			enemy.sprite.move_to(target.second);
+			config::cursor.cursor.move_to(target.second);
 			this->state = MapState::AnimatingEnemy;
 			config::battle_ani.set_combatants(enemy, *target.first);
-			update_palettes_of(accessible, 0);
+			update_palettes_of(accessible, 2);
 		};
 
 		switch (vec.size()) {
 		case 0:
 			config::used.insert(&enemy);
 			enemy.sprite.palette = 4;
-			update_palettes_of(accessible, 0);
+			update_palettes_of(accessible, 2);
 			continue;
 		case 1:
 			f(vec[0]);
@@ -549,6 +577,16 @@ void Map::enemy_turn_handler() {
 }
 
 void Map::animating_enemy_handler() {
+	Point<s16> const diff =
+		config::cursor.recentre_camera(config::hexmap.layer0.pos.into<s32>());
+	config::hexmap.move_in_bounds(diff.x, diff.y);
+
+	config::hexmap.update_layer_partial(config::hexmap.layer0);
+	config::hexmap.update_layer_partial(config::hexmap.layer1);
+	if (diff != Point<s16>{0, 0}) {
+		return;
+	}
+
 	if (config::selected_unit == nullptr
 		|| config::selected_unit->sprite.animation == Point<s16>{0, 0})
 	{
@@ -557,6 +595,26 @@ void Map::animating_enemy_handler() {
 		config::selected_unit = nullptr;
 		this->state = MapState::EnemyTurn;
 		state::next_state = 4;
+	}
+}
+
+void Map::animating_cutscene_handler() {
+	Point<s16> const diff =
+		config::cursor.recentre_camera(config::hexmap.layer0.pos.into<s32>());
+	config::hexmap.move_in_bounds(diff.x, diff.y);
+
+	config::hexmap.update_layer_partial(config::hexmap.layer0);
+	config::hexmap.update_layer_partial(config::hexmap.layer1);
+
+	config::cursor.cursor.hidden = false;
+
+	if (diff == Point<s16>{0, 0}) {
+		this->animation_pause++;
+		if (this->animation_pause > 60) {
+			this->state = MapState::WaitingForInput;
+			state::next_state = 11;
+			config::cursor.cursor.hidden = true;
+		}
 	}
 }
 
@@ -585,6 +643,9 @@ void Map::update() {
 		break;
 	case MapState::AnimatingEnemy:
 		this->animating_enemy_handler();
+		break;
+	case MapState::AnimatingCutscene:
+		this->animating_cutscene_handler();
 		break;
 	}
 }

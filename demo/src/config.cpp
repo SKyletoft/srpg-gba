@@ -2,6 +2,7 @@
 
 #include "cursor_scroller.h"
 #include "debug.h"
+#include "dialogue.h"
 #include "export.h"
 #include "hexes.h"
 #include "image.h"
@@ -10,7 +11,6 @@
 #include "map.h"
 #include "mdspan.h"
 #include "overlay.h"
-#include "popup.h"
 #include "sprite.h"
 #include "state.h"
 #include "stats.h"
@@ -155,7 +155,7 @@ context_menu::ContextMenu movement_popup{
 		 state::next_state = 0;
 		 config::original_pos = config::selected_unit->pos();
 		 config::selected_unit->sprite.move_to(config::cursor.pos());
-		 map::update_palettes_of(config::highlights, 0);
+		 map::update_palettes_of(config::highlights, 2);
 
 		 highlights.clear();
 		 for (Unit *enemy : neighbouring_enemies) {
@@ -168,13 +168,14 @@ context_menu::ContextMenu movement_popup{
 		 map.state = map::MapState::Animating;
 		 neighbouring_enemies.clear();
 		 config::selected_unit->sprite.move_to(config::cursor.pos());
-		 map::update_palettes_of(config::highlights, 0);
+		 map::update_palettes_of(config::highlights, 2);
 		 config::highlights.clear();
 		 state::next_state = 0;
 	 }},
 };
 
 stats::Stats stats{};
+dialogue::Dialogue dialogue{dialogue::TEXT};
 
 image::Image image{};
 
@@ -187,37 +188,49 @@ main_menu::MainMenu game_over{
 };
 
 main_menu::MainMenu main_menu{
+	{"Start",
+	 []() {
+		 state::next_state = 11;
+		 dialogue.restart();
+		 auto level = map1::Level{};
+		 level::load_level(level);
+		 map::cycle_hovered_unit();
+	 }},
 	{"Level 1",
 	 []() {
 		 state::next_state = 0;
 		 auto level = map1::Level{};
 		 level::load_level(level);
+		 config::map.end_enemy_turn();
+		 map::cycle_hovered_unit();
 	 }},
 	{"Level 2",
 	 []() {
 		 state::next_state = 0;
 		 auto level = map2::Level{};
 		 level::load_level(level);
-	 }},
-	{"Game over",
-	 []() {
-		 state::next_state = 3;
-		 image.bg = image::Background::GameOver;
-	 }},
-	{"Win",
-	 []() {
-		 state::next_state = 3;
-		 image.bg = image::Background::Win;
+		 config::map.end_enemy_turn();
+		 map::cycle_hovered_unit();
 	 }},
 };
 
 main_menu::MainMenu win{
-	{"Start", []() {}},
-	{"Reboot", []() {}},
-	{"Game over", []() {}},
+	{"Continue to next level",
+	 []() {
+		 state::next_state = 0;
+		 auto level = map2::Level{};
+		 level::load_level(level);
+		 config::map.end_enemy_turn();
+		 map::cycle_hovered_unit();
+	 }},
+	{"Return to title",
+	 []() {
+		 state::next_state = 3;
+		 image.bg = image::Background::TitleScreen;
+	 }},
 };
 
-std::array<state::Mode *, 11> const modes_data{
+std::array<state::Mode *, 12> const modes_data{
 	&map,
 	&debug::tty_mode,
 	&popup,
@@ -229,6 +242,7 @@ std::array<state::Mode *, 11> const modes_data{
 	&main_menu,
 	&win,
 	&stats,
+	&dialogue,
 };
 
 u32 startup_song = MOD_BAD_APPLE;
