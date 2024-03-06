@@ -60,6 +60,9 @@ class Dialogue : public state::Mode {
 	bool blackout() override;
 	void restore() override;
 	void update() override;
+
+	void draw();
+	void next();
 };
 
 } // namespace dialogue
