@@ -1,6 +1,11 @@
 #pragma once
 
+#include "hexes.h"
 #include "state.h"
+#include "tiles.h"
+
+#include <string_view>
+#include <variant>
 
 namespace dialogue {
 
