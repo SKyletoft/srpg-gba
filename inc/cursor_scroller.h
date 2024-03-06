@@ -1,11 +1,10 @@
 #pragma once
 
-#include <cstddef>
-
 #include "hexes.h"
 #include "point.h"
-#include "scrolling_map.h"
 #include "sprite.h"
+
+#include <cstddef>
 
 extern "C" {
 #include <tonc_types.h>

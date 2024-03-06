@@ -11,7 +11,6 @@
 #include "map.h"
 #include "mdspan.h"
 #include "overlay.h"
-#include "popup.h"
 #include "sprite.h"
 #include "state.h"
 #include "stats.h"

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "popup.h"
+
 #include <initializer_list>
 
 namespace main_menu {

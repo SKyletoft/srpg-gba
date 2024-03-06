@@ -11,7 +11,7 @@ namespace battle {
 using sprite::HardwareSprite;
 using unit::Unit;
 
-constexpr std::array<std::tuple<u8, u8, u8, u8>, 10> animation_sequence{
+constexpr std::array<std::tuple<u8, u8, u8, u8>, 10> ANIMATION_SEQUENCE{
 	std::tuple<u8, u8, u8, u8>{48, 0, 128, 0},
 	{50, 1, 128, 0},
 	{70, 2, 128, 0},

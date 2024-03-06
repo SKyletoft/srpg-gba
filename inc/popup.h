@@ -2,11 +2,11 @@
 
 #include "sprite.h"
 #include "state.h"
+
 #include <cstring>
 #include <functional>
 #include <initializer_list>
 #include <string_view>
-#include <tuple>
 #include <vector>
 
 extern "C" {
