@@ -192,6 +192,7 @@ main_menu::MainMenu main_menu{
 	{"Start",
 	 []() {
 		 state::next_state = 11;
+		 dialogue.restart();
 		 auto level = map1::Level{};
 		 level::load_level(level);
 		 map::cycle_hovered_unit();

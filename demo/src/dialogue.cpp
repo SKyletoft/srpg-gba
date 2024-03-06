@@ -122,6 +122,8 @@ void Dialogue::restore() {
 	this->draw();
 }
 
+void Dialogue::restart() { this->step = 0; }
+
 void end() {
 	config::overlay.image = overlay::Image::Rout;
 	state::next_state = 6;

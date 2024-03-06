@@ -63,6 +63,7 @@ class Dialogue : public state::Mode {
 
 	void draw();
 	void next();
+	void restart();
 };
 
 } // namespace dialogue
