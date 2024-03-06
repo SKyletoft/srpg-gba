@@ -1,8 +1,10 @@
 #include "map.h"
 
 #include "audio.h"
+#include "hexes.h"
 #include "image.h"
 #include "input.h"
+#include "sprite.h"
 #include "state.h"
 #include "tiles.h"
 #include "util.h"
@@ -428,6 +430,17 @@ void Map::waiting_for_input_handler() {
 
 	config::hexmap.update_layer_partial(config::hexmap.layer0);
 	config::hexmap.update_layer_partial(config::hexmap.layer1);
+
+	if (input::get_button(Button::Start) == InputState::Pressed) {
+		state::next_state = 2;
+		return;
+	}
+	if (input::get_button(Button::Select) == InputState::Pressed) {
+		for (auto &unit : config::user_units()) {
+			config::used.insert(&unit);
+		}
+		return;
+	}
 
 	if (auto hovered_unit = get_hovered_unit()) {
 		auto new_status = DrawStatus(*hovered_unit);
