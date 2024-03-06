@@ -17,4 +17,5 @@ mgba: build
 	mgba-qt srpg-engine.elf -4
 
 clean:
-	-rm -rf out/* libtonc maxmod
+	-rm -rf libtonc maxmod
+	-doas rm -rf build build
