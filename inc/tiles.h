@@ -53,6 +53,15 @@ class Colour {
 
 	constexpr Colour()
 		: data(0) {}
+
+	constexpr u16 raw() { return this->data; }
+	constexpr RGB rgb() {
+		return RGB{
+			.red = (u8)(this->data & MASK),
+			.green = (u8)((this->data >> 5) & MASK),
+			.blue = (u8)((this->data >> 10) & MASK),
+		};
+	}
 };
 static_assert(sizeof(Colour) == sizeof(u16));
 
