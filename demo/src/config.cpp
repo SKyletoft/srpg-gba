@@ -198,30 +198,33 @@ main_menu::MainMenu main_menu{
 	 }},
 	{"Level 1",
 	 []() {
-		 state::next_state = 0;
 		 auto level = map1::Level{};
 		 level::load_level(level);
 		 config::map.end_enemy_turn();
 		 map::cycle_hovered_unit();
+		 state::next_state = 6;
+		 overlay.image = overlay::Image::Rout;
 	 }},
 	{"Level 2",
 	 []() {
-		 state::next_state = 0;
 		 auto level = map2::Level{};
 		 level::load_level(level);
 		 config::map.end_enemy_turn();
 		 map::cycle_hovered_unit();
+		 state::next_state = 6;
+		 overlay.image = overlay::Image::Rout;
 	 }},
 };
 
 main_menu::MainMenu win{
 	{"Continue to next level",
 	 []() {
-		 state::next_state = 0;
 		 auto level = map2::Level{};
 		 level::load_level(level);
 		 config::map.end_enemy_turn();
 		 map::cycle_hovered_unit();
+		 state::next_state = 6;
+		 overlay.image = overlay::Image::Rout;
 	 }},
 	{"Return to title",
 	 []() {
