@@ -560,6 +560,23 @@ void Map::animating_enemy_handler() {
 	}
 }
 
+void Map::animating_cutscene_handler() {
+	Point<s16> const diff =
+		config::cursor.recentre_camera(config::hexmap.layer0.pos.into<s32>());
+	config::hexmap.move_in_bounds(diff.x, diff.y);
+
+	config::hexmap.update_layer_partial(config::hexmap.layer0);
+	config::hexmap.update_layer_partial(config::hexmap.layer1);
+
+	if (diff == Point<s16>{0, 0}) {
+		this->animation_pause++;
+		if (this->animation_pause > 60) {
+			this->state = MapState::WaitingForInput;
+			state::next_state = 11;
+		}
+	}
+}
+
 void Map::update() {
 	this->animation_cycle = (u8)((this->animation_cycle + 1) % 1024);
 
@@ -585,6 +602,9 @@ void Map::update() {
 		break;
 	case MapState::AnimatingEnemy:
 		this->animating_enemy_handler();
+		break;
+	case MapState::AnimatingCutscene:
+		this->animating_cutscene_handler();
 		break;
 	}
 }

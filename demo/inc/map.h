@@ -27,6 +27,7 @@ enum class MapState {
 	SelectingEnemy,
 	EnemyTurn,
 	AnimatingEnemy,
+	AnimatingCutscene,
 };
 
 struct DrawStatus {
@@ -57,6 +58,7 @@ class Map : public state::Mode {
 	void selecting_enemy_handler();
 	void enemy_turn_handler();
 	void animating_enemy_handler();
+	void animating_cutscene_handler();
 
   public:
 	void suspend() override;
@@ -65,6 +67,7 @@ class Map : public state::Mode {
 	bool blackout() override;
 	void update() override;
 
+	u8 animation_pause = 0;
 	u8 animation_cycle = 0;
 	size_t const ui_layer_map = 3;
 	size_t const ui_layer_source = 2;
