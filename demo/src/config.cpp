@@ -135,6 +135,12 @@ context_menu::ContextMenu popup{
 		 BG_PALETTE_MEMORY[15].colours[1] = tiles::BLUE;
 		 SPRITE_PALETTE_MEMORY[0].colours[1] = tiles::BLUE;
 	 }},
+	{"Heal all",
+	 []() {
+		 for (auto &unit : user_units()) {
+			 unit.stats.health = unit.stats.max_health;
+		 }
+	 }},
 	{"End turn",
 	 []() {
 		 for (auto &unit : config::user_units()) {
