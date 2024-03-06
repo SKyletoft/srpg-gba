@@ -10,6 +10,7 @@ void load_level(Level &level) {
 		config::enemy_army[i] = level.enemies()[i];
 	}
 	config::user_army = config::default_user_army;
+	config::user_soldier_count = 2;
 }
 
 }; // namespace level
