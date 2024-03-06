@@ -375,6 +375,7 @@ void Map::end_player_turn() {
 	config::overlay.image = overlay::Image::Enemy;
 	config::selected_unit = nullptr;
 	this->state = MapState::EnemyTurn;
+	config::cursor.cursor.hidden = true;
 	state::next_state = 6;
 }
 
@@ -386,7 +387,11 @@ void Map::end_enemy_turn() {
 	config::overlay.image = overlay::Image::Player;
 	config::selected_unit = nullptr;
 	this->state = MapState::WaitingForInput;
+	config::cursor.cursor.hidden = false;
 	state::next_state = 6;
+
+	config::cursor.pos() = hexes::CubeCoord::from_axial_coord({-1, -1});
+	cycle_hovered_unit();
 }
 
 void Map::animation_handler() {
