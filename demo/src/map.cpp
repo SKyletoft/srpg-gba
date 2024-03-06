@@ -537,6 +537,7 @@ void Map::enemy_turn_handler() {
 		auto const f = [&](std::pair<Unit *, CubeCoord> target) {
 			config::selected_unit = &enemy;
 			enemy.sprite.move_to(target.second);
+			config::cursor.cursor.move_to(target.second);
 			this->state = MapState::AnimatingEnemy;
 			config::battle_ani.set_combatants(enemy, *target.first);
 			update_palettes_of(accessible, 2);
@@ -562,6 +563,16 @@ void Map::enemy_turn_handler() {
 }
 
 void Map::animating_enemy_handler() {
+	Point<s16> const diff =
+		config::cursor.recentre_camera(config::hexmap.layer0.pos.into<s32>());
+	config::hexmap.move_in_bounds(diff.x, diff.y);
+
+	config::hexmap.update_layer_partial(config::hexmap.layer0);
+	config::hexmap.update_layer_partial(config::hexmap.layer1);
+	if (diff != Point<s16>{0, 0}) {
+		return;
+	}
+
 	if (config::selected_unit == nullptr
 		|| config::selected_unit->sprite.animation == Point<s16>{0, 0})
 	{
