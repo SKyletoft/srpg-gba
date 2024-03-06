@@ -76,31 +76,7 @@ bool Dialogue::blackout() { return false; }
 
 void Dialogue::restore() {
 	if (state::blacked_out) {
-		for (auto i : rv::iota(0uz, 128uz)) {
-			sprite::HardwareSprite::hide(i);
-		}
-
-		loading::load_sprites();
-		loading::load_palettes();
-		loading::load_tiles();
-		loading::load_map();
-		loading::load_ui();
-		tiles::SPRITE_PALETTE_MEMORY[0] = *(tiles::Palette *)arrowPal;
-		std::memcpy(&tiles::SPRITE_CHARBLOCK[0][1], arrowTiles, sizeof(arrowTiles));
-
-		REG_BG0CNT = (u16)(BG_CBB(config::hexmap.layer0.tile_source)
-						   | BG_SBB(config::hexmap.layer0.tile_map) | BG_4BPP
-						   | BG_REG_32x32 | BG_PRIO(3));
-		REG_BG1CNT = (u16)(BG_CBB(config::hexmap.layer1.tile_source)
-						   | BG_SBB(config::hexmap.layer1.tile_map) | BG_4BPP
-						   | BG_REG_32x32 | BG_PRIO(3));
-		REG_BG2CNT = (u16)(BG_CBB(config::map.ui_layer_source)
-						   | BG_SBB(config::map.ui_layer_map) | BG_4BPP
-						   | BG_REG_32x32 | BG_PRIO(0));
-		REG_DISPCNT = DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_OBJ
-					  | DCNT_OBJ_1D;
-
-		config::map.vsync_hook();
+		loading::load_all();
 	}
 
 	for (size_t y : rv::iota(0uz, 15uz)) {

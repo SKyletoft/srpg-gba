@@ -49,5 +49,6 @@ void load_sprites();
 void load_tiles();
 void load_map();
 void load_palettes();
+void load_all();
 
 } // namespace loading

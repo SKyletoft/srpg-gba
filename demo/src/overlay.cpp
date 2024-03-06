@@ -58,6 +58,10 @@ void Overlay::update() {
 }
 
 void Overlay::restore() {
+	if (state::blacked_out) {
+		loading::load_all();
+	}
+
 	this->time = 0;
 
 	REG_DISPCNT &= (u16) ~(DCNT_BG3 | DCNT_BG2);

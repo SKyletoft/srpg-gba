@@ -152,15 +152,7 @@ void Map::suspend() { config::cursor.cursor.hide(); }
 
 void Map::restore() {
 	if (state::blacked_out) {
-		for (auto i : rv::iota(0uz, 128uz)) {
-			sprite::HardwareSprite::hide(i);
-		}
-
-		loading::load_sprites();
-		loading::load_palettes();
-		loading::load_tiles();
-		loading::load_map();
-		loading::load_ui();
+		loading::load_all();
 	}
 
 	switch (state::last_state) {
