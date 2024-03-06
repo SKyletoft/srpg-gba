@@ -25,6 +25,7 @@ void MainMenu::restore() {
 
 void MainMenu::load_tiles_and_palettes() {
 	CHARBLOCKS[this->tile_source][0] = tiles::EMPTY;
+	CHARBLOCKS[this->tile_source][97] = tiles::EMPTY;
 	tty::decompress_1bpp_to_4bpp(
 		&CHARBLOCKS[this->tile_source][2], sys8Glyphs, '~' - ' '
 	);
