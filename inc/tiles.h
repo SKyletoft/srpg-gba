@@ -15,13 +15,13 @@ class Colour {
   private:
 	u16 data;
 
+	static constexpr u16 MASK = 0b11111;
 	static constexpr u16 convert(u8 red, u8 green, u8 blue) {
 		auto const clamp = [](u8 x) { return std::clamp(x, (u8)0, (u8)31); };
 		red = clamp(red);
 		green = clamp(green);
 		blue = clamp(blue);
 
-		constexpr u16 MASK = 0b11111;
 		const u16 be =
 			(u16)(((blue & MASK) << 10) | ((green & MASK) << 5) | (red & MASK));
 
