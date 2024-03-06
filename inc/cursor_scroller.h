@@ -36,7 +36,7 @@ class CursorScroller {
 
 	void handle_input();
 	bool move_cursor(Point<s32> const);
-	Point<s16> recentre_camera(Point<s32> const);
+	Point<s16> recentre_camera(Point<s32> const) const;
 	CubeCoord &pos();
 
 	constexpr CursorScroller() {}
