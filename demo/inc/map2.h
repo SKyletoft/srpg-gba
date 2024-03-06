@@ -120,13 +120,13 @@ constexpr Unit type_3(s16 x, s16 y, std::string_view name, u8 num) {
 constexpr Unit enemies[]{
 	type_1(7, 5, "Dude #1", 9),
 	type_1(5, 1, "Dude #2", 10),
-	type_1(9, 5, "Dude #3", 11),
+	type_2(9, 5, "Dude #3", 11),
 	type_1(11, 4, "Dude #4", 12),
-	type_1(12, 5, "Dude #5", 13),
+	type_2(12, 5, "Dude #5", 13),
 	type_1(11, 7, "Dude #6", 14),
-	type_1(11, 2, "Dude #7", 15),
+	type_2(11, 2, "Dude #7", 15),
 	type_1(14, 2, "Dude #8", 16),
-	type_1(15, 4, "Dude #9", 17),
+	type_2(15, 4, "Dude #9", 17),
 	type_1(15, 7, "Dude #10", 18),
 	type_3(17, 6, "Dude Leader", 19),
 };
