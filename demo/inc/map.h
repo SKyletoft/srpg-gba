@@ -19,6 +19,7 @@ void update_palette_of_tile(CubeCoord const, u8);
 void update_palettes_of(Set<CubeCoord> const &, u8);
 void deselect();
 void select_unit(Unit *);
+void cycle_hovered_unit();
 
 enum class MapState {
 	WaitingForInput,
