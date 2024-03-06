@@ -17,23 +17,23 @@ using unit::Unit;
 static constexpr std::array<std::array<unsigned char,  10>,  19> map {
 	std::array<unsigned char,  10> // What?
 	{ 0, 1, 6,18, 1, 1, 1, 1, 1, 1}
-	, { 0, 1, 7,19, 1, 1, 1, 1, 1},
-	{ 0, 1, 6,18, 1, 1, 1, 1, 1, 0}
+	, { 0, 1, 7,19, 1, 1, 1, 2, 1},
+	{ 0, 1, 6,18, 1, 1, 2, 1, 1, 0}
 	, { 0, 1, 7,19, 1, 1, 1, 1, 1},
 	{ 0, 1, 6,18, 1, 1, 1, 1, 1, 1}
 	, { 0, 1, 7,21, 1, 1, 1, 1, 0},
 	{ 0, 1, 6, 1,15,15,15, 1, 1, 0}
 	, { 0, 1, 3, 9, 9,15,15, 2, 0},
-	{ 0, 1, 1, 1, 1, 8,15,15, 2, 0}
+	{ 0, 1, 2, 1, 1, 8,15,15, 2, 0}
 	, { 0, 1, 1, 1, 1,14,15,14, 0},
 	{ 0, 1, 1, 1, 1, 1,14,15,15, 0}
 	, { 0, 1, 3, 3, 1, 1, 8,15, 0},
 	{ 0, 1, 3, 3, 3, 1,15,15,15, 0}
 	, { 0, 1, 3, 3, 1,15, 1, 1, 0},
-	{ 0, 1, 1, 1, 1, 3,15, 3, 1, 0}
-	, { 0, 1, 1, 1, 1,15, 1, 1, 0},
+	{ 0, 1, 2, 1, 1, 3,15, 3, 2, 0}
+	, { 0, 1, 2, 1, 1,15, 1, 1, 0},
 	{ 0, 1, 1, 1, 3, 1, 1, 1, 4, 0}
-	, { 0, 1, 1, 1, 1, 1, 1, 4, 0},
+	, { 0, 2, 2, 1, 1, 1, 2, 4, 0},
 	{ 0, 1, 1, 1, 1, 1, 1, 1, 4, 0}
 };
 // clang-format on
@@ -75,6 +75,33 @@ constexpr Unit enemies[]{
 				.centre = {5, 0},
 				.size = sprite::SpriteSize::x16,
 				.hardware_id = 10,
+				.tile_index = 33,
+				.prio = 1,
+				.palette = 2,
+			},
+		.stats =
+			Stats{
+				.health = 16,
+				.max_health = 16,
+				.attack = 5,
+				.defence = 4,
+				.magic = 3,
+				.resistance = 3,
+				.speed = 9,
+				.luck = 2,
+				.movement = 3,
+			},
+		.animation_frames = 3,
+	},
+	Unit{
+		.name = "Dude #3",
+		.portrait = 3,
+		.sprite =
+			HexSprite{
+				.pos = hexes::OffsetXYCoord(4, 10).to_cube_coord(),
+				.centre = {5, 0},
+				.size = sprite::SpriteSize::x16,
+				.hardware_id = 12,
 				.tile_index = 33,
 				.prio = 1,
 				.palette = 2,
