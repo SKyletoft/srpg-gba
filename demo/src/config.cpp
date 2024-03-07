@@ -223,7 +223,7 @@ main_menu::MainMenu main_menu{
 };
 
 main_menu::MainMenu win{
-	{"Continue to next level",
+	{"Continue",
 	 []() {
 		 auto level = map2::Level{};
 		 level::load_level(level);
