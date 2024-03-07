@@ -1,9 +1,12 @@
 #include "main_menu.h"
 
+#include "audio.h"
 #include "sprite.h"
 #include "state.h"
 #include "tiles.h"
 #include "tty.h"
+
+#include "soundbank.h"
 
 #include <ranges>
 
@@ -34,5 +37,9 @@ void MainMenu::load_tiles_and_palettes() {
 		tiles::YELLOW,
 	};
 }
+
+void MainMenu::move_hook() { audio::play_sfx(SFX__BLIP); }
+
+void MainMenu::selection_hook() { audio::play_sfx(SFX__BLIP); }
 
 } // namespace main_menu

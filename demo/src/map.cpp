@@ -211,7 +211,7 @@ void Map::restore() {
 					   | BG_SBB(config::map.ui_layer_map) | BG_4BPP
 					   | BG_REG_32x32 | BG_PRIO(0));
 	REG_DISPCNT =
-		DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_OBJ | DCNT_OBJ_1D;
+		DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
 
 	this->draw_status = {};
 }

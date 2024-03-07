@@ -47,11 +47,13 @@ PopupMenu &PopupMenu::hide(size_t i) {
 	return *this;
 }
 
-void PopupMenu::b() {}
+void PopupMenu::b_hook() {}
+void PopupMenu::selection_hook() {}
+void PopupMenu::move_hook() {}
 
 void PopupMenu::update() {
 	if (input::get_button(Button::B).is_down()) {
-		this->b();
+		this->b_hook();
 	}
 
 	size_t const entry_count = (size_t)r::count_if(this->visible, id);
@@ -65,6 +67,8 @@ void PopupMenu::update() {
 				i++;
 			}
 		}
+
+		this->selection_hook();
 		this->entries[i].second();
 	}
 	if (input::get_button(Button::A) == input::InputState::Released) {
@@ -75,10 +79,12 @@ void PopupMenu::update() {
 		if (this->selection == 0) {
 			this->selection = (u16)entry_count;
 		}
+		this->move_hook();
 		this->selection--;
 	}
 
 	if (input::get_button(Button::Down) == input::InputState::Pressed) {
+		this->move_hook();
 		this->selection = (u16)((this->selection + 1) % entry_count);
 	}
 }
