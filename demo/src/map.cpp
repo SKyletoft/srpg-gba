@@ -270,12 +270,10 @@ void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 
 	ScreenEntry volatile *base;
 	if (!tile.is_odd()) {
-		base = &tiles::SCREENBLOCKS[config::hexmap.layer0.tile_map]
-								   [tile_coord.y * 32];
+		base = &tiles::SCREENBLOCKS[config::hexmap.layer0.tile_map][0];
 	} else {
 		tile_coord.x += 1;
-		base = &tiles::SCREENBLOCKS[config::hexmap.layer1.tile_map]
-								   [tile_coord.y * 32];
+		base = &tiles::SCREENBLOCKS[config::hexmap.layer1.tile_map][0];
 	}
 
 	for (size_t i = start; i < end; ++i) {
@@ -285,7 +283,8 @@ void update_palette_of_tile(CubeCoord const tile, u8 new_palette) {
 		if (idx >= 32) {
 			idx -= 32;
 		}
-		ScreenEntry volatile &se = base[idx];
+		idx += (size_t)(tile_coord.y * 32);
+		ScreenEntry volatile &se = base[idx % 1024];
 		ScreenEntry copy = se;
 		copy.palette = new_palette & 0b1111;
 		se = copy;
