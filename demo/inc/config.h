@@ -55,6 +55,8 @@ extern main_menu::MainMenu win;
 
 extern u32 menu_song;
 extern u32 startup_song;
+extern u32 enemy_song;
+extern u32 player_song;
 extern u32 sfx_swoosh;
 extern u32 sfx_fwoop;
 extern u32 jingle_battle;

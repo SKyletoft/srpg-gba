@@ -366,6 +366,7 @@ void Map::end_player_turn() {
 	}
 	REG_DISPCNT &= (u16)~DCNT_BG2;
 	config::used.clear();
+	audio::play_song(config::enemy_song);
 	config::overlay.image = overlay::Image::Enemy;
 	config::selected_unit = nullptr;
 	this->state = MapState::EnemyTurn;
@@ -378,6 +379,7 @@ void Map::end_enemy_turn() {
 		unit.sprite.palette = 2;
 	}
 	config::used.clear();
+	audio::play_song(config::player_song);
 	config::overlay.image = overlay::Image::Player;
 	config::selected_unit = nullptr;
 	this->state = MapState::WaitingForInput;
