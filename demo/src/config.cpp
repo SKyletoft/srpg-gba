@@ -207,7 +207,6 @@ main_menu::MainMenu main_menu{
 		 auto level = map1::Level{};
 		 level::load_level(level);
 		 config::map.end_enemy_turn();
-		 map::cycle_hovered_unit();
 		 state::next_state = 6;
 		 overlay.image = overlay::Image::Rout;
 	 }},
@@ -216,7 +215,6 @@ main_menu::MainMenu main_menu{
 		 auto level = map2::Level{};
 		 level::load_level(level);
 		 config::map.end_enemy_turn();
-		 map::cycle_hovered_unit();
 		 state::next_state = 6;
 		 overlay.image = overlay::Image::Rout;
 	 }},
