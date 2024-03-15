@@ -5,6 +5,7 @@
 #include "state.h"
 #include "tiles.h"
 #include "tty.h"
+#include "config.h"
 
 #include "soundbank.h"
 
@@ -24,6 +25,7 @@ void MainMenu::restore() {
 	}
 	this->y = 10;
 	this->PopupMenu::restore();
+	audio::play_song(config::menu_song);
 }
 
 void MainMenu::load_tiles_and_palettes() {

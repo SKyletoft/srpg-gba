@@ -255,6 +255,9 @@ std::array<state::Mode *, 12> const modes_data{
 };
 
 u32 startup_song = MOD_BAD_APPLE;
+u32 player_song = MOD_BAD_APPLE;
+u32 enemy_song = MOD_MEGALOVANIA;
+u32 menu_song = MOD_ZELDA_OPENING;
 u32 jingle_battle = MOD_BATTLE;
 u32 sfx_swoosh = SFX_SWOOSH;
 u32 sfx_fwoop = SFX_FWOOP;
