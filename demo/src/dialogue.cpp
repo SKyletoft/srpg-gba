@@ -106,10 +106,9 @@ void Dialogue::restore() {
 void Dialogue::restart() { this->step = 0; }
 
 void end() {
-	config::overlay.image = overlay::Image::Rout;
 	state::next_state = 6;
-	config::cursor.cursor.move_to(config::user_army[0].pos());
 	config::map.end_enemy_turn();
+	config::overlay.image = overlay::Image::Rout;
 }
 
 void Dialogue::update() {
